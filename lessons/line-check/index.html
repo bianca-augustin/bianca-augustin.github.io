@@ -6,12 +6,12 @@
 <title>Line Check · Fig &amp; Fennel Kitchen</title>
 <meta name="description" content="Line Check: a bilingual 3D food-safety hazard hunt for new restaurant staff, designed and built by Bianca Augustin.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Atkinson+Hyperlegible:wght@400;700&family=Courier+Prime:wght@400;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Atkinson+Hyperlegible:wght@400;700&family=Courier+Prime:wght@400;700&display=swap">
 <style>
 /* Layout: kitchen pass. Big 3D stage on the left, order tickets clipped to a rail on the right; manager view below. Single committed look: teal tile + tomato + mustard, black outlines, hard offset shadows. */
 :root{
   --tile:#123F3A; --tile-2:#0D302C; --paper:#FFF9EA; --ink:#141414; --tomato:#E5432D; --mustard:#F3B53F; --mint:#A6DCC8; --steel:#C7CFD1; --steel-dark:#7F8B8E; --ok:#1F7A4D;
-  --f-display:"Bagel Fat One","Arial Black",system-ui,sans-serif;
+  --f-display:"Fredoka","Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;
   --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
   --f-ticket:"Courier Prime","Courier New",ui-monospace,monospace;
   color-scheme:dark;
@@ -36,7 +36,7 @@ a{color:inherit}
 /* top bar */
 .top{padding-block:16px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
 .brand{display:flex;align-items:center;gap:14px;text-decoration:none}
-.logo{font-family:var(--f-display);font-size:30px;line-height:1;background:var(--tomato);color:var(--paper);padding:8px 14px 10px;transform:rotate(-2deg)}
+.logo{font-family:var(--f-display);font-weight:700;font-size:30px;line-height:1;background:var(--tomato);color:var(--paper);padding:8px 14px 10px;transform:rotate(-2deg)}
 .brand small{font-family:var(--f-ticket);font-size:13px;color:var(--mint);letter-spacing:.06em;text-transform:uppercase}
 .tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .seg{display:flex;border:2.5px solid var(--ink);border-radius:10px;overflow:hidden;box-shadow:3px 3px 0 var(--ink)}
@@ -50,12 +50,12 @@ a{color:inherit}
 .stage canvas{display:block;width:100%;height:100%;touch-action:none}
 .stage.hovering canvas{cursor:pointer}
 .tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font-weight:700;font-size:14px;padding:5px 10px;border-radius:8px;transform:translate(-50%,-140%);white-space:nowrap;z-index:3}
-.pin{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:var(--tomato);color:var(--paper);border:3px solid var(--ink);display:grid;place-items:center;font-family:var(--f-display);font-size:16px;pointer-events:none;z-index:2;box-shadow:2px 2px 0 var(--ink)}
+.pin{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:var(--tomato);color:var(--paper);border:3px solid var(--ink);display:grid;place-items:center;font-family:var(--f-display);font-weight:700;font-size:16px;pointer-events:none;z-index:2;box-shadow:2px 2px 0 var(--ink)}
 .pin.pop{animation:pop .45s cubic-bezier(.3,1.6,.5,1)}
 @keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
 .toast{position:absolute;left:16px;right:16px;bottom:16px;z-index:4;background:var(--paper);color:var(--ink);padding:14px 16px;display:flex;gap:14px;align-items:flex-start;transform:translateY(0);transition:opacity .25s,transform .25s}
 .toast.gone{opacity:0;transform:translateY(12px);pointer-events:none}
-.toast .badge{flex:none;font-family:var(--f-display);font-size:15px;padding:4px 10px;border-radius:8px;border:2.5px solid var(--ink)}
+.toast .badge{flex:none;font-family:var(--f-display);font-weight:700;font-size:15px;padding:4px 10px;border-radius:8px;border:2.5px solid var(--ink)}
 .toast .badge.haz{background:var(--tomato);color:var(--paper)}
 .toast .badge.safe{background:var(--mint)}
 .toast b{display:block;font-size:17px}
@@ -67,18 +67,19 @@ a{color:inherit}
 .views button{background:var(--paper);color:var(--ink);border:2.5px solid var(--ink);border-radius:999px;padding:4px 11px;font-weight:700;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
 .views button:hover{background:var(--mustard)}
 .views button.on{background:var(--ink);color:var(--mustard)}
-.ntag{position:absolute;transform:translate(-50%,-50%);background:rgba(20,20,20,.86);color:#FFF9EA;font-size:12.5px;font-weight:700;padding:3px 9px;border-radius:999px;pointer-events:none;white-space:nowrap;z-index:1;border:1.5px solid rgba(255,249,234,.7)}
+.ntag{display:none;position:absolute;transform:translate(-50%,-50%);background:rgba(20,20,20,.86);color:#FFF9EA;font-size:12.5px;font-weight:700;padding:3px 9px;border-radius:999px;pointer-events:none;white-space:nowrap;z-index:1;border:1.5px solid rgba(255,249,234,.7)}
 .ntag.found{background:var(--tomato)}
 .ntag.hot{background:var(--mustard);color:var(--ink);border-color:var(--ink)}
-.tags-off .ntag{display:none}
+.ntag.hot,.tags-all .ntag{display:block}
+.ntag.offscreen{display:none!important}
 .overlay{position:absolute;inset:0;z-index:5;background:rgba(18,63,58,.82);display:grid;place-items:center;padding:20px;overflow:auto}
 .card{background:var(--paper);color:var(--ink);padding:28px;max-width:560px;display:grid;gap:14px;text-align:left}
-.card h1{font-family:var(--f-display);font-weight:400;font-size:clamp(38px,6vw,60px);line-height:.95;margin:0;color:var(--tomato);-webkit-text-stroke:2px var(--ink);text-shadow:4px 4px 0 var(--ink)}
+.card h1{font-family:var(--f-display);font-weight:700;font-size:clamp(38px,6vw,60px);line-height:.95;margin:0;color:var(--tomato);-webkit-text-stroke:1.5px var(--ink);text-shadow:4px 4px 0 var(--ink);letter-spacing:.01em}
 .card p{margin:0}
 .card .meta{display:flex;gap:8px;flex-wrap:wrap}
 .card .meta span{font-family:var(--f-ticket);font-size:13px;font-weight:700;border:2px dashed var(--ink);border-radius:8px;padding:3px 8px}
 .list-mode{position:absolute;inset:0;z-index:4;background:var(--paper);color:var(--ink);overflow:auto;padding:22px}
-.list-mode h2{font-family:var(--f-display);font-weight:400;margin:0 0 6px;font-size:28px}
+.list-mode h2{font-family:var(--f-display);font-weight:700;margin:0 0 6px;font-size:28px}
 .areas{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:14px}
 .area h3{font-family:var(--f-ticket);font-size:14px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 8px}
 .area button{display:block;width:100%;text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:10px;padding:9px 12px;margin-bottom:8px;cursor:pointer;font-weight:700;box-shadow:2px 2px 0 var(--ink)}
@@ -91,7 +92,7 @@ a{color:inherit}
 .ticket{background:var(--paper);color:var(--ink);font-family:var(--f-ticket);padding:18px 18px 22px;position:relative;filter:drop-shadow(4px 4px 0 var(--ink))}
 .ticket::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:10px;background:linear-gradient(-45deg,transparent 7px,var(--paper) 0) 0 0/14px 10px,linear-gradient(45deg,transparent 7px,var(--paper) 0) 0 0/14px 10px}
 .ticket .head{display:flex;justify-content:space-between;font-weight:700;font-size:13px;letter-spacing:.06em;border-bottom:2px dashed var(--ink);padding-bottom:8px;margin-bottom:10px;text-transform:uppercase}
-.clock{font-family:var(--f-display);font-size:48px;line-height:1;letter-spacing:.02em}
+.clock{font-family:var(--f-display);font-weight:700;font-size:48px;line-height:1;letter-spacing:.02em}
 .clock.low{color:var(--tomato)}
 .stats{display:flex;gap:18px;margin-top:8px;font-weight:700}
 .stats .m{color:var(--tomato)}
@@ -106,22 +107,22 @@ a{color:inherit}
 /* results receipt */
 .receipt{background:var(--paper);color:var(--ink);font-family:var(--f-ticket);width:min(420px,100%);padding:24px 22px 28px;position:relative;filter:drop-shadow(6px 6px 0 var(--ink))}
 .receipt::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:10px;background:linear-gradient(-45deg,transparent 7px,var(--paper) 0) 0 0/14px 10px,linear-gradient(45deg,transparent 7px,var(--paper) 0) 0 0/14px 10px}
-.receipt h2{font-family:var(--f-display);font-weight:400;text-align:center;margin:0;font-size:30px}
+.receipt h2{font-family:var(--f-display);font-weight:700;text-align:center;margin:0;font-size:30px}
 .receipt .c{text-align:center;font-size:13px}
 .receipt .ln{display:flex;justify-content:space-between;gap:10px;font-size:15px;padding:3px 0}
 .receipt hr{border:0;border-top:2px dashed var(--ink);margin:10px 0}
 .receipt .tot{font-weight:700;font-size:20px}
-.stamp{display:block;text-align:center;font-family:var(--f-display);font-size:24px;color:var(--tomato);border:3px solid var(--tomato);border-radius:10px;padding:6px;transform:rotate(-4deg);margin:14px auto 4px;width:max-content;max-width:100%}
+.stamp{display:block;text-align:center;font-family:var(--f-display);font-weight:700;font-size:24px;color:var(--tomato);border:3px solid var(--tomato);border-radius:10px;padding:6px;transform:rotate(-4deg);margin:14px auto 4px;width:max-content;max-width:100%}
 .receipt .acts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:16px;font-family:var(--f-body)}
 
 /* manager view */
 .mgr{background:var(--paper);color:var(--ink);padding:32px;margin-bottom:56px}
 .mgr-head{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:end;border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:24px}
-.mgr-head h2{font-family:var(--f-display);font-weight:400;font-size:clamp(30px,4vw,42px);margin:0;line-height:1}
+.mgr-head h2{font-family:var(--f-display);font-weight:700;font-size:clamp(30px,4vw,42px);margin:0;line-height:1}
 .sample{font-family:var(--f-ticket);font-size:13px;font-weight:700;background:var(--mustard);border:2px solid var(--ink);border-radius:8px;padding:4px 10px}
 .kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:26px}
 .kpi{border:3px solid var(--ink);border-radius:12px;padding:14px 16px;background:#fff}
-.kpi b{display:block;font-family:var(--f-display);font-weight:400;font-size:32px;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi b{display:block;font-family:var(--f-display);font-weight:700;font-size:32px;line-height:1.1;font-variant-numeric:tabular-nums}
 .kpi span{font-size:14px;color:#4A4A4A}
 .mgr-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:26px}
 .panel{border:3px solid var(--ink);border-radius:12px;padding:18px;background:#fff;min-width:0}
@@ -238,7 +239,7 @@ const T={
   rTitle:"LINE CHECK",rSub:"Fig & Fennel Kitchen",rFound:"Hazards found",rMiss:"False flags",rTime:"Time bonus",rTotal:"TOTAL",rMissed:"Still on the line:",
   g1:"READY FOR SERVICE",g2:"ALMOST THERE",g3:"BACK TO PREP",again:"Run it again",toMgr:"See the manager view",timeUp:"Doors are open!",allFound:"Kitchen's clear!",
   pts:"pts",youMissed:"You didn't find:",nothingMissed:"You found every hazard.",
-  area_cooler:"Walk-in cooler",vAll:"Whole kitchen",vCooler:"Cooler & hand sink",vPrep:"Prep counter",vSink:"Dish sink",vStove:"Stove",tagsOn:"Labels on",tagsOff:"Labels off",area_prep:"Prep counter",area_sinks:"Sinks & floor",area_walls:"Walls & stations"},
+  area_cooler:"Walk-in cooler",vAll:"Whole kitchen",vCooler:"Cooler & hand sink",vPrep:"Prep counter",vSink:"Dish sink",vStove:"Stove",tagsOn:"Hide labels",tagsOff:"Show all labels",area_prep:"Prep counter",area_sinks:"Sinks & floor",area_walls:"Walls & stations"},
  es:{sub:"Cocina Fig & Fennel · antes del turno",sound:"Sonido sí",soundOff:"Sonido no",listBtn:"Revisar desde una lista",listBtnOff:"Volver a la cocina 3D",caseLink:"Leer el caso de estudio →",drag:"Arrastra para mirar · rueda para acercar",hint:"Pregúntale a Chef Rosa",
   listTitle:"Revisar desde una lista",listIntro:"La misma cocina, sin 3D. Selecciona todo lo que revisarías antes del turno.",introLead:"Abrimos a las 5:00. Son las 4:57.",
   introBody:"Recorre la cocina y encuentra todos los peligros de inocuidad antes de que lleguen los primeros clientes. Haz clic en todo lo que se vea mal. Cuidado: marcar algo que está bien te resta puntos.",
@@ -251,7 +252,7 @@ const T={
   rTitle:"LINE CHECK",rSub:"Cocina Fig & Fennel",rFound:"Peligros encontrados",rMiss:"Marcas falsas",rTime:"Bono de tiempo",rTotal:"TOTAL",rMissed:"Siguen en la cocina:",
   g1:"LISTOS PARA SERVIR",g2:"CASI LISTOS",g3:"DE VUELTA A PREPARAR",again:"Intentar de nuevo",toMgr:"Ver la vista del gerente",timeUp:"¡Ya abrimos!",allFound:"¡Cocina despejada!",
   pts:"pts",youMissed:"No encontraste:",nothingMissed:"Encontraste todos los peligros.",
-  area_cooler:"Cámara fría",vAll:"Toda la cocina",vCooler:"Cámara y lavamanos",vPrep:"Mesa de preparación",vSink:"Fregadero",vStove:"Estufa",tagsOn:"Etiquetas sí",tagsOff:"Etiquetas no",area_prep:"Mesa de preparación",area_sinks:"Fregaderos y piso",area_walls:"Paredes y estaciones"}};
+  area_cooler:"Cámara fría",vAll:"Toda la cocina",vCooler:"Cámara y lavamanos",vPrep:"Mesa de preparación",vSink:"Fregadero",vStove:"Estufa",tagsOn:"Ocultar etiquetas",tagsOff:"Mostrar etiquetas",area_prep:"Mesa de preparación",area_sinks:"Fregaderos y piso",area_walls:"Paredes y estaciones"}};
 const ITEMS={
  fridge:{haz:1,area:"cooler",cohort:71,
   en:["Raw chicken stored above the salad","Juices from raw poultry can drip onto ready-to-eat food. Ready-to-eat food goes on top; raw poultry goes on the bottom shelf.","Check what's on the top shelf of the cooler."],
@@ -393,26 +394,54 @@ function initThree(){
   const wallM=new THREE.MeshToonMaterial({map:tileTx,gradientMap:grad});
   add(B(12,4,.2),"#fff",[0,2,-5.1],{material:wallM});const lw=add(B(.2,4,10),"#fff",[-6.1,2,0],{material:wallM.clone()});
   add(B(12,.25,.24),"#2F6F66",[0,4.05,-5.1]);add(B(.24,.25,10),"#2F6F66",[-6.1,4.05,0]);
+  // ---------- realistic food props (textured, standard materials) ----------
+  const std=(o)=>new THREE.MeshStandardMaterial(Object.assign({roughness:.6,metalness:0},o));
+  const rand=(()=>{let s=7;return()=>{s=(s*16807)%2147483647;return s/2147483647}})();
+  const steakTex=canvasTex(512,512,(g,W,H)=>{const gr=g.createRadialGradient(W*.45,H*.5,20,W*.5,H*.5,W*.6);gr.addColorStop(0,"#B81C28");gr.addColorStop(1,"#7A0E17");g.fillStyle=gr;g.fillRect(0,0,W,H);
+    for(let i=0;i<40;i++){g.fillStyle=`rgba(${150+rand()*40},${20+rand()*20},${30+rand()*15},.3)`;g.beginPath();g.ellipse(rand()*W,rand()*H,10+rand()*40,6+rand()*20,rand()*3,0,7);g.fill()}
+    g.strokeStyle="rgba(255,240,235,.75)";for(let i=0;i<26;i++){g.lineWidth=1+rand()*3;g.beginPath();let x=rand()*W,y=rand()*H;g.moveTo(x,y);for(let k=0;k<5;k++){x+=(rand()-.5)*70;y+=(rand()-.5)*70;g.lineTo(x,y)}g.stroke()}
+    g.fillStyle="rgba(250,238,222,.95)";g.beginPath();g.ellipse(W*.66,H*.42,W*.07,H*.05,.5,0,7);g.fill()});
+  steakTex.wrapS=steakTex.wrapT=THREE.RepeatWrapping;steakTex.repeat.set(1/.46,1/.34);steakTex.offset.set(.5,.5);
+  function steak(parent,pos,id,s=1){const sh=new THREE.Shape();sh.moveTo(-.21,-.05);sh.bezierCurveTo(-.23,.1,-.08,.17,.05,.15);sh.bezierCurveTo(.17,.13,.23,.06,.22,-.03);sh.bezierCurveTo(.21,-.13,.08,-.16,-.04,-.14);sh.bezierCurveTo(-.15,-.13,-.2,-.1,-.21,-.05);
+    const geo=new THREE.ExtrudeGeometry(sh,{depth:.035,bevelEnabled:true,bevelThickness:.014,bevelSize:.016,bevelSegments:4,curveSegments:28});
+    const m=add(geo,"#fff",pos,{parent,id,edges:false,material:[std({map:steakTex,roughness:.5}),std({color:"#F5E6D3",roughness:.6})],rot:[-Math.PI/2,0,.2]});m.scale.setScalar(s);return m}
+  const leafTex=canvasTex(256,256,(g,W,H)=>{const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,"#3F9A2E");gr.addColorStop(.6,"#7FC94A");gr.addColorStop(1,"#D6F0A4");g.fillStyle=gr;g.fillRect(0,0,W,H);
+    g.strokeStyle="rgba(235,250,205,.9)";g.lineWidth=5;g.beginPath();g.moveTo(W/2,H);g.lineTo(W/2,0);g.stroke();g.lineWidth=2;for(let y=20;y<H;y+=24){g.beginPath();g.moveTo(W/2,y+18);g.quadraticCurveTo(W*.3,y+8,6,y);g.moveTo(W/2,y+18);g.quadraticCurveTo(W*.7,y+8,W-6,y);g.stroke()}});
+  function lettuce(parent,pos,id,s=1){const gp=new THREE.Group();gp.position.set(...pos);gp.scale.setScalar(s);parent.add(gp);
+    add(new THREE.SphereGeometry(.1,20,14),"#fff",[0,.08,0],{parent:gp,id,edges:false,material:std({color:"#BFE68A",roughness:.7})});
+    for(let i=0;i<7;i++){const a=i/7*Math.PI*2,leaf=add(new THREE.SphereGeometry(.15,20,14,0,Math.PI*.8,0,Math.PI*.6),"#fff",[Math.cos(a)*.02,.05,Math.sin(a)*.02],{parent:gp,id,edges:false,material:std({map:leafTex,side:THREE.DoubleSide,roughness:.75})});leaf.rotation.set(-.35,a,0);leaf.scale.set(1,1.05-i%2*.12,1)}
+    return gp}
+  const skinTex=canvasTex(256,256,(g,W,H)=>{g.fillStyle="#F2B3A3";g.fillRect(0,0,W,H);for(let i=0;i<500;i++){g.fillStyle=`rgba(${215+rand()*30},${140+rand()*40},${130+rand()*30},.6)`;g.beginPath();g.arc(rand()*W,rand()*H,1+rand()*2.2,0,7);g.fill()}
+    g.fillStyle="rgba(255,235,225,.5)";for(let i=0;i<8;i++){g.beginPath();g.ellipse(rand()*W,rand()*H,20,8,rand()*3,0,7);g.fill()}});
+  function drumstick(parent,pos,rot,id,s=1){const gp=new THREE.Group();gp.position.set(...pos);gp.rotation.set(...rot);gp.scale.setScalar(s);parent.add(gp);
+    const pts=[[.0,.0],[.016,.004],[.02,.03],[.017,.07],[.03,.1],[.05,.13],[.066,.17],[.07,.21],[.06,.25],[.038,.28],[0,.29]].map(([r,y])=>new THREE.Vector2(r,y));
+    add(new THREE.LatheGeometry(pts,28),"#fff",[0,0,0],{parent:gp,id,edges:false,material:std({map:skinTex,roughness:.5})});
+    add(new THREE.SphereGeometry(.024,14,10),"#fff",[0,-.006,0],{parent:gp,id,edges:false,material:std({color:"#FBF3E6",roughness:.4})});return gp}
+  const crustTex=canvasTex(512,256,(g,W,H)=>{const gr=g.createLinearGradient(0,0,0,H);gr.addColorStop(0,"#E9B66B");gr.addColorStop(.5,"#C98336");gr.addColorStop(1,"#E2A85B");g.fillStyle=gr;g.fillRect(0,0,W,H);
+    for(let i=0;i<4;i++){const x=W*(.2+i*.2);g.strokeStyle="#F7DDA8";g.lineWidth=10;g.beginPath();g.moveTo(x-30,H*.15);g.lineTo(x+30,H*.85);g.stroke();g.strokeStyle="rgba(120,60,20,.5)";g.lineWidth=3;g.beginPath();g.moveTo(x-24,H*.15);g.lineTo(x+36,H*.85);g.stroke()}
+    for(let i=0;i<300;i++){g.fillStyle=`rgba(255,250,240,${rand()*.35})`;g.fillRect(rand()*W,rand()*H,2,2)}});
+  const bottleTex=canvasTex(256,256,(g,W,H)=>{g.fillStyle="#2F7DF6";g.fillRect(0,0,W,H);g.fillStyle="#FFFFFF";g.fillRect(W*.18,H*.32,W*.64,H*.42);g.fillStyle="#141414";g.font="bold 34px Arial";g.textAlign="center";g.fillText("CLEANER",W/2,H*.47);
+    g.save();g.translate(W/2,H*.62);g.rotate(Math.PI/4);g.fillStyle="#F28C28";g.fillRect(-16,-16,32,32);g.restore();g.fillStyle="#141414";g.font="bold 26px Arial";g.fillText("!",W/2,H*.655)});
+  const soupTex=canvasTex(256,256,(g,W,H)=>{g.fillStyle="#C9772E";g.fillRect(0,0,W,H);const cs=["#E8A13A","#8FBF4A","#F2D27A","#B5502A"];for(let i=0;i<70;i++){g.fillStyle=cs[i%4];g.fillRect(rand()*W,rand()*H,6+rand()*10,6+rand()*10)}});
+  const metal=std({color:"#E6ECF0",metalness:.85,roughness:.25});
   // ---------- back counter ----------
   add(B(5.6,.85,1),"#2F6F66",[1.1,.43,-4.4]);add(B(5.8,.08,1.1),"#C7CFD1",[1.1,.89,-4.4]);
   add(B(5.4,.04,.02),"#141414",[1.1,.6,-3.89],{edges:false,shadow:false});
   // cutting board with raw steak AND lettuce (hazard: board)
   const board=new THREE.Group();board.position.set(-.6,.95,-4.25);scene.add(board);
   add(B(1.25,.07,.72),"#6DBE84",[0,0,0],{parent:board,id:"board"});
-  const steak=add(new THREE.SphereGeometry(.2,20,12),"#A3262E",[-.3,.09,0],{parent:board,id:"board"});steak.scale.set(1.6,.45,1.15);
-  const fat=add(new THREE.TorusGeometry(.2,.035,6,28,Math.PI*.95),"#F5E6D8",[-.3,.09,0],{parent:board,id:"board",rot:[Math.PI/2,0,.3],edges:false});fat.scale.set(1.6,1.15,1);
-  [[.3,.14,0,.16],[.42,.12,.09,.11],[.2,.12,.11,.1],[.38,.12,-.11,.11],[.28,.24,.02,.11]].forEach(([x,y,z,r])=>add(new THREE.SphereGeometry(r,14,10),"#7CCB45",[x,y,z],{parent:board,id:"board"}));
-  ANCHORS.board=new THREE.Vector3(-.6,1.35,-4.25);
+  steak(board,[-.3,.05,.02],"board",1.15);lettuce(board,[.32,.035,0],"board",1.05);
+  ANCHORS.board=new THREE.Vector3(-.6,1.38,-4.25);
   // spray bottle right next to the bread (hazard: chem)
-  add(C(.11,.13,.5,20),"#2F7DF6",[.4,1.18,-4.15],{id:"chem"});add(C(.05,.08,.1,12),"#F3F3F3",[.4,1.48,-4.15],{id:"chem"});
-  add(B(.09,.12,.24),"#141414",[.4,1.57,-4.07],{id:"chem"});add(B(.035,.11,.035),"#141414",[.4,1.47,-3.98],{id:"chem",rot:[.4,0,0]});
-  label("CLEANER",.24,.1,[.4,1.16,-4.015],{size:44,id:"chem",bg:"#FFE27A"});
-  const loaf=add(new THREE.SphereGeometry(.22,22,14),"#D99A4E",[.98,1.1,-4.2],{id:"chem"});loaf.scale.set(2,.8,.9);
-  [-.2,0,.2].forEach(dx=>add(B(.03,.02,.22),"#A9652A",[.98+dx,1.27,-4.2],{id:"chem",edges:false,rot:[0,.45,0]}));
-  ANCHORS.chem=new THREE.Vector3(.7,1.4,-4.15);
+  const bp=[[0,0],[.1,0],[.115,.04],[.115,.34],[.09,.42],[.05,.46],[.045,.52],[0,.52]].map(([r,y])=>new THREE.Vector2(r,y));
+  const btl=add(new THREE.LatheGeometry(bp,32),"#fff",[.4,.93,-4.15],{id:"chem",edges:false,material:std({map:bottleTex,roughness:.35})});btl.rotation.y=-Math.PI/2;
+  add(B(.08,.1,.22),"#fff",[.4,1.5,-4.08],{id:"chem",edges:false,material:std({color:"#1B1B1B",roughness:.4})});
+  add(B(.035,.12,.035),"#fff",[.4,1.4,-3.99],{id:"chem",rot:[.35,0,0],edges:false,material:std({color:"#1B1B1B",roughness:.4})});
+  const loaf=add(new THREE.SphereGeometry(.22,32,20),"#fff",[.98,1.08,-4.2],{id:"chem",edges:false,material:std({map:crustTex,roughness:.8})});loaf.scale.set(2,.85,1);loaf.rotation.y=Math.PI/2;
+  ANCHORS.chem=new THREE.Vector3(.7,1.5,-4.15);
   // stockpot with ladle and thermometer reading 95°F (hazard: soup)
   add(C(.44,.42,.66,30),"#C7CFD1",[2.25,1.26,-4.25],{id:"soup"});add(C(.45,.45,.05,30),"#7F8B8E",[2.25,1.6,-4.25],{id:"soup"});
-  add(C(.38,.38,.02,30),"#C9852E",[2.25,1.56,-4.25],{id:"soup",edges:false});
+  add(C(.39,.39,.02,30),"#fff",[2.25,1.565,-4.25],{id:"soup",edges:false,material:std({map:soupTex,roughness:.3})});
   add(C(.02,.02,.75,8),"#7F8B8E",[2.0,1.85,-4.2],{rot:[0,0,.35],id:"soup"});
   add(C(.015,.015,.6,8),"#7F8B8E",[2.5,1.75,-4.12],{rot:[0,0,-.25],id:"soup"});add(C(.09,.09,.03,20),"#FFFFFF",[2.58,2.04,-4.1],{rot:[Math.PI/2,0,0],id:"soup"});
   label("95°F",.42,.2,[2.25,2.3,-4.25],{size:100,fg:"#E5432D",id:"soup"});
@@ -444,17 +473,17 @@ function initThree(){
   const fm="#D8DEE0";add(B(1.5,.1,1),fm,[0,.05,0],{parent:fr});add(B(1.5,.12,1),fm,[0,2.4,0],{parent:fr});add(B(.1,2.4,1),fm,[-.7,1.2,0],{parent:fr});add(B(.1,2.4,1),fm,[.7,1.2,0],{parent:fr});add(B(1.5,2.4,.1),"#B8C2C5",[0,1.2,-.45],{parent:fr});
   [.65,1.25,1.85].forEach(y=>add(B(1.3,.04,.85),"#9AA5A8",[0,y,0],{parent:fr}));
   label("COOLER",.7,.18,[0,2.5,.52],{size:70,parent:fr,bg:"#2F6F66",fg:"#fff"});
-  add(B(.7,.06,.45),"#E8E8E8",[-.05,1.9,.05],{parent:fr,id:"fridge"});
-  [-.28,-.05,.18].forEach((x,i)=>{const leg=new THREE.Group();leg.position.set(x,1.99,.05+(i%2?.06:-.04));leg.rotation.y=.3*i;fr.add(leg);
-    const m=add(new THREE.SphereGeometry(.12,14,10),"#EE9C8C",[0,0,0],{parent:leg,id:"fridge"});m.scale.set(1.5,.85,1);
-    add(C(.025,.025,.14,8),"#FFF4E6",[.17,0,0],{parent:leg,id:"fridge",rot:[0,0,Math.PI/2]});add(new THREE.SphereGeometry(.035,8,6),"#FFF4E6",[.25,0,0],{parent:leg,id:"fridge"})});
-  label("RAW CHICKEN",.62,.14,[-.05,2.15,.36],{size:56,parent:fr,id:"fridge",fg:"#E5432D"});
-  add(C(.3,.21,.22,22),"#FFFFFF",[.1,1.39,.05],{parent:fr,id:"fridge"});
-  [[0,0,.1],[.14,.05,.09],[.12,-.09,.09],[.24,0,.08],[.05,.1,.08]].forEach(([x,z,r])=>add(new THREE.SphereGeometry(r,10,8),"#7CCB45",[x+.02,1.53,z+.05],{parent:fr,id:"fridge"}));
-  [[.0,.03],[.18,-.05]].forEach(([x,z])=>add(new THREE.SphereGeometry(.045,10,8),"#E5432D",[x,1.6,z+.05],{parent:fr,id:"fridge"}));
-  label("SALAD",.4,.13,[.1,1.27,.36],{size:64,parent:fr,id:"fridge"});
+  add(B(.72,.05,.46),"#fff",[-.05,1.9,.05],{parent:fr,id:"fridge",edges:false,material:std({color:"#E9EEF1",roughness:.3})});
+  [[-.26,1.95,-.05,0],[-.04,1.95,.08,.5],[.18,1.95,-.04,-.3]].forEach(([x,y,z,r])=>drumstick(fr,[x,y,z],[0,r,Math.PI/2],"fridge",1.15));
+  label("RAW CHICKEN",.6,.1,[-.05,1.86,.44],{size:56,parent:fr,id:"fridge",fg:"#E5432D"});
+  const bowlPts=[[0,0],[.16,0],[.24,.06],[.29,.18],[.3,.2],[.28,.2],[.22,.08],[.14,.02],[0,.02]].map(([r,y])=>new THREE.Vector2(r,y));
+  add(new THREE.LatheGeometry(bowlPts,36),"#fff",[.1,1.27,.05],{parent:fr,id:"fridge",edges:false,material:std({color:"#FFFFFF",roughness:.25,side:THREE.DoubleSide})});
+  for(let i=0;i<14;i++){const a=i*2.4,r=.04+(i%4)*.045,lf=add(new THREE.SphereGeometry(.07,12,8,0,Math.PI*2,0,Math.PI*.5),"#fff",[.1+Math.cos(a)*r,1.42+(i%3)*.012,.05+Math.sin(a)*r],{parent:fr,id:"fridge",edges:false,material:std({map:leafTex,side:THREE.DoubleSide})});lf.rotation.set((rand()-.5)*.9,a,(rand()-.5)*.9);lf.scale.set(1,.45,.8)}
+  [[.0,.0],[.17,-.05],[.08,.13],[.2,.1]].forEach(([x,z])=>{add(new THREE.SphereGeometry(.04,14,10),"#fff",[x,1.47,z+.05],{parent:fr,id:"fridge",edges:false,material:std({color:"#E3342F",roughness:.25})});add(C(.012,.012,.02,6),"#fff",[x,1.51,z+.05],{parent:fr,id:"fridge",edges:false,material:std({color:"#2E7D32"})})});
+  [[-.04,.12],[.24,-.1]].forEach(([x,z])=>{add(C(.04,.04,.015,18),"#fff",[x,1.46,z+.05],{parent:fr,id:"fridge",edges:false,rot:[.3,0,.2],material:std({color:"#E8F5C8",roughness:.6})})});
+  label("SALAD",.4,.1,[.1,1.26,.44],{size:64,parent:fr,id:"fridge"});
   [-.38,-.14].forEach(x=>{add(B(.17,.32,.17),"#FFFFFF",[x,.83,.05],{parent:fr,id:"dairy"});add(C(0,.13,.1,4),"#FFFFFF",[x,1.04,.05],{parent:fr,id:"dairy",rot:[0,Math.PI/4,0]});add(B(.175,.08,.175),"#3D8BFF",[x,.78,.05],{parent:fr,id:"dairy",edges:false})});
-  label("MILK",.34,.12,[-.26,.68,.3],{size:66,parent:fr,id:"dairy"});
+  label("MILK",.34,.1,[-.26,.66,.44],{size:66,parent:fr,id:"dairy"});
   const glass=new THREE.Mesh(B(1.3,2.25,.03),new THREE.MeshBasicMaterial({color:"#cfeef5",transparent:true,opacity:.1}));glass.position.set(0,1.25,.5);fr.add(glass);
   ANCHORS.fridge=new THREE.Vector3(-4.85,2.8,-4.0);ANCHORS.dairy=new THREE.Vector3(-5.1,1.1,-4.1);
   // three-compartment dish sink with a knife under the water (hazard: knife)
@@ -463,7 +492,8 @@ function initThree(){
   add(B(1,.12,.06),"#C7CFD1",[0,.88,-1.27],{parent:sk});add(B(1,.12,.06),"#C7CFD1",[0,.88,1.27],{parent:sk});add(B(.06,.12,2.6),"#C7CFD1",[.47,.88,0],{parent:sk});add(B(.06,.12,2.6),"#C7CFD1",[-.47,.88,0],{parent:sk});
   [-.42,.42].forEach(z=>add(B(.9,.12,.05),"#C7CFD1",[0,.88,z],{parent:sk}));
   [-.85,0,.85].forEach(z=>add(B(.88,.02,.78),"#3E9FD0",[0,.9,z],{parent:sk,id:"knife",mo:{transparent:true,opacity:.42},edges:false,shadow:false}));
-  add(B(.06,.015,.5),"#F2F6F8",[.05,.85,-.08],{parent:sk,id:"knife",rot:[0,.5,0]});
+  {const ks=new THREE.Shape();ks.moveTo(0,0);ks.lineTo(.36,0);ks.quadraticCurveTo(.42,.0,.44,.05);ks.quadraticCurveTo(.3,.07,0,.07);ks.lineTo(0,0);
+    const kg=new THREE.ExtrudeGeometry(ks,{depth:.006,bevelEnabled:false});add(kg,"#fff",[-.12,.855,-.2],{parent:sk,id:"knife",edges:false,material:metal,rot:[-Math.PI/2,0,.5]})}
   add(B(.08,.08,.26),"#141414",[.22,.93,.18],{parent:sk,id:"knife",rot:[.45,.5,0]});
   [0,1,2].forEach(k=>add(new THREE.TorusGeometry(.12,.03,6,16),"#FFFFFF",[0,.92,-.95+k*.13],{parent:sk,rot:[Math.PI/2,0,0],edges:false}));
   add(C(.03,.03,.5,8),"#7F8B8E",[-.42,1.15,0],{parent:sk});add(B(.03,.03,.25),"#7F8B8E",[-.42,1.38,.12],{parent:sk});
@@ -501,7 +531,7 @@ function initThree(){
   renderer.domElement.addEventListener("pointerdown",e=>{down=[e.clientX,e.clientY]});
   renderer.domElement.addEventListener("pointerup",e=>{if(!down)return;const moved=Math.hypot(e.clientX-down[0],e.clientY-down[1]);down=null;if(moved>6)return;const id=pick(e);if(id){if(state==="intro")return;inspect(id)}});
   renderer.domElement.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")return;const id=state==="play"?pick(e):null;const tip=$("#tip");stage.classList.toggle("hovering",!!id);
-    setHot(id);if(id){const r=stage.getBoundingClientRect();tip.hidden=false;tip.style.left=(e.clientX-r.left)+"px";tip.style.top=(e.clientY-r.top)+"px";tip.textContent=nname(id)}else tip.hidden=true});
+    setHot(id);if(id){const r=stage.getBoundingClientRect();tip.hidden=true}else tip.hidden=true});
   renderer.domElement.addEventListener("pointerleave",()=>{$("#tip").hidden=true;setHot(null)});
   buildTags();buildViews();
   const v=new THREE.Vector3();
@@ -511,21 +541,21 @@ function initThree(){
     steam.forEach(s=>{const p=((time/2400)+s.userData.ph)%1;s.position.y=1.7+p*1.1;s.position.x=2.25+Math.sin(p*6+s.userData.ph*9)*.12;s.material.opacity=.55*(1-p);s.scale.setScalar(.6+p)});
     const r=stage.getBoundingClientRect();
     PINS.forEach(p=>{v.copy(ANCHORS[p.id]).project(camera);p.el.style.left=((v.x+1)/2*r.width)+"px";p.el.style.top=((1-v.y)/2*r.height-30)+"px";p.el.style.display=v.z<1?"grid":"none"});
-    Object.entries(TAGS).forEach(([id,el])=>{v.copy(ANCHORS[id]).project(camera);el.style.left=((v.x+1)/2*r.width)+"px";el.style.top=((1-v.y)/2*r.height)+"px";el.style.display=v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05?"block":"none"});
+    Object.entries(TAGS).forEach(([id,el])=>{v.copy(ANCHORS[id]).project(camera);el.style.left=((v.x+1)/2*r.width)+"px";el.style.top=((1-v.y)/2*r.height)+"px";el.classList.toggle("offscreen",!(v.z<1&&Math.abs(v.x)<1.05&&Math.abs(v.y)<1.05))});
     renderer.render(scene,camera)})(0);
 }
 
 /* name tags, hover highlight, camera views */
-const TAGS={};let hotId=null,tagsOn=true;
+const TAGS={};let hotId=null,tagsOn=false;
 function buildTags(){Object.keys(ITEMS).forEach(id=>{if(!ANCHORS[id])return;const el=document.createElement("div");el.className="ntag";el.dataset.id=id;$("#pins").before(el);TAGS[id]=el});refreshTags()}
 function refreshTags(){Object.entries(TAGS).forEach(([id,el])=>{el.textContent=nname(id);el.classList.toggle("found",found.includes(id))})}
 function setHot(id){if(id===hotId)return;const prev=hotId;hotId=id;
-  clickables.forEach(m=>{const d=m.userData.id;if(d!==prev&&d!==id)return;if(m.material&&m.material.emissive){if(d===id){m.material.emissive.set("#F3B53F");m.material.emissiveIntensity=.35}else m.material.emissive.set("#000000")}});
+  clickables.forEach(m=>{const d=m.userData.id;if(d!==prev&&d!==id)return;(Array.isArray(m.material)?m.material:[m.material]).forEach(mt=>{if(!mt||!mt.emissive)return;if(d===id){mt.emissive.set("#F3B53F");mt.emissiveIntensity=.3}else mt.emissive.set("#000000")})});
   Object.entries(TAGS).forEach(([k,el])=>el.classList.toggle("hot",k===id))}
 const VIEWS={vAll:[[3.4,4.6,6.2],[-1.1,1,-2.5]],vCooler:[[-3.3,3.3,-1.3],[-4.7,1.7,-4.2]],vPrep:[[1.4,2.7,-.8],[1.1,1.1,-4.2]],vSink:[[-2.3,3.4,1.5],[-5.3,.8,.4]],vStove:[[3.6,2.7,-.6],[3.9,1.2,-4.2]]};
-function buildViews(){const box=$("#views");box.innerHTML=Object.keys(VIEWS).map(k=>`<button data-v="${k}">${t(k)}</button>`).join("")+`<button id="tagBtn" class="on">${tagsOn?t("tagsOn"):t("tagsOff")}</button>`;
+function buildViews(){const box=$("#views");box.innerHTML=Object.keys(VIEWS).map(k=>`<button data-v="${k}">${t(k)}</button>`).join("")+`<button id="tagBtn">${tagsOn?t("tagsOn"):t("tagsOff")}</button>`;
   box.querySelectorAll("[data-v]").forEach(b=>b.onclick=()=>{const [p,g]=VIEWS[b.dataset.v];flyTo={pos:new THREE.Vector3(...p),target:new THREE.Vector3(...g)};box.querySelectorAll("[data-v]").forEach(x=>x.classList.toggle("on",x===b))});
-  $("#tagBtn").classList.toggle("on",tagsOn);$("#tagBtn").onclick=()=>{tagsOn=!tagsOn;$("#stage").classList.toggle("tags-off",!tagsOn);buildViews()}}
+  $("#tagBtn").classList.toggle("on",tagsOn);$("#tagBtn").onclick=()=>{tagsOn=!tagsOn;$("#stage").classList.toggle("tags-all",tagsOn);buildViews()}}
 $("#hintBtn").onclick=()=>{const left=HAZ.filter(k=>!found.includes(k));if(!left.length)return;const k=left[0];hintsUsed++;hintAt=Date.now();$("#hintBtn").hidden=true;
   toast("hint",t("chef"),ITEMS[k][lang][2]);xapi("asked","Hint: "+ITEMS[k].en[0],null);
   if(camera&&ANCHORS[k]){const a=ANCHORS[k];flyTo={target:a.clone(),pos:new THREE.Vector3(a.x+3.4,a.y+2.6,a.z+5.2)}}};
