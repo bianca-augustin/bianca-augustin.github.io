@@ -4,20 +4,20 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Sheet Studio · Spreadsheet Builder</title>
-<meta name="description" content="Sheet Studio: describe a spreadsheet in plain words and watch a fun, automated one build itself, with a dashboard, rewards, color themes, and tabs that fill themselves in. Designed and coded by Bianca Augustin.">
+<meta name="description" content="Sheet Studio: describe a spreadsheet in plain words and watch a colorful, automated one build itself, with a dashboard at the top, stars that light up, dropdowns that fill themselves in, and tabs that update on their own. Hand-coded by Bianca Augustin, no AI.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 <style>
-/* Layout: ledger workbench. Graph-paper page, builder column on the left, a live workbook on the right.
-   The page chrome stays ledger green; the workbook itself takes whichever theme the visitor picks. */
+/* Layout: ledger workbench page (graph paper, ledger green) wrapping a themed, light "spreadsheet" window that mirrors Bianca's real sheets:
+   banner dashboard with stars, cream input cells, numbered tabs, auto-filling lookups. */
 :root{
   --paper:#F6F7F2; --grid:#E3E8DD; --surface:#FFFFFF; --ink:#1C211C; --ink-2:#4F5A50; --ink-3:#7D877E; --line:#D5DBD0;
-  --green:#17603F; --green-2:#1E7A51; --green-soft:#E3F0E8;
+  --green:#17603F; --green-2:#1E7A51; --green-soft:#E3F0E8; --amber-soft:#FBF0D8;
   --f-ui:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){:root{
   --paper:#121512; --grid:#1D221D; --surface:#191E19; --ink:#E8ECE6; --ink-2:#AAB4AB; --ink-3:#7F8A80; --line:#2C342C;
-  --green:#5FC28F; --green-2:#7FD3A6; --green-soft:#16301F; color-scheme:dark}}
+  --green:#5FC28F; --green-2:#7FD3A6; --green-soft:#16301F; --amber-soft:#33270F; color-scheme:dark}}
 *{box-sizing:border-box}
 [hidden]{display:none!important}
 html,body{margin:0}
@@ -26,7 +26,7 @@ body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:
 button,input,textarea,select{font:inherit;color:inherit}
 :focus-visible{outline:2.5px solid var(--green);outline-offset:2px;border-radius:4px}
 a{color:var(--green)}
-.wrap{max-width:1400px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:1420px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-block:16px}
 .logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
 .logo i{width:34px;height:34px;background:var(--green);border-radius:6px;display:grid;place-items:center}
@@ -37,20 +37,16 @@ a{color:var(--green)}
 .btn.primary{background:var(--green);border-color:var(--green);color:#fff}
 .btn.primary:hover{background:var(--green-2)}
 .btn.sm{padding:6px 12px;font-size:14px}
-.hero{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:28px;align-items:end;padding-block:14px 20px}
-.hero h1{font-stretch:68%;font-weight:800;font-size:clamp(2.5rem,5.6vw,4.4rem);line-height:.92;margin:0;text-transform:uppercase}
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:28px;align-items:end;padding-block:14px 26px}
+.hero h1{font-stretch:68%;font-weight:800;font-size:clamp(2.4rem,5.4vw,4.3rem);line-height:.92;margin:0;text-transform:uppercase}
 .hero h1 span{color:var(--green)}
-.hero p{font-size:1.1rem;color:var(--ink-2);max-width:60ch;margin:14px 0 0}
+.hero p{font-size:1.1rem;color:var(--ink-2);max-width:62ch;margin:14px 0 0}
 .credit{background:var(--surface);border:2px solid var(--ink);border-radius:4px;padding:20px;display:grid;gap:10px;box-shadow:7px 7px 0 var(--green)}
 .credit .k{font-family:var(--f-mono);font-size:12px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.06em}
 .credit h2{margin:0;font-stretch:75%;font-weight:800;font-size:1.7rem;line-height:1.05;text-transform:uppercase}
 .credit p{margin:0;font-size:15px;color:var(--ink-2)}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-.mail{font-family:var(--f-mono);font-size:13px;color:var(--ink-2);user-select:all}
-.noai{display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;align-items:start;background:var(--surface);border:1.5px dashed var(--green);border-radius:4px;padding:14px 18px;margin-bottom:22px}
-.noai .tag{font-family:var(--f-mono);font-size:12px;font-weight:600;background:var(--green);color:#fff;border-radius:3px;padding:3px 8px;white-space:nowrap}
-.noai p{margin:0;font-size:15px;color:var(--ink-2)}
-.noai b{color:var(--ink)}
+.credit .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.mail{font-family:var(--f-mono);font-size:13px;color:var(--ink-2)}
 .bench{display:grid;grid-template-columns:390px minmax(0,1fr);gap:22px;align-items:start;padding-bottom:28px}
 .bench>*{min-width:0}
 .panel{background:var(--surface);border:1.5px solid var(--line);border-radius:6px;padding:18px;display:grid;gap:14px}
@@ -59,161 +55,201 @@ a{color:var(--green)}
 .step h2{margin:0;display:flex;gap:10px;align-items:center;font-size:15px;font-stretch:85%;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
 .step h2 i{font-style:normal;font-family:var(--f-mono);font-size:12px;background:var(--ink);color:var(--paper);border-radius:3px;padding:2px 6px}
 textarea{width:100%;min-height:96px;resize:vertical;border:1.5px solid var(--line);border-radius:4px;padding:10px 12px;background:var(--paper);line-height:1.45}
-textarea:focus{outline:none;border-color:var(--green)}
+textarea:focus,.panel input[type=text]:focus,.panel input[type=number]:focus{outline:none;border-color:var(--green)}
 .ex{display:flex;flex-wrap:wrap;gap:6px}
 .ex button{border:1px solid var(--line);background:var(--paper);border-radius:99px;padding:4px 10px;font-size:13px;cursor:pointer}
 .ex button:hover{border-color:var(--green)}
-.log{background:#101410;color:#BDE6CC;border-radius:4px;padding:10px 12px;font-family:var(--f-mono);font-size:12.5px;line-height:1.55;max-height:230px;overflow:auto}
-.log .h{color:#7F8A80}
-.log .c{color:#FFFFFF}
-.log .s{color:#7FD3A6}
-.log .w{color:#F3C969}
-details.cmds{font-size:13.5px}
-details.cmds summary{cursor:pointer;font-weight:700;color:var(--green)}
-details.cmds dl{margin:8px 0 0;display:grid;grid-template-columns:96px minmax(0,1fr);gap:4px 10px}
-details.cmds dt{font-weight:700;color:var(--ink-2);font-size:12.5px}
-details.cmds dd{margin:0;font-family:var(--f-mono);font-size:12px;color:var(--ink-2)}
-.f-label{font-size:13px;font-weight:700;color:var(--ink-2)}
-.themes{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.th{display:flex;align-items:center;gap:8px;border:1.5px solid var(--line);background:var(--paper);border-radius:4px;padding:6px 8px;cursor:pointer;font-size:13px;font-weight:600}
-.th i{display:flex;width:30px;height:16px;border-radius:3px;overflow:hidden;flex:none}
-.th i b{flex:1}
-.th[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
-.seg{display:grid;grid-template-columns:repeat(4,1fr);background:var(--paper);border:1.5px solid var(--line);border-radius:4px;padding:3px;gap:3px}
-.seg button{border:0;background:none;border-radius:3px;padding:6px 4px;font-size:13px;font-weight:600;cursor:pointer;color:var(--ink-2)}
-.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
-.feats{display:grid;grid-template-columns:1fr 1fr;gap:4px 10px}
-.feat{display:flex;gap:8px;align-items:flex-start;font-size:13.5px;cursor:pointer;padding:4px 2px;line-height:1.3}
-.feat input{accent-color:var(--green);width:16px;height:16px;margin-top:1px;flex:none}
+.noai-strip{display:flex;gap:14px;align-items:center;border:1.5px dashed var(--green);border-radius:4px;background:var(--surface);padding:12px 16px;margin-bottom:22px}
+.noai-strip span{flex:none;background:var(--green);color:#fff;font:600 11px var(--f-mono);letter-spacing:.06em;padding:4px 8px;border-radius:3px}
+.noai-strip p{margin:0;font-size:14.5px;color:var(--ink-2)}
+.noai-strip b{color:var(--ink)}
+@media (max-width:640px){.noai-strip{flex-direction:column;align-items:flex-start}}
+.noai{display:grid;grid-template-columns:auto 1fr;gap:10px;background:var(--amber-soft);border:1.5px solid var(--ink);border-radius:4px;padding:11px 12px;font-size:13.5px;line-height:1.4}
+.noai b{display:block;font-size:14px}
+.noai summary{cursor:pointer;font-weight:700;color:var(--green);margin-top:6px}
+.cmds{margin:8px 0 0;padding-left:18px;display:grid;gap:5px;font-size:13px;color:var(--ink-2)}
+.cmds code{font-family:var(--f-mono);font-size:12px;background:var(--surface);border:1px solid var(--line);border-radius:3px;padding:0 4px;color:var(--ink)}
+.term{background:#121712;color:#CFE9D8;border-radius:4px;padding:10px 12px;font-family:var(--f-mono);font-size:12px;line-height:1.55;max-height:260px;overflow:auto}
+.term .hd{color:#7FD3A6;margin-bottom:4px;word-break:break-word}
+.cl{display:grid;grid-template-columns:14px 80px minmax(0,1fr);gap:6px;align-items:baseline}
+.cl .ck{color:#7FD3A6}.cl.def .ck{color:#8C968D}.cl.warn .ck{color:#F0B95A}
+.cl .ky{color:#F2D27A}
+.cl .vl{color:#E8F3EC;word-break:break-word}
+.cl .mt{grid-column:3;color:#8C968D;font-size:11px;margin-top:-2px}
+.grp{display:grid;gap:8px}
+.lbl{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{border:1.5px solid var(--line);background:var(--paper);border-radius:4px;padding:5px 9px;font-size:13px;font-weight:600;cursor:pointer}
+.chips button[aria-pressed="true"]{border-color:var(--green);background:var(--green-soft);color:var(--green)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.panel label.f{display:grid;gap:4px;font-size:12.5px;font-weight:700;color:var(--ink-2)}
+.panel input[type=text],.panel input[type=number],.panel select{border:1.5px solid var(--line);border-radius:4px;padding:7px 9px;background:var(--paper);font-weight:600;width:100%;min-width:0}
+.feats{display:grid;gap:2px}
+.feat{display:grid;grid-template-columns:20px 1fr;gap:8px;align-items:start;font-size:14px;cursor:pointer;padding:5px 6px;border-radius:4px}
+.feat:hover{background:var(--paper)}
+.feat input{accent-color:var(--green);width:16px;height:16px;margin-top:2px}
+.feat b{display:block;font-size:13.5px}
+.feat small{display:block;font-size:12px;color:var(--ink-3);line-height:1.3}
+.feat.off{opacity:.45;cursor:default}
+.dots{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.dots button{width:24px;height:24px;border-radius:50%;border:2px solid #fff;box-shadow:0 0 0 1.5px #C9D0C6;cursor:pointer;padding:0}
+.dots button[aria-pressed="true"]{box-shadow:0 0 0 2.5px var(--ink)}
+.icons{display:flex;gap:4px;flex-wrap:wrap}
+.icons button{width:32px;height:32px;border:1.5px solid var(--line);background:var(--paper);border-radius:4px;cursor:pointer;font-size:16px;padding:0}
+.icons button[aria-pressed="true"]{border-color:var(--green);background:var(--green-soft)}
+.range{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:var(--ink-2)}
+.range input{flex:1;accent-color:var(--green)}
+.range b{font-family:var(--f-mono);min-width:2ch;color:var(--ink)}
 .cta-box{background:var(--green);color:#fff;border-radius:4px;padding:14px;display:grid;gap:8px}
 .cta-box b{font-stretch:80%;font-weight:800;font-size:17px;text-transform:uppercase}
 .cta-box p{margin:0;font-size:14px;opacity:.92}
 .cta-box .btn{background:#fff;color:#1C211C;border-color:#fff;justify-self:start}
 
-/* ---------- workbook (always light, like a real spreadsheet) ---------- */
-.book{--cream:#FFF6D6;--cream-2:#FCEFC0;--bk-ink:#1F2421;--bk-ink-2:#5B6460;--bk-line:#DADFDC;--bk-head:#F3F5F4;
-  background:#fff;color:var(--bk-ink);border:1.5px solid var(--ink);border-radius:4px;overflow:hidden;box-shadow:6px 6px 0 rgba(23,96,63,.18);min-width:0;position:relative;color-scheme:light}
-.ribbon{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--bk-line);background:var(--bk-head);flex-wrap:wrap}
+/* ===== the spreadsheet window (always light, like a real spreadsheet) ===== */
+.sheet{--b:#1E4A2A;--a:#2F7D3A;--s:#E4F1E2;--g:#F5B92E;--c:#FFF6D6;color-scheme:light;background:#fff;color:#1C211C;border:1.5px solid #1C211C;border-radius:6px;overflow:hidden;box-shadow:6px 6px 0 rgba(23,96,63,.2);min-width:0;position:relative}
+.ribbon{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 12px;border-bottom:1px solid #DDE2DA;background:#F6F7F2;flex-wrap:wrap}
 .ribbon .file{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px;min-width:0}
-.ribbon .file i{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:3px;background:var(--t-mid);color:#fff;font-style:normal;font-size:11px;font-weight:800;flex:none}
-.ribbon .file span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.rb-r{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.live{font-family:var(--f-mono);font-size:12px;color:var(--bk-ink-2)}
-.live.flash{color:var(--t-mid);font-weight:600}
-.mini{border:1px solid var(--bk-line);background:#fff;border-radius:3px;padding:3px 8px;font-size:12.5px;font-weight:600;cursor:pointer;color:var(--bk-ink)}
-.mini:hover{border-color:var(--t-mid)}
-.demo-tag{font-family:var(--f-mono);font-size:11px;font-weight:600;color:var(--t-dark);border:1px solid var(--t-dark);border-radius:3px;padding:2px 6px;white-space:nowrap}
-.fx{display:grid;grid-template-columns:70px 28px minmax(0,1fr);align-items:center;border-bottom:1px solid var(--bk-line);font-family:var(--f-mono);font-size:12.5px}
-.fx span{padding:6px 10px;border-right:1px solid var(--bk-line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.fx em{font-style:italic;color:var(--bk-ink-2);text-align:center;border-right:1px solid var(--bk-line);padding:6px 0}
-.hint{font-size:13px;color:var(--bk-ink);padding:7px 12px;background:var(--cream);border-bottom:1px solid var(--bk-line);display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.hint b{white-space:nowrap}
-.view{overflow:auto;height:600px;position:relative;background:#fff}
-table.ss{border-collapse:collapse;font-size:13.5px;min-width:100%}
-.ss th,.ss td{border:1px solid var(--bk-line);padding:4px 8px;white-space:nowrap;height:30px;text-align:left}
-.ss thead th{position:sticky;top:0;background:var(--bk-head);color:var(--bk-ink-2);font-family:var(--f-mono);font-weight:500;font-size:11.5px;z-index:3;text-align:center;height:22px;padding:2px 6px}
-.ss tbody th{position:sticky;left:0;background:var(--bk-head);color:var(--bk-ink-2);font-family:var(--f-mono);font-weight:500;font-size:11.5px;width:36px;min-width:36px;text-align:center;z-index:2;padding:2px}
-.ss td{cursor:cell;max-width:300px;overflow:hidden;text-overflow:ellipsis;position:relative;background:#fff}
-.ss td.sel{outline:2px solid var(--t-mid);outline-offset:-2px;z-index:1}
-.ss td.hd{background:var(--t-dark);color:#fff;font-weight:700;font-size:13px}
-.ss td.n{text-align:right;font-family:var(--f-mono);font-size:13px}
-.ss td.c{text-align:center}
-.ss td.au{color:var(--bk-ink)}
-.ss td.mu{color:var(--bk-ink-2)}
-.ss td.cr{background:var(--cream);padding:0}
-.ss td.cr input,.ss td.cr select{width:100%;height:29px;border:0;background:transparent;padding:0 8px;font-size:13.5px;color:var(--bk-ink);cursor:pointer;outline:none;font-family:var(--f-ui)}
-.ss td.cr input[type=date]{min-width:136px}
-.ss td.cr input[type=number]{width:72px;text-align:right}
-.ss td.cr input::placeholder{color:#A39567;font-style:italic}
-.ss td.cr:focus-within{outline:2px solid var(--t-mid);outline-offset:-2px}
-.ss td.cr select.empty{color:#8D7C46;font-style:italic}
-.ss tr.done td:not(.cr):not(.hd){background:var(--t-pale)}
-.ss tr.done td.num0{color:var(--t-dark);font-weight:700}
-.ss tr.redo td.pk,.ss tr.redo td.sm{background:#E3F0FB!important}
-.ss td .lnk{color:#1A5FB4;text-decoration:underline;cursor:pointer}
-.ss td.late input{color:#B3361F;font-weight:700}
-.ss .chk{color:var(--t-mid);font-weight:800}
-.ss td.cnt{font-weight:700;color:var(--t-dark)}
-/* banner */
-.ss td.bn{padding:0;background:#fff;cursor:default;max-width:none;overflow:visible}
-.bn1,.bn2,.bn3,.bn4{position:sticky;left:37px;width:var(--vw,880px);max-width:var(--vw,880px)}
-.bn1{background:var(--t-dark);color:#fff;display:flex;align-items:center;gap:14px;padding:10px 14px;flex-wrap:wrap}
-.bn1 .tt{font-stretch:80%;font-weight:800;font-size:19px;letter-spacing:.02em;text-transform:uppercase;white-space:normal;line-height:1.15}
-.bn1 .nm{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;margin-left:auto}
-.bn1 .nm input{background:var(--cream);color:var(--bk-ink);border:0;border-radius:2px;padding:4px 8px;width:190px;font-size:13.5px;font-weight:600}
-.bn1 .nm input::placeholder{color:#A39567;font-style:italic;font-weight:500}
-.bn1 .lg{font-size:12px;color:var(--t-acc);font-weight:600;white-space:normal;max-width:360px;line-height:1.5;display:flex;flex-wrap:wrap;gap:0 12px}
-.bn1 .lg span{white-space:nowrap}
-.bn2{background:var(--t-pale);display:flex;flex-wrap:wrap;gap:6px 12px;align-items:flex-end;padding:8px 14px 10px}
-.bn2 .bar{flex:1 1 220px}
-.bn2 .ic{font-size:20px;line-height:1;padding-bottom:3px}
-.bar{position:relative;padding-top:20px}
-.segs{display:grid;grid-template-columns:repeat(20,1fr);gap:3px}
-.segs i{height:18px;background:#fff;border:1px solid var(--t-light);border-radius:2px;position:relative;overflow:hidden}
-.segs i b{position:absolute;inset:0;background:var(--t-mid);transform-origin:left;transition:transform .45s cubic-bezier(.3,.8,.3,1)}
-.segs.warn i b{background:#E0A021}.segs.over i b{background:#C9452C}
-.mk{position:absolute;top:0;transform:translateX(-50%);font-size:15px;line-height:1;color:#C8CFCB;transition:color .3s,transform .3s;white-space:nowrap}
-.mk.on{color:var(--t-acc);text-shadow:0 0 1px rgba(0,0,0,.35);transform:translateX(-50%) scale(1.15)}
-.bn2 .tot{font-family:var(--f-mono);font-weight:600;font-size:14px;color:var(--t-dark);white-space:nowrap;padding-bottom:1px}
-.bn3{padding:7px 14px;font-weight:700;font-size:14px;background:var(--cream);color:var(--bk-ink);white-space:normal}
-.bn3.win{background:var(--t-acc)}
-.bn3.bad{background:#FBE1DA;color:#8E2A18}
-.bn4{display:flex;gap:8px;flex-wrap:wrap;padding:7px 14px;background:#fff}
-.chip{font-size:12.5px;font-weight:700;border-radius:99px;padding:3px 10px;background:var(--t-pale);color:var(--t-dark);border:1px solid var(--t-light);white-space:nowrap}
-.chip.r{background:#FBE6E1;color:#A23420;border-color:#F2C2B6}
-.chip.b{background:#E3F0FB;color:#1E5A92;border-color:#BFD8F0}
-/* other tabs */
-.pad{padding:18px;display:grid;gap:16px;align-content:start;min-width:560px}
-.howto h3{margin:0;background:var(--t-dark);color:#fff;font-stretch:80%;font-weight:800;font-size:19px;letter-spacing:.02em;text-transform:uppercase;padding:10px 14px}
-.howto .lead{margin:0;font-size:14px;color:var(--bk-ink-2)}
-.howto h4{margin:4px 0 0;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--t-dark)}
-.steps{display:grid;gap:0;border:1px solid var(--t-light)}
-.steps div{display:grid;grid-template-columns:40px 190px minmax(0,1fr);border-bottom:1px solid var(--t-light);font-size:13.5px}
-.steps div:last-child{border-bottom:0}
-.steps .no{background:var(--t-mid);color:#fff;font-weight:800;display:grid;place-items:center}
-.steps b,.steps span{padding:8px 10px}
-.steps.cream b{background:var(--cream)}
-.howto ul{margin:0;padding-left:18px;font-size:13.5px;display:grid;gap:4px}
-.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.kpis div{border:1px solid var(--bk-line);border-top:4px solid var(--t-mid);border-radius:4px;padding:10px 12px;background:#fff}
-.kpis span{display:block;font-size:12px;color:var(--bk-ink-2);font-weight:600}
-.kpis b{font-family:var(--f-mono);font-size:22px;font-weight:500;color:var(--bk-ink)}
-.charts{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:12px}
-.chart{border:1px solid var(--bk-line);border-radius:4px;padding:12px;background:#fff}
-.chart.wide{grid-column:1/-1}
-.chart h4{margin:0 0 8px;font-size:12.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--bk-ink-2)}
+.ribbon .file i{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:3px;background:var(--a);color:#fff;font-style:normal;font-size:11px;font-weight:800;flex:none}
+.demo-tag{font-family:var(--f-mono);font-size:11px;font-weight:600;color:#17603F;border:1px solid #17603F;border-radius:3px;padding:2px 6px;white-space:nowrap}
+.live{font-family:var(--f-mono);font-size:12px;color:#7D877E;transition:color .3s}
+.live.flash{color:#17603F;font-weight:600}
+.toolbar{display:flex;gap:16px;align-items:center;flex-wrap:wrap;padding:6px 12px;border-bottom:1px solid #DDE2DA;background:#FBFCF9;font-size:12.5px;font-weight:700;color:#4F5A50}
+.toolbar .dots button{width:20px;height:20px}
+.toolbar .dots button[aria-pressed="true"]{box-shadow:0 0 0 2.5px #1C211C}
+.legend-cells{display:flex;gap:10px;align-items:center;font-weight:600}
+.legend-cells i{display:inline-block;width:14px;height:14px;border:1px solid #D9DED6;border-radius:2px;vertical-align:-2px;margin-right:4px}
+.fx{display:grid;grid-template-columns:70px 28px minmax(0,1fr);align-items:center;border-bottom:1px solid #DDE2DA;font-family:var(--f-mono);font-size:12.5px;background:#fff}
+.fx span{padding:6px 10px;border-right:1px solid #DDE2DA;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fx em{font-style:italic;color:#7D877E;text-align:center;border-right:1px solid #DDE2DA;padding:6px 0}
+.view{overflow:auto;max-height:660px;min-height:440px;background:#fff}
+table.ss{border-collapse:collapse;font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;font-size:13px;min-width:100%}
+.ss thead th{position:sticky;top:0;background:#F3F5F1;color:#7D877E;font:500 11.5px var(--f-mono);border:1px solid #E1E5DE;height:22px;z-index:3;padding:0 6px}
+.ss tbody th{position:sticky;left:0;background:#F3F5F1;color:#7D877E;font:500 11.5px var(--f-mono);border:1px solid #E1E5DE;width:36px;min-width:36px;text-align:center;z-index:2}
+.ss thead th:first-child{left:0;z-index:4}
+.ss td{border:1px solid #E1E5DE;padding:5px 9px;height:32px;white-space:nowrap;max-width:300px;overflow:hidden;text-overflow:ellipsis;position:relative;cursor:cell;vertical-align:middle}
+.ss td.in{background:var(--c)}
+.ss td.in:hover{box-shadow:inset 0 0 0 2px var(--a)}
+.ss td.auto{color:#26302B}
+.ss td.n{text-align:right;font-family:var(--f-mono);font-size:12.5px}
+.ss td.hd{background:var(--a);color:#fff;font-weight:700;text-align:center;font-size:12px;cursor:default}
+.ss td.rn{text-align:center;color:var(--a);font-weight:700;font-size:12px}
+.ss td.sel{outline:2px solid var(--a);outline-offset:-2px}
+.ss td.pick,.ss td.list{padding-right:24px}
+.caret{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:10px;color:#8B8466}
+.ph{color:#A89F7C;font-style:italic}
+.lnk{color:#1A5FB4;text-decoration:underline}
+.ss td.lk{max-width:200px}
+.bn-val{white-space:nowrap}
+.lt{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px}
+.lt.g{background:#2E9A62}.lt.a{background:#E0A021}.lt.r{background:#D6452C}
+.ss td input:not(.cb),.ss td select{width:100%;min-width:110px;border:0;background:#fff;padding:3px 5px;font:13px Arial,sans-serif;outline:2px solid var(--a)}
+.ss td.chk{text-align:center}
+.ss td.chk input{width:17px;height:17px;accent-color:var(--a);cursor:pointer}
+.rate button{border:0;background:none;padding:0 1px;font-size:16px;line-height:1;color:#DCD3AE;cursor:pointer}
+.rate button.on{color:var(--g)}
+.rate button:disabled{cursor:default}
+tr.late td{background:#FCE4DF}
+tr.late td.in{background:#FAD6CE}
+tr.fl td.auto{animation:fl 1.2s ease-out}
+@keyframes fl{0%{background:var(--g)}100%{background:#fff}}
+/* banner dashboard rows */
+.bn td{background:var(--b);color:#fff;border-color:var(--b);cursor:default;white-space:normal}
+.bn-title{font-family:var(--f-ui);font-stretch:78%;font-weight:800;font-size:21px;letter-spacing:.02em;height:54px}
+.bn-title .ico{margin-right:9px;font-size:20px}
+.bn-title small{font-size:16px;font-weight:700;color:var(--g)}
+.bn-name label{display:flex;gap:8px;align-items:center;font-weight:700;font-size:13px}
+.bn-name input{flex:1;min-width:110px;background:var(--c);border:2px solid var(--g);border-radius:4px;padding:6px 9px;font:600 14px Arial,sans-serif;color:#3A3200}
+.bn-leg{font-size:11.5px;line-height:1.45;text-align:center;color:#EDF2EC}
+.bn-leg b{color:var(--g)}
+.bn2 td{height:46px}
+.bn2 .bn-bar{background:var(--s);padding:6px 18px}
+.pbar{position:relative;height:20px;border-radius:10px;background:#fff;border:1.5px solid rgba(0,0,0,.1)}
+.pfill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--a),var(--g));transition:width .5s;min-width:4px}
+.pfill.warn{background:linear-gradient(90deg,#E0A021,#D6452C)}
+.pstar{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:25px;color:#C5CBC3;text-shadow:0 1px 0 #fff;line-height:1;transition:color .3s}
+.pstar.on{color:var(--g);text-shadow:0 0 1px #6b5200,0 1px 3px rgba(0,0,0,.3)}
+.pstar.pop{animation:pop .8s}
+@keyframes pop{40%{transform:translate(-50%,-50%) scale(1.9) rotate(18deg)}}
+.ptxt{position:absolute;left:9px;top:50%;transform:translateY(-50%);font:700 11px var(--f-mono);color:#1C211C}
+.bn-val{font:800 18px var(--f-ui);font-stretch:85%;text-align:center}
+.bn-val small{display:block;font:600 11px Arial,sans-serif;color:#CFE0D2;margin-top:2px}
+.bn3 td{padding:3px 10px 8px;height:auto}
+.kchips{display:flex;gap:6px;flex-wrap:wrap}
+.kchips span{background:rgba(255,255,255,.14);border-radius:99px;padding:3px 10px;font-size:12px;font-weight:700}
+.kchips span.r{background:#D6452C}
+.kchips span.g{background:var(--g);color:#2A2000}
+.tip td{background:#FFF1C2;color:#3A2F00;font-size:12px;font-weight:600;white-space:normal;cursor:default;line-height:1.4}
+.tabs{display:flex;gap:2px;border-top:1px solid #DDE2DA;background:#F6F7F2;padding:0 8px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;color:#4F5A50;white-space:nowrap;display:flex;gap:6px;align-items:center}
+.tabs button[aria-selected="true"]{background:#fff;color:var(--a);border-bottom-color:var(--a)}
+.tabs .auto{font-family:var(--f-mono);font-size:10px;color:#17603F;background:#E3F0E8;border-radius:3px;padding:0 4px}
+.tabs .cnt{font-family:var(--f-mono);font-size:11px;background:#1C211C;color:#fff;border-radius:8px;padding:0 6px}
+.tabs .cnt.bump{animation:bump .6s}
+@keyframes bump{40%{transform:scale(1.4);background:var(--a)}}
+.tabs .sw{width:9px;height:9px;border-radius:2px;background:var(--a)}
+/* dashboard tab */
+.dash{padding:0 0 16px}
+.dash-top{background:var(--b);color:#fff;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.dash-top h3{margin:0;font-stretch:78%;font-weight:800;font-size:21px;letter-spacing:.02em}
+.dash-top span{font:600 12px var(--f-mono);color:#D7E4D9}
+.kp{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;padding:14px 16px 4px}
+.kp div{border:1.5px solid #E1E5DE;border-top:5px solid var(--a);border-radius:4px;padding:9px 12px;background:#fff}
+.kp span{display:block;font-size:11.5px;color:#6B756C;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.kp b{font:600 22px var(--f-mono)}
+.kp b.r{color:#C23B22}
+.charts{display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:12px;padding:10px 16px 0}
+.chart{border:1.5px solid #E1E5DE;border-radius:4px;padding:12px;background:#fff;min-width:0}
+.chart h4{margin:0 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#4F5A50;font-family:var(--f-ui)}
 .chart svg{width:100%;height:auto;display:block}
-.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:12px;color:var(--bk-ink-2);margin-top:6px}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
-.empty{padding:40px 24px;color:var(--bk-ink-2);text-align:center;font-size:14.5px}
-.note{font-size:12.5px;color:var(--bk-ink-2);margin:0}
-.tabs{display:flex;gap:2px;border-top:1px solid var(--bk-line);background:var(--bk-head);padding:0 8px;overflow-x:auto}
-.tabs button{border:0;background:none;padding:7px 12px 6px;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;color:var(--bk-ink-2);white-space:nowrap;display:flex;gap:6px;align-items:center}
-.tabs button[aria-selected="true"]{background:#fff;color:var(--t-dark);border-bottom-color:var(--t-mid)}
-.tabs .auto{font-family:var(--f-mono);font-size:10px;color:var(--t-dark);background:var(--t-pale);border:1px solid var(--t-light);border-radius:3px;padding:0 4px}
-.tabs .cnt{font-family:var(--f-mono);font-size:11px;background:var(--bk-ink);color:#fff;border-radius:8px;padding:0 6px}
-.tabs .cnt.bump{animation:bump .5s}
-@keyframes bump{40%{transform:scale(1.35);background:var(--t-mid)}}
-.confetti{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:6}
-.confetti i{position:absolute;top:-14px;width:9px;height:14px;border-radius:2px;animation:fall 1.6s cubic-bezier(.25,.6,.4,1) forwards}
-@keyframes fall{to{transform:translate(var(--dx),640px) rotate(var(--r));opacity:.2}}
-.pop{position:absolute;left:50%;top:38%;transform:translate(-50%,-50%) scale(.6);background:var(--t-dark);color:#fff;font-weight:800;font-stretch:80%;font-size:24px;padding:14px 22px;border-radius:6px;box-shadow:0 10px 30px rgba(0,0,0,.25);z-index:7;opacity:0;pointer-events:none;text-transform:uppercase;letter-spacing:.02em;text-align:center}
-.pop.show{animation:popin 1.8s ease forwards}
-.pop small{display:block;font-size:13px;font-weight:600;text-transform:none;letter-spacing:0;color:var(--t-acc);margin-top:2px}
-@keyframes popin{12%{opacity:1;transform:translate(-50%,-50%) scale(1.05)}20%{transform:translate(-50%,-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-50%) scale(1)}}
-
-.below{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}
-.below div{background:var(--surface);border:1.5px solid var(--line);border-radius:4px;padding:10px 12px;font-size:13.5px;color:var(--ink-2)}
-.below b{display:block;font-size:14px;margin-bottom:2px;color:var(--ink)}
-.built{padding-block:30px 8px;border-top:1.5px solid var(--ink);margin-top:14px}
-.built h2,.more h2{font-stretch:70%;font-weight:800;text-transform:uppercase;font-size:clamp(1.8rem,4vw,2.6rem);line-height:1;margin:0 0 6px}
-.built>p,.more>p{color:var(--ink-2);max-width:68ch;margin:0 0 18px}
-.real{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.realc{background:var(--surface);border:1.5px solid var(--line);border-radius:4px;overflow:hidden}
-.realc .top-band{padding:12px 16px;color:#fff;font-weight:800;font-stretch:80%;text-transform:uppercase;font-size:17px;letter-spacing:.02em}
-.realc .body{padding:14px 16px;display:grid;gap:8px;font-size:14.5px;color:var(--ink-2)}
-.realc ul{margin:0;padding-left:18px;display:grid;gap:3px}
-.realc .tagline{font-family:var(--f-mono);font-size:12px;color:var(--ink-3)}
+.chart.wide{grid-column:1/-1}
+.chart svg.ring{max-width:220px;margin:0 auto}
+.chart svg text{font-family:Arial,"Helvetica Neue",sans-serif}
+.gstar{color:var(--g)}
+.ring-stars{text-align:center;font-size:24px;letter-spacing:2px;color:#C5CBC3;margin-top:4px}
+.ring-stars b{color:var(--g);font-weight:400}
+.lb{display:grid;gap:6px}
+.lb-row{display:grid;grid-template-columns:28px 30px minmax(70px,.8fr) minmax(90px,1.4fr) auto auto;gap:10px;align-items:center;font-size:13.5px;padding:6px 8px;border-radius:4px;background:#FAFBF8;border:1px solid #EEF1EC}
+.lb-row .rk{font-size:17px;text-align:center}
+.lb-row .av{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;color:#fff;font-weight:800;font-size:12px}
+.lb-row .tr{height:10px;border-radius:5px;background:#EEF1EC;overflow:hidden}
+.lb-row .tr i{display:block;height:100%;background:linear-gradient(90deg,var(--a),var(--g))}
+.lb-row .v{font:600 12.5px var(--f-mono)}
+.lb-row .st{color:var(--g);letter-spacing:1px;white-space:nowrap}
+.lb-row .st i{font-style:normal;color:#D5DAD3}
+.note{margin:12px 16px 0;font-size:12.5px;color:#6B756C}
+/* how to use tab */
+.how{padding:0 0 20px}
+.how-top{background:var(--b);color:#fff;padding:16px 20px}
+.how-top h3{margin:0;font-stretch:78%;font-weight:800;font-size:23px;letter-spacing:.02em}
+.how-top p{margin:4px 0 0;color:#D7E4D9;font-size:14px}
+.how h4{margin:18px 20px 8px;color:var(--a);font-size:13px;text-transform:uppercase;letter-spacing:.08em}
+.steps{display:grid;gap:6px;padding:0 20px;max-width:760px}
+.stp{display:grid;grid-template-columns:44px 1fr;border:1.5px solid #E1E5DE;border-radius:4px;overflow:hidden;background:#fff}
+.stp b{background:var(--a);color:#fff;display:grid;place-items:center;font:800 20px var(--f-ui)}
+.stp div{padding:9px 12px;font-size:13.5px}
+.stp div strong{display:block;font-size:14px;color:var(--b)}
+.boxes{margin:0 20px;border-collapse:collapse;font-size:13.5px;max-width:760px;width:calc(100% - 40px)}
+.boxes td{border:1px solid #E1E5DE;padding:7px 10px;vertical-align:top}
+.boxes td:first-child{background:var(--c);font-weight:700;width:34%}
+.know{margin:0 20px;padding-left:20px;font-size:13.5px;display:grid;gap:5px;max-width:760px}
+.keyrow{display:flex;gap:16px;flex-wrap:wrap;margin:0 20px;font-size:13px;font-weight:600}
+.keyrow span{display:flex;gap:6px;align-items:center}
+.keyrow i{width:18px;height:18px;border:1px solid #D9DED6;border-radius:2px;display:inline-block}
+.empty{padding:28px;color:#6B756C;text-align:center}
+.confetti{position:absolute;top:-12px;width:9px;height:14px;border-radius:2px;pointer-events:none;z-index:9;animation:fall 1.8s ease-in forwards}
+@keyframes fall{to{transform:translateY(620px) rotate(560deg);opacity:.2}}
+.autos{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-top:16px}
+.autos div{background:var(--surface);border:1.5px solid var(--line);border-radius:4px;padding:10px 12px;font-size:13.5px}
+.autos b{display:block;font-size:14px;margin-bottom:2px}
+.inspired{padding-block:30px 8px;border-top:1.5px solid var(--ink);margin-top:12px}
+.inspired h2,.more h2{font-stretch:70%;font-weight:800;text-transform:uppercase;font-size:clamp(1.8rem,4vw,2.6rem);line-height:1;margin:0 0 6px}
+.inspired>p,.more>p{color:var(--ink-2);max-width:68ch;margin:0 0 18px}
+.ins-cards{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.ins-card{background:var(--surface);border:1.5px solid var(--line);border-radius:4px;padding:16px;display:grid;gap:8px}
+.ins-card .k{font-family:var(--f-mono);font-size:12px;color:var(--green);font-weight:600}
+.ins-card b{font-size:17px}
+.ins-card p{margin:0;font-size:14.5px;color:var(--ink-2)}
+.ins-card ul{margin:0;padding-left:18px;font-size:14px;color:var(--ink-2);display:grid;gap:3px}
 .more{padding-block:30px 56px}
 .cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
 .card{background:var(--surface);border:1.5px solid var(--line);border-radius:4px;padding:16px;display:grid;gap:6px;align-content:start}
@@ -222,115 +258,124 @@ table.ss{border-collapse:collapse;font-size:13.5px;min-width:100%}
 .bigcta{margin-top:24px;background:var(--surface);border:2px solid var(--ink);border-radius:4px;padding:24px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center;box-shadow:7px 7px 0 var(--green)}
 .bigcta h3{margin:0;font-stretch:72%;font-weight:800;text-transform:uppercase;font-size:clamp(1.6rem,3.4vw,2.3rem);line-height:1}
 .bigcta p{margin:8px 0 0;color:var(--ink-2)}
-.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:4px;font-weight:600;font-size:14px;z-index:9;transition:opacity .3s;max-width:calc(100% - 32px)}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1C211C;color:#fff;padding:10px 16px;border-radius:4px;font-weight:700;font-size:14.5px;z-index:20;transition:opacity .3s;max-width:calc(100% - 32px);box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .toast.gone{opacity:0;pointer-events:none}
-@media (max-width:1120px){.bench{grid-template-columns:minmax(0,1fr)}.hero{grid-template-columns:1fr}.below{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr}}
-@media (max-width:700px){.real{grid-template-columns:1fr}.cards,.below{grid-template-columns:1fr}.bigcta{grid-template-columns:1fr}.themes{grid-template-columns:1fr 1fr}.kpis{grid-template-columns:1fr 1fr}.charts{grid-template-columns:1fr}.noai{grid-template-columns:1fr}.view{height:520px}}
+@media (max-width:1150px){.bench{grid-template-columns:minmax(0,1fr)}.hero{grid-template-columns:1fr}.autos{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr}}
+@media (max-width:700px){.charts{grid-template-columns:1fr}.ins-cards{grid-template-columns:1fr}.bigcta{grid-template-columns:1fr}.lb-row{grid-template-columns:24px 28px minmax(60px,1fr) auto;}.lb-row .tr,.lb-row .st{display:none}}
+@media (max-width:560px){.cards,.autos{grid-template-columns:1fr}.two{grid-template-columns:1fr}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
 <header class="wrap top">
-  <a class="logo" href="./"><i aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></i><span><b>Sheet Studio</b><small>Designed &amp; coded by Bianca Augustin</small></span></a>
-  <nav><a href="../../">← Portfolio</a><a href="#built">Spreadsheets I've built</a><a class="btn primary sm" href="mailto:bianca.augustin0318@gmail.com?subject=Custom%20spreadsheet">Request a custom spreadsheet</a></nav>
+  <a class="logo" href="./"><i aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></i><span><b>Sheet Studio</b><small>Designed &amp; hand-coded by Bianca Augustin</small></span></a>
+  <nav><a href="../../">← Portfolio</a><a href="#inspired">Real sheets I've built</a><a class="btn primary sm" href="mailto:bianca.augustin0318@gmail.com?subject=Custom%20spreadsheet">Request a custom spreadsheet</a></nav>
 </header>
 
 <main class="wrap">
   <section class="hero">
     <div>
-      <h1>Spreadsheets people<br><span>actually enjoy using.</span></h1>
-      <p>Describe what you want to track, and Sheet Studio builds a live workbook in my style: a dashboard across the top, rewards that light up as you go, cream cells for the few things you type, and tabs that fill themselves in. Pick a color theme and play with it.</p>
+      <h1>Spreadsheets that are fun<br><span>and do the work for you.</span></h1>
+      <p>Describe what you need in plain words. Sheet Studio builds a live, colorful spreadsheet with a dashboard at the top, stars that light up as goals fill, dropdowns that fill in the details, and tabs that update themselves. Edit any cream cell and watch everything recalculate.</p>
     </div>
     <aside class="credit" aria-label="About this tool">
-      <span class="k">I built this builder</span>
-      <h2>Want a spreadsheet made just for your team?</h2>
-      <p>Sheet Studio is a sample of what I make. I'm happy to design a unique spreadsheet around how your team actually works: easy to follow, nice to look at, and automated so nobody has to think about formulas.</p>
+      <span class="k">I built this builder · no AI</span>
+      <h2>Want a spreadsheet made for your team?</h2>
+      <p>Sheet Studio shows the kind of spreadsheets I design: easy to follow, visually appealing, and automated so everything is easy to find. I'm happy to build one around your exact process.</p>
       <div class="row"><a class="btn primary" href="mailto:bianca.augustin0318@gmail.com?subject=Custom%20spreadsheet">Email me about your project</a><a class="btn" href="https://www.linkedin.com/in/bianca-augustin-6a15b3177/">LinkedIn</a></div>
       <span class="mail">bianca.augustin0318@gmail.com</span>
     </aside>
   </section>
 
-  <aside class="noai" aria-label="How Sheet Studio works">
-    <span class="tag">NO AI INSIDE</span>
-    <p><b>Sheet Studio doesn't use AI.</b> I coded it myself in JavaScript. It reads your description for the words and phrases I taught it (like <i>lessons</i>, <i>due dates</i>, <i>stars</i>, or <i>a $5,000 budget</i>), turns each one into a build command, and runs those commands to assemble the workbook. The build log shows every command it ran.</p>
-  </aside>
+  <div class="noai-strip"><span>NO AI INSIDE</span><p><b>Sheet Studio doesn't use AI.</b> I coded it myself in JavaScript. It reads your description for words and phrases I taught it (like <i>lessons</i>, <i>due dates</i>, <i>stars</i>, or <i>a $5,000 budget</i>), turns each one into a build command, and runs those commands to build the spreadsheet. The build log under the description box shows every command it ran.</p></div>
 
   <section class="bench">
     <div class="panel" aria-label="Spreadsheet builder">
       <div class="step">
-        <h2><i>01</i>Describe what you want to track</h2>
+        <h2><i>01</i>Describe what you need</h2>
         <label for="desc" style="position:absolute;left:-9999px">Describe your spreadsheet</label>
-        <textarea id="desc">A self-paced lessons tracker for my new hire class with a 300 minute goal, links, summaries, and 5 stars.</textarea>
+        <textarea id="desc">Lesson tracker for Ana, Ben, and Cara with a goal of 1,360 minutes, 5 stars, due dates, ratings, and a dashboard in green</textarea>
         <div class="ex" aria-label="Examples">
-          <button data-ex="A reading log for my 4th grade class with a goal of 1,500 pages, stars, and notes. Make it purple.">Reading log</button>
-          <button data-ex="Project tasks for our website launch with owners, due dates, priority, and badges. Use blue.">Team project</button>
-          <button data-ex="Department budget of $4,000 with categories, dates, and notes in green">Budget</button>
-          <button data-ex="Volunteer hours log with a 30 hour goal and badges, make it orange">Volunteer hours</button>
-          <button data-ex="A workout challenge with a 600 minute goal, levels, and notes. Make it pink!">Workout challenge</button>
-          <button data-ex="Assignment tracker for my biology class with due dates, grades, and 5 stars in teal">Assignments</button>
+          <button data-ex="Lesson tracker for Ana, Ben, and Cara with a goal of 1,360 minutes, 5 stars, due dates, ratings, and a dashboard in green">Lessons with stars</button>
+          <button data-ex="Project tasks for our website launch with due dates, priority, and notes in purple">Project tasks</button>
+          <button data-ex="Marketing budget of $8,000 with categories and a spending dashboard in blue">Budget</button>
+          <button data-ex="Reading challenge for 12 books with ratings and notes, called Summer Reading Challenge, in pink">Reading challenge</button>
+          <button data-ex="Volunteer hours for my club with a 40 hour goal for each member: Maya, Leo, Sam, and Priya, in orange">Volunteer hours</button>
+          <button data-ex="Sales tracker with a $50,000 goal, 10 stars, and a leaderboard for Jordan and Riley">Sales goal</button>
+          <button data-ex="Office supply inventory with reorder alerts and an order list in gray">Inventory</button>
+          <button data-ex="Track my plant watering with notes and 🌱">Anything else</button>
         </div>
         <button class="btn primary" id="build">Build my spreadsheet</button>
-        <div class="log" id="log" aria-live="polite"></div>
-        <details class="cmds">
-          <summary>Words Sheet Studio understands</summary>
-          <dl>
-            <dt>What</dt><dd>lessons, courses, books, reading, tasks, project, budget, expenses, volunteer hours, workouts, assignments, grades</dd>
-            <dt>Goal</dt><dd>"300 minute goal", "goal of 1,500 pages", "budget of $4,000", "20 books"</dd>
-            <dt>Rewards</dt><dd>stars, badges, levels, "progress bar only"</dd>
-            <dt>Columns</dt><dd>due dates, owners, assigned, grades, scores, notes, links, summaries, priority</dd>
-            <dt>Colors</dt><dd>teal, green, purple, orange, blue, pink</dd>
-            <dt>Size &amp; title</dt><dd>"15 rows", "for my 4th grade class", "called Summer Reading Bingo"</dd>
-          </dl>
-        </details>
+        <div class="noai">
+          <span aria-hidden="true" style="font-size:20px">🛠️</span>
+          <div><b>No AI here. I coded this.</b>Sheet Studio is a rule-based builder I wrote in JavaScript. It scans your description for words it knows and runs the matching build commands, so the same words always build the same spreadsheet.
+            <details><summary>Words it understands</summary>
+              <ul class="cmds">
+                <li><b>What to track:</b> <code>lessons</code> <code>tasks</code> <code>budget</code> <code>inventory</code> <code>books</code> <code>workouts</code> <code>volunteer hours</code> <code>sales</code>, or anything ("track my plants")</li>
+                <li><b>Goal:</b> <code>goal of 600 minutes</code> <code>$8,000 budget</code> <code>12 books</code> <code>40 hours</code></li>
+                <li><b>People:</b> <code>for Ana, Ben, and Cara</code> gives each a tab plus a leaderboard. <code>my 20-person team</code> adds a Person column.</li>
+                <li><b>Stars:</b> <code>5 stars</code> <code>milestones</code> <code>no stars</code></li>
+                <li><b>Columns:</b> <code>due dates</code> <code>priority</code> <code>ratings</code> <code>notes</code> <code>links</code> <code>categories</code> <code>status</code></li>
+                <li><b>Tabs:</b> <code>dashboard</code> <code>log</code> <code>instructions</code>, or turn them off with <code>without dashboard</code></li>
+                <li><b>Look:</b> <code>green</code> <code>blue</code> <code>pink</code> <code>orange</code> <code>purple</code> <code>gray</code>, any emoji, <code>called "Title"</code></li>
+              </ul>
+            </details>
+          </div>
+        </div>
+        <div class="term" aria-live="polite"><div class="hd" id="cmdHead"></div><div id="cmdlog"></div></div>
       </div>
       <div class="step">
-        <h2><i>02</i>Style it</h2>
-        <span class="f-label">Color theme</span>
-        <div class="themes" id="themes" role="group" aria-label="Color theme"></div>
-        <span class="f-label">Rewards</span>
-        <div class="seg" id="rewards" role="group" aria-label="Reward style"></div>
-        <span class="f-label">Automations</span>
-        <div class="feats" id="feats"></div>
+        <h2><i>02</i>Adjust it</h2>
+        <div class="grp"><span class="lbl">Type</span><div class="chips" id="types" role="group" aria-label="Spreadsheet type"></div></div>
+        <div class="two">
+          <label class="f">Title<input type="text" id="titleIn" maxlength="48"></label>
+          <label class="f">People (comma-separated)<input type="text" id="peopleIn" placeholder="e.g. Ana, Ben, Cara"></label>
+        </div>
+        <div class="two">
+          <label class="f"><span id="goalLbl">Goal</span><input type="number" id="goalIn" min="0" step="any"></label>
+          <label class="f">Stars<select id="starsIn"><option>3</option><option>4</option><option>5</option><option>6</option><option>8</option><option>10</option></select></label>
+        </div>
+        <div class="grp"><span class="lbl">Automations</span><div class="feats" id="feats"></div></div>
+        <div class="grp"><span class="lbl">Theme</span><div class="dots" id="themes" role="group" aria-label="Theme"></div></div>
+        <div class="grp"><span class="lbl">Icon</span><div class="icons" id="icons" role="group" aria-label="Icon"></div></div>
+        <div class="range"><label for="rows">Rows per tab</label><input type="range" id="rows" min="5" max="20" step="1" value="10"><b id="rowsOut">10</b></div>
+        <label class="feat" style="padding-left:0"><input type="checkbox" id="sampleIn" checked><span><b>Start with sample rows</b><small>Turn off to start with blank cream cells</small></span></label>
       </div>
       <div class="step">
         <h2><i>03</i>Make it yours</h2>
         <div class="cta-box">
           <b>This is a live demo</b>
-          <p>Everything in the preview works, but downloads are turned off. I build real versions in Excel or Google Sheets around your team's exact process.</p>
+          <p>Everything here is interactive, but downloads are turned off. I'll build a custom version around your team's real process, in Excel, Google Sheets, or as a web tool like this one.</p>
           <a class="btn" href="mailto:bianca.augustin0318@gmail.com?subject=Custom%20spreadsheet">Request a custom spreadsheet</a>
         </div>
       </div>
     </div>
 
     <div>
-      <div class="book" id="book">
-        <div class="ribbon"><span class="file"><i>X</i><span id="fname"></span></span><span class="rb-r"><span class="live" id="live">Live preview</span><button class="mini" id="blank">Start blank</button><button class="mini" id="sample">Sample data</button><span class="demo-tag">DEMO · BY BIANCA AUGUSTIN</span></span></div>
-        <div class="fx"><span id="cellRef">A1</span><em>fx</em><span id="cellVal">Select any cell to see the formula behind it</span></div>
-        <div class="hint" id="hint"><b>Fill in the cream cells.</b><span>Everything else is automatic.</span><span id="hint2"></span></div>
+      <div class="sheet" id="sheet">
+        <div class="ribbon"><span class="file"><i>X</i><span id="fname"></span></span><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="live" id="live">Live preview</span><span class="demo-tag">DEMO · HAND-CODED BY BIANCA AUGUSTIN</span></span></div>
+        <div class="toolbar"><span style="display:flex;gap:8px;align-items:center">🎨 Theme <span class="dots" id="themes2" role="group" aria-label="Theme"></span></span><span class="legend-cells"><span><i style="background:var(--c)"></i>You type</span><span><i style="background:#fff"></i>Automatic</span></span></div>
+        <div class="fx"><span id="cellRef">A1</span><em>fx</em><span id="cellVal">Click any cell to see the formula behind it</span></div>
         <div class="view" id="view"></div>
         <div class="tabs" id="tabs" role="tablist" aria-label="Sheets"></div>
-        <div class="confetti" id="confetti"></div>
-        <div class="pop" id="pop"></div>
       </div>
-      <div class="below" aria-label="What this demo shows">
-        <div><b>Dashboard up top</b>A progress bar, rewards, and a live message that updates with every entry.</div>
-        <div><b>Pick, don't type</b>Choose from a dropdown, and the details fill themselves in from the library tab.</div>
-        <div><b>Tabs that fill themselves</b>Needs attention, summary, and charts rebuild on every edit.</div>
-        <div><b>Little celebrations</b>Rows turn color when done, and milestones set off confetti.</div>
+      <div class="autos" aria-label="What's automated">
+        <div><b>Dashboard at the top</b>A progress bar, totals, and stars that light up at each milestone, with a celebration.</div>
+        <div><b>Dropdowns that fill in</b>Pick an item and its details pull in from the Library tab. Change the Library and every row updates.</div>
+        <div><b>Tabs that build themselves</b>A tab for each person, a Dashboard with a leaderboard, and a log that fills itself.</div>
+        <div><b>Instructions included</b>A How to Use tab written from your choices, plus cream cells that show where to type.</div>
       </div>
     </div>
   </section>
 
-  <section class="built" id="built">
-    <h2>Spreadsheets I've built</h2>
-    <p>Sheet Studio borrows its style from real spreadsheets I've designed for courses. Both follow the same rules: the cream cells are the only ones you touch, everything else is automatic, and the important numbers sit right at the top.</p>
-    <div class="real">
-      <div class="realc"><div class="top-band" style="background:#0A4D68">Course time calculator</div>
-        <div class="body"><span class="tagline">Higher education · faculty and instructional designers</span>
-          <ul><li>Numbered setup sections: course details, exams, module goals, progress</li><li>Pick an activity type and enter an amount; minutes calculate themselves from a rate table</li><li>Fourteen module tabs roll up into one overview with direct and indirect minutes</li><li>Status turns green when the course meets its required time</li></ul></div></div>
-      <div class="realc"><div class="top-band" style="background:#1E3F1A">Gamified lesson tracker</div>
-        <div class="body"><span class="tagline">Law school course · students</span>
-          <ul><li>A How to Use tab with step-by-step directions</li><li>Choose a lesson from a dropdown; its link, summary, and minutes fill in</li><li>A star bar across the top lights up as submitted minutes add up</li><li>Rows turn green when submitted, and repeat lessons are flagged as redos</li></ul></div></div>
+  <section class="inspired" id="inspired">
+    <h2>Modeled on real spreadsheets I've built</h2>
+    <p>Sheet Studio borrows the patterns from spreadsheets I've designed for real courses and programs. They have the same idea: fill in the cream cells, and everything else is automatic.</p>
+    <div class="ins-cards">
+      <div class="ins-card"><span class="k">COURSE PLANNING</span><b>Course hours calculator</b><p>An overview dashboard that rolls up more than a dozen module tabs, so an instructional designer can see goals, progress, and what's still needed for a whole course at a glance.</p>
+        <ul><li>Numbered setup sections with cream input cells</li><li>Module tabs that feed one overview automatically</li><li>Progress and "still needed" status that update as you plan</li></ul></div>
+      <div class="ins-card"><span class="k">GAMIFIED TRACKING</span><b>Lesson tracker with stars</b><p>Students pick a lesson from a dropdown and the link, summary, and minutes fill themselves in. A progress bar fills and five stars light up as they log their minutes.</p>
+        <ul><li>A step-by-step How to Use tab</li><li>Dropdowns that pull details from a lessons list</li><li>A dashboard banner with a name box, progress bar, and stars</li></ul></div>
     </div>
   </section>
 
@@ -338,13 +383,13 @@ table.ss{border-collapse:collapse;font-size:13.5px;min-width:100%}
     <h2>What I can build for your team</h2>
     <p>If people keep fighting the same spreadsheet, a well-designed one usually helps more than another training session.</p>
     <div class="cards">
-      <div class="card"><span class="k">TRACKERS</span><b>Progress &amp; compliance trackers</b><p>Assignments that flag who's overdue, roll up by team, and celebrate finishing.</p></div>
-      <div class="card"><span class="k">CALCULATORS</span><b>Planning calculators</b><p>Enter a few details and get time, cost, or workload calculated by rules you set.</p></div>
-      <div class="card"><span class="k">DASHBOARDS</span><b>One-glance dashboards</b><p>The numbers a manager actually asks for, right at the top of the sheet.</p></div>
-      <div class="card"><span class="k">TEMPLATES</span><b>Reusable templates</b><p>Clear directions, protected formulas, and cream cells so anyone can use it.</p></div>
+      <div class="card"><span class="k">TRACKERS</span><b>Progress &amp; goal trackers</b><p>Learning hours, certifications, or goals with dashboards, stars, and leaderboards.</p></div>
+      <div class="card"><span class="k">CALCULATORS</span><b>Planning calculators</b><p>Fill in a few cells and get totals, requirements, and what's still needed, by section.</p></div>
+      <div class="card"><span class="k">REPORTS</span><b>Self-building reports</b><p>Raw exports turned into a clean summary tab that updates itself every time.</p></div>
+      <div class="card"><span class="k">JOB AIDS</span><b>Guided templates</b><p>Built-in instructions, dropdowns, and color cues so anyone can use it on day one.</p></div>
     </div>
     <div class="bigcta">
-      <div><h3>Let's build a spreadsheet your team will like using.</h3><p>Tell me what you're tracking and what keeps going wrong. I'll design something simple, fun, and automated.</p></div>
+      <div><h3>Let's build the spreadsheet your team actually wants to use.</h3><p>Tell me what you're tracking and what keeps going wrong. I'll design something fun, clear, and automated.</p></div>
       <div style="display:grid;gap:8px;justify-items:start"><a class="btn primary" href="mailto:bianca.augustin0318@gmail.com?subject=Custom%20spreadsheet">Email me</a><span class="mail">bianca.augustin0318@gmail.com</span><a href="../../">Back to my portfolio</a></div>
     </div>
   </section>
@@ -352,370 +397,490 @@ table.ss{border-collapse:collapse;font-size:13.5px;min-width:100%}
 <div class="toast gone" id="toast" role="status" aria-live="polite"></div>
 
 <script>
-/* Sheet Studio · rule-based spreadsheet builder · © Bianca Augustin. No AI: keyword rules → build commands. */
+/* Sheet Studio: a rule-based spreadsheet builder, hand-coded by Bianca Augustin. No AI: keywords map to build commands. */
 const $=s=>document.querySelector(s);
-const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const TODAY=new Date();TODAY.setHours(0,0,0,0);const DAY=864e5;
+let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return (seed-1)/2147483646};
+const pickR=a=>a[Math.floor(rnd()*a.length)];
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const cap=s=>s?s.charAt(0).toUpperCase()+s.slice(1):"";
+const tcase=s=>String(s).replace(/(^|[\s-])([a-z])/g,(m,a,b)=>a+b.toUpperCase());
+const sing=w=>/ies$/.test(w)?w.slice(0,-3)+"y":/(ss|us|is)$/.test(w)?w:/s$/.test(w)?w.slice(0,-1):w;
+const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"");
+const letter=i=>{let s="";i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26)}return s};
 const fmtD=d=>d?d.toLocaleDateString("en-US",{month:"short",day:"numeric"}):"";
-const iso=d=>d?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`:"";
-const fromIso=v=>{if(!v)return null;const[y,m,d]=v.split("-").map(Number);return new Date(y,m-1,d)};
-const fmtN=n=>Number(n||0).toLocaleString("en-US",{maximumFractionDigits:1});
-const L=i=>{let s="";i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26)}return s};
-let seed=7;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};
-const cap=s=>s.replace(/\b[a-z]/g,c=>c.toUpperCase());
+const num=(v,dp)=>Number(v||0).toLocaleString("en-US",{maximumFractionDigits:dp??1});
+function fmtU(v,unit,short){if(unit==="dollars")return "$"+num(v,0);if(unit==="minutes")return num(v,0)+(short?" min":" minutes");if(unit==="hours")return num(v,1)+(short?" hrs":" hours");return num(v,1)+" "+unit}
+const stepOf=u=>u==="minutes"?5:u==="hours"?.5:u==="pages"?10:u==="dollars"?50:u==="steps"?500:1;
+const nice=(v,u)=>{const s=stepOf(u);return Math.max(s,Math.round(v/s)*s)};
+const PEOPLE_POOL=["Ana","Ben","Cara","Dev","Elle","Finn","Gia","Hugo"];
+const AVC=["#2F7D3A","#176A8E","#AE2F5E","#C2410C","#6D3BC8","#475569"];
 
-/* ---------------- themes ---------------- */
-const THEMES={
-  harbor:{n:"Harbor",dark:"#0A4D68",mid:"#1A7FA3",light:"#BFDDE9",pale:"#EAF4F8",acc:"#F7D564"},
-  forest:{n:"Forest",dark:"#1E3F1A",mid:"#439639",light:"#CFE6CA",pale:"#EEF7EC",acc:"#F5C518"},
-  plum:{n:"Plum",dark:"#3E1A5B",mid:"#7B3FA8",light:"#E0D0EE",pale:"#F5EEFB",acc:"#FFC94D"},
-  coral:{n:"Sunset",dark:"#7A2617",mid:"#E0603F",light:"#F6D2C6",pale:"#FDF1EC",acc:"#FFD166"},
-  ocean:{n:"Ocean",dark:"#0B2F5B",mid:"#2F7FD1",light:"#CFE1F6",pale:"#EEF5FC",acc:"#FFCF4A"},
-  bubble:{n:"Bubblegum",dark:"#7A1E4E",mid:"#DB4F92",light:"#F6D0E3",pale:"#FDEFF6",acc:"#FFD23F"}};
+const THEMES={forest:{n:"Forest",b:"#1E4A2A",a:"#2F7D3A",s:"#E4F1E2",g:"#F5B92E",c:"#FFF6D6"},ocean:{n:"Ocean & gold",b:"#0B4560",a:"#176A8E",s:"#E1EFF5",g:"#F6C445",c:"#FFF7DD"},berry:{n:"Berry",b:"#6B1A40",a:"#AE2F5E",s:"#FBE4EE",g:"#FFC24B",c:"#FFF4E2"},sunset:{n:"Sunset",b:"#8A2E0E",a:"#C2410C",s:"#FFE9DC",g:"#FBBF24",c:"#FFF6DA"},grape:{n:"Grape",b:"#3E1A82",a:"#6D3BC8",s:"#EEE6FD",g:"#FCD34D",c:"#FFF8DD"},slate:{n:"Slate",b:"#1F2937",a:"#475569",s:"#EEF1F5",g:"#F59E0B",c:"#FFF6DA"}};
+const ICONS=["📚","✅","💰","📦","📖","🏃","🤝","💼","⭐","🎯","🌱","🎨"];
 
-/* ---------------- templates (what the sheet tracks) ---------------- */
-const SUBJ={
- lessons:{re:/\b(lessons?|courses?|modules?|trainings?|tutorials?|webinars?|classes|cle|cali|e-?learning)\b/g,one:"lesson",many:"lessons",icon:"📚",unit:"minutes",u:"min",amtL:"Minutes",catL:"Topic",mid:"In progress",done:"Submitted",tab:"My Lessons",libTab:"Lesson Library",base:"Lessons Tracker",reward:"stars",def:{link:1,sum:1,date:1},
-  lib:[["Spot the Phish","Security",20,"Recognize phishing emails and report them safely."],["Line Check: Food Safety","Safety",15,"Find seven kitchen hazards before the doors open."],["Data Privacy Essentials","Compliance",30,"What counts as personal data and how to protect it."],["Giving Great Feedback","Leadership",45,"Use Situation-Behavior-Impact to make feedback clear and kind."],["Excel Basics","Tools",60,"Formulas, sorting, and filters for everyday work."],["Writing Clear Emails","Communication",25,"Lead with the ask and cut the clutter."],["Running Better Meetings","Communication",35,"Agendas, timeboxes, and next steps that stick."],["Accessibility 101","Inclusion",40,"Make documents and slides everyone can use."],["Intro to Project Management","Leadership",90,"Scope, schedule, and risks in plain language."],["Customer Service Recovery","Service",30,"Turn an upset customer into a loyal one."],["Time Management Toolkit","Productivity",45,"Prioritize with the urgent and important matrix."],["Inclusive Language","Inclusion",20,"Small word choices that make a big difference."]]},
- books:{re:/\b(books?|reading|readers?|novels?|pages|library)\b/g,one:"book",many:"books",icon:"📖",unit:"pages",u:"pages",amtL:"Pages",catL:"Genre",mid:"Reading",done:"Finished",tab:"Reading Log",libTab:"Book List",base:"Reading Log",reward:"stars",def:{sum:1,date:1},
-  lib:[["The Secret Garden","Classic",280,"A lonely girl brings a hidden garden back to life."],["Treasure Island","Adventure",240,"Pirates, a map, and a hunt for buried gold."],["Alice's Adventures in Wonderland","Fantasy",120,"Down the rabbit hole into a very curious world."],["Little Women","Classic",450,"Four sisters grow up together in New England."],["The Wonderful Wizard of Oz","Fantasy",160,"Dorothy follows the yellow brick road home."],["Anne of Green Gables","Classic",300,"An imaginative orphan finds a home on a farm."],["Black Beauty","Animals",230,"A horse tells the story of his life."],["Peter Pan","Fantasy",180,"The boy who wouldn't grow up visits the Darlings."],["The Jungle Book","Animals",210,"Mowgli grows up with wolves in the jungle."],["Heidi","Classic",260,"A girl's life with her grandfather in the Alps."],["The Wind in the Willows","Animals",190,"Mole, Rat, Badger, and the very reckless Toad."],["Robinson Crusoe","Adventure",320,"Shipwrecked and alone on an island for years."]]},
- tasks:{re:/\b(tasks?|projects?|launch|milestones?|deliverables?|to-?dos?|sprints?|rollout)\b/g,one:"task",many:"tasks",icon:"🚀",unit:"hours",u:"hrs",amtL:"Est. hours",catL:"Phase",mid:"In progress",done:"Done",tab:"Tasks",libTab:"Task Bank",base:"Project Tracker",reward:"bar",def:{due:1,date:1},
-  lib:[["Kickoff meeting","Plan",2,"Agree on goals, audience, and timeline."],["Interview subject experts","Plan",6,"Capture what great performance looks like."],["Write learning objectives","Design",3,"Observable, measurable, and tied to the job."],["Draft storyboard","Design",10,"Screens, narration, and interactions."],["Build prototype","Build",16,"A clickable first version to test early."],["Pilot with learners","Test",6,"Watch five people use it and take notes."],["Revise from feedback","Build",8,"Fix what confused people in the pilot."],["Record narration","Build",4,"Script, record, and sync the audio."],["Accessibility check","Test",3,"Keyboard, captions, contrast, and alt text."],["Upload to the LMS","Launch",2,"Package, upload, and test tracking."],["Launch email","Launch",1,"Tell learners what's new and why it matters."],["Collect results","Evaluate",4,"Survey, scores, and on-the-job follow-up."]]},
- expenses:{re:/\b(budgets?|expenses?|spend(?:ing)?|purchases?|receipts?|money|costs?|dollars?)\b/g,one:"purchase",many:"purchases",icon:"💰",unit:"dollars",u:"$",amtL:"Cost",catL:"Category",mid:"Pending",done:"Paid",tab:"Spending",libTab:"Price List",base:"Budget Tracker",reward:"bar",limit:true,def:{date:1},
-  lib:[["Course design software","Software",420,"Annual license for the authoring tool."],["Stock photo subscription","Software",290,"Images for courses and job aids."],["Microphone and headset","Equipment",180,"Clear narration for videos."],["Conference registration","Travel",650,"Annual learning and development conference."],["Hotel (2 nights)","Travel",480,"Conference stay."],["Printed job aids","Supplies",210,"Laminated quick-reference cards."],["Workshop catering","Events",360,"Lunch for a full-day workshop."],["Guest speaker fee","Events",900,"Expert session for managers."],["Learner gift cards","Rewards",250,"Thank-yous for pilot testers."],["Team books","Supplies",140,"Copies of the book club pick."],["Video lights","Equipment",160,"Soft lighting for recordings."],["LMS add-on","Software",600,"Certificates and badges plug-in."]]},
- volunteer:{re:/\b(volunteer\w*|service hours|community service|service)\b/g,one:"shift",many:"shifts",icon:"🤝",unit:"hours",u:"hrs",amtL:"Hours",catL:"Cause",mid:"Signed up",done:"Verified",tab:"Hours Log",libTab:"Opportunities",base:"Volunteer Hours",reward:"badges",def:{date:1},
-  lib:[["Food bank shift","Hunger",3,"Sort and pack donations."],["Park cleanup","Environment",2,"Pick up litter and plant flowers."],["Reading buddy","Education",1.5,"Read with a young student."],["Senior center visit","Community",2,"Play games and share stories."],["Animal shelter","Animals",3,"Walk dogs and clean kennels."],["Coat drive","Community",2,"Collect and sort winter coats."],["Homework help","Education",2,"Tutor middle school math."],["Community garden","Environment",2.5,"Weed, water, and harvest."],["Blood drive helper","Health",3,"Greet donors and hand out snacks."],["Charity 5K crew","Health",4,"Set up the course and cheer runners."],["Library book sort","Education",2,"Shelve and repair donated books."],["Meal delivery","Hunger",2,"Bring hot meals to neighbors."]]},
- fitness:{re:/\b(workouts?|exercises?|fitness|steps|running|walking|gym|yoga|wellness)\b/g,one:"workout",many:"workouts",icon:"💪",unit:"minutes",u:"min",amtL:"Minutes",catL:"Type",mid:"Scheduled",done:"Done",tab:"Workouts",libTab:"Workout Menu",base:"Workout Challenge",reward:"levels",def:{date:1},
-  lib:[["Morning walk","Cardio",30,"Easy pace, get outside."],["Yoga flow","Flexibility",45,"Stretch, breathe, and reset."],["Bike ride","Cardio",60,"Steady ride around the neighborhood."],["Strength circuit","Strength",30,"Squats, push-ups, and rows."],["Swim laps","Cardio",40,"Easy laps, mixed strokes."],["Stretch break","Flexibility",10,"Quick desk-friendly stretch."],["Dance class","Cardio",50,"Learn a routine, have fun."],["Weekend hike","Cardio",90,"Trails and fresh air."],["Core workout","Strength",20,"Planks and crunches."],["Pilates","Strength",45,"Slow, controlled strength."],["Jump rope","Cardio",15,"Short bursts, big energy."],["Pickup game","Cardio",60,"Basketball, soccer, or volleyball."]]},
- assignments:{re:/\b(assignments?|homework|grades?|gradebook|essays?|quiz(?:zes)?|syllabus|semester)\b/g,one:"assignment",many:"assignments",icon:"✏️",unit:"points",u:"pts",amtL:"Points",catL:"Unit",mid:"Started",done:"Turned in",tab:"Assignments",libTab:"Syllabus",base:"Assignment Tracker",reward:"stars",def:{due:1,score:1,date:1},
-  lib:[["Syllabus quiz","Unit 1",10,"Get to know the course."],["Reading response 1","Unit 1",20,"One page on the first reading."],["Lab report","Unit 2",50,"Write up the first experiment."],["Group project proposal","Unit 2",30,"Pick a topic and plan roles."],["Midterm exam","Unit 3",100,"Units 1 through 3."],["Reading response 2","Unit 3",20,"Connect two readings."],["Case study","Unit 4",60,"Apply the model to a real case."],["Peer review","Unit 4",20,"Give feedback on a classmate's draft."],["Research paper","Unit 5",120,"Five pages with sources."],["Presentation","Unit 5",80,"Ten minutes plus questions."],["Reflection journal","Unit 6",30,"What you learned and why it matters."],["Final exam","Unit 6",150,"Everything, with a study guide."]]},
- general:{re:null,one:"item",many:"items",icon:"✅",unit:"points",u:"pts",amtL:"Points",catL:"Category",mid:"In progress",done:"Done",tab:"Tracker",libTab:"Item List",base:"Goal Tracker",reward:"stars",def:{date:1},
-  lib:[["Set a weekly goal","Planning",10,"Pick one thing to finish this week."],["Organize your workspace","Planning",15,"Clear the desk and the desktop."],["Learn a new shortcut","Skills",10,"Save a few clicks every day."],["Share a win","Team",5,"Tell the team something that went well."],["Help a teammate","Team",15,"Offer a hand on something tricky."],["Finish a short course","Skills",30,"Pick one from the learning library."],["Clear your inbox","Planning",10,"Archive, reply, or delete."],["Try a new tool","Skills",20,"Test it on a real task."],["Give someone feedback","Team",15,"Specific, kind, and useful."],["Update a checklist","Planning",10,"Make the next person's job easier."],["Mentor someone","Team",25,"Thirty minutes of your time."],["Celebrate progress","Team",5,"Notice how far you've come."]]}};
-const REW={stars:{n:"Stars",ic:["★","★★","★★★","★★★★","★★★★★"],mk:"★",names:["1 star","2 stars","3 stars","4 stars","5 stars"]},
- badges:{n:"Badges",ic:["🥉","🥈","🥇","🏆","💎"],mk:null,names:["Bronze","Silver","Gold","Platinum","Diamond"]},
- levels:{n:"Levels",ic:["Lv 1","Lv 2","Lv 3","Lv 4","Lv 5"],mk:null,names:["Rookie","Rising Star","Go-Getter","Pro","Legend"]},
- bar:{n:"Bar only",ic:[],mk:null,names:[]}};
-const FEATS=[["howto","How to Use tab"],["banner","Dashboard at the top"],["stamp","Auto date stamp"],["redo","Redo detection"],["attention","Needs attention tab"],["dash","Charts tab"],["summary","Summary tab"],["party","Celebrations"]];
-const NAMES=["Amara","Luis","Priya","Marcus","Sofia","Jamal","Mei","Diego","Aisha","Grace"];
-const NOTES={books:["Loved the ending!","Read with my family","Funny chapters","","Want to read the sequel"],fitness:["Felt great","Hard but fun","With a friend","",""],volunteer:["Met great people","Brought a friend","","Would go again"],general:["","Quick win","Team loved it"],lessons:["","Good examples","Share with the team"],tasks:["","Waiting on review","Blocked by legal"],expenses:["Receipt saved","","Approved by Dana"],assignments:["","Ask about feedback","Study group"]};
+/* ---------- type packs: the vocabulary each kind of spreadsheet uses ---------- */
+const PACKS={
+ learning:{label:"Learning",icon:"📚",kw:/\b(lessons?|courses?|modules?|training|learn\w*|class(?:es)?|webinars?|workshops?|study|studying|ceus?|skills?|students?)\b/g,
+  noun:"Lesson",plural:"Lessons",title:"Lessons Tracker",tab:"My Tracker",pick:"Choose a lesson",check:"Submitted",doneWord:"Done",stampLabel:"Date completed",logName:"Completed",
+  measure:{label:"Minutes",unit:"minutes",from:"lib"},goal:{kind:"up",value:1360,unit:"minutes"},catLabel:"Topic",infoLabel:"Summary",linkBase:"lms.example.com/",want:{cat:true,link:true},
+  lib:[["Excel Basics","Tech",45,"Formulas, sorting, and filters"],["Writing Clear Emails","Communication",30,"Short, scannable, actionable"],["Data Privacy Essentials","Compliance",40,"Handling personal information"],["Time Management","Productivity",35,"Planning a focused week"],["Giving Feedback","Leadership",50,"The SBI model in practice"],["Intro to Project Management","Productivity",60,"Scope, schedule, and risks"],["Customer Service Skills","Communication",45,"Listening and de-escalation"],["Presentation Skills","Communication",55,"Structure and delivery"],["Spreadsheet Dashboards","Tech",70,"Charts that tell a story"],["Workplace Safety","Compliance",25,"Spotting everyday hazards"],["Inclusive Meetings","Leadership",30,"Making room for every voice"],["Research Skills","Tech",50,"Finding and citing sources"]]},
+ tasks:{label:"Projects",icon:"✅",kw:/\b(projects?|tasks?|to-?dos?|launch\w*|deliverables?|sprints?|assign\w*|kanban|deadlines?|plans?|planning)\b/g,
+  noun:"Task",plural:"Tasks",title:"Project Tasks",tab:"Tasks",pick:null,check:"Done",doneWord:"Done",stampLabel:"Date done",logName:"Done log",
+  measure:null,goal:{kind:"count",value:0,unit:"tasks"},catLabel:"Phase",cats:["Plan","Design","Build","Test","Launch"],want:{due:true,priority:true,cat:true},
+  names:["Kickoff meeting","Draft project plan","Interview stakeholders","Write content outline","Design mockups","Build prototype","Review with team","Test with users","Fix feedback items","Prepare launch email","Launch day","Post-launch survey","Share results","Celebrate the team"]},
+ budget:{label:"Budget",icon:"💰",kw:/\b(budget\w*|spend\w*|expenses?|costs?|money|finance\w*|bills?|purchases?)\b/g,
+  noun:"Expense",plural:"Expenses",title:"Budget Planner",tab:"Expenses",pick:null,check:"Paid",doneWord:"Paid",stampLabel:"Date paid",logName:"Paid",
+  measure:{label:"Amount",unit:"dollars",from:"input",cur:true},goal:{kind:"limit",value:8000,unit:"dollars"},catLabel:"Category",catLib:true,want:{cat:true},
+  lib:[["Software","",1500],["Training","",2000],["Events","",1800],["Travel","",1500],["Supplies","",500],["Marketing","",700]],
+  names:["LMS license","Design tool seats","Conference tickets","Workshop catering","Team offsite venue","Flights to summit","Printed job aids","Video mic kit","Social ads","Name badges","Guest speaker fee","Snacks for sessions","Webinar platform","Hotel nights"]},
+ inventory:{label:"Inventory",icon:"📦",kw:/\b(inventor\w*|stock\w*|supplies|supply|reorder\w*|warehouse|equipment)\b/g,
+  noun:"Item",plural:"Items",title:"Supply Inventory",tab:"Stock",pick:"Choose an item",check:"Ordered",doneWord:"Ordered",stampLabel:"Date ordered",logName:"Order list",
+  measure:{label:"On hand",unit:"units",from:"input"},goal:{kind:"stock"},catLabel:"Location",infoLabel:"Unit cost",want:{},
+  lib:[["Printer paper (case)","Supply closet",4,32],["Sticky notes","Supply closet",10,1.5],["Whiteboard markers","Training room",12,1.25],["Name badges","Front desk",25,.4],["Shipping labels","Mail room",6,9],["Safety gloves (box)","Warehouse",5,12],["AA batteries","Supply closet",8,.75],["Hand sanitizer","Front desk",6,4.5],["Notebooks","Training room",15,2],["Coffee pods","Kitchen",20,.6],["Paper towels","Kitchen",8,2.2],["First aid refills","Warehouse",3,18]]},
+ reading:{label:"Reading",icon:"📖",kw:/\b(read\w*|books?|novels?|pages?|authors?)\b/g,
+  noun:"Book",plural:"Books",title:"Reading Log",tab:"My Books",pick:"Choose a book",check:"Finished",doneWord:"Finished",stampLabel:"Date finished",logName:"Finished",
+  measure:{label:"Pages",unit:"pages",from:"lib"},goal:{kind:"count",value:12,unit:"books"},catLabel:"Genre",infoLabel:"Author",want:{rating:true,cat:true},
+  lib:[["Pride and Prejudice","Classic",432,"Jane Austen"],["The Great Gatsby","Classic",180,"F. Scott Fitzgerald"],["Frankenstein","Sci-fi",280,"Mary Shelley"],["Little Women","Classic",759,"Louisa May Alcott"],["The Time Machine","Sci-fi",118,"H. G. Wells"],["Jane Eyre","Classic",532,"Charlotte Brontë"],["The Secret Garden","Children's",331,"Frances H. Burnett"],["Dracula","Horror",418,"Bram Stoker"],["Anne of Green Gables","Children's",320,"L. M. Montgomery"],["The Hound of the Baskervilles","Mystery",256,"Arthur Conan Doyle"],["Treasure Island","Adventure",292,"R. L. Stevenson"],["Emma","Classic",474,"Jane Austen"],["The Wind in the Willows","Children's",256,"Kenneth Grahame"],["Around the World in 80 Days","Adventure",250,"Jules Verne"]]},
+ fitness:{label:"Fitness",icon:"🏃",kw:/\b(workouts?|fitness|exercis\w*|gym|run\w*|walk\w*|yoga|wellness|habits?|health\w*|steps)\b/g,
+  noun:"Workout",plural:"Workouts",title:"Workout Tracker",tab:"My Workouts",pick:"Choose a workout",check:"Done",doneWord:"Done",stampLabel:"Date done",logName:"Workout log",
+  measure:{label:"Minutes",unit:"minutes",from:"lib"},goal:{kind:"up",value:600,unit:"minutes"},catLabel:"Type",infoLabel:"Intensity",want:{cat:true},
+  lib:[["Morning Run","Cardio",30,"Medium"],["Yoga Flow","Flexibility",45,"Low"],["Strength Circuit","Strength",40,"High"],["Lunch Walk","Cardio",20,"Low"],["Cycling Class","Cardio",50,"High"],["Stretch & Core","Flexibility",15,"Low"],["Swim Laps","Cardio",35,"Medium"],["HIIT Burst","Strength",25,"High"],["Dance Cardio","Cardio",30,"Medium"],["Pilates","Strength",40,"Medium"]]},
+ volunteer:{label:"Volunteer hours",icon:"🤝",kw:/\b(volunteer\w*|service|community|club|charity|shifts?|outreach|donat\w*)\b/g,
+  noun:"Activity",plural:"Activities",title:"Volunteer Hours",tab:"Hours Log",pick:"Choose an activity",check:"Verified",doneWord:"Verified",stampLabel:"Date verified",logName:"Verified hours",
+  measure:{label:"Hours",unit:"hours",from:"lib"},goal:{kind:"up",value:40,unit:"hours"},catLabel:"Area",infoLabel:"Location",want:{cat:true},
+  lib:[["Food bank sorting","Hunger relief",3,"Community pantry"],["Reading buddy","Education",1.5,"Elementary school"],["Park cleanup","Environment",4,"Riverside park"],["Event setup","Events",2.5,"Community center"],["Front desk","Operations",3,"Main office"],["Senior visits","Care",2,"Sunrise home"],["Tutoring","Education",2,"Public library"],["Coat drive","Hunger relief",3.5,"Downtown hub"],["Garden day","Environment",3,"Community garden"]]},
+ sales:{label:"Sales",icon:"💼",kw:/\b(sales?|deals?|clients?|customers?|leads?|pipeline|revenue|quota|commission|crm|selling)\b/g,
+  noun:"Deal",plural:"Deals",title:"Sales Tracker",tab:"Pipeline",pick:"Choose a package",check:"Closed won",doneWord:"Won",stampLabel:"Date closed",logName:"Closed deals",
+  measure:{label:"Value",unit:"dollars",from:"lib",cur:true},goal:{kind:"up",value:50000,unit:"dollars"},catLabel:"Tier",want:{},extras:[{k:"client",label:"Client",type:"text"}],
+  lib:[["Starter plan","Starter",1200],["Team plan","Team",4800],["Pro plan","Pro",9600],["Enterprise plan","Enterprise",24000],["Training add-on","Add-on",1500],["Onboarding package","Add-on",3000]],
+  clients:["Harbor & Co","Bluebird Labs","Northwind","Greenleaf","Summit Health","Orbit Media","Pine Street","Atlas Freight","Maple School","Riverbend"]},
+ generic:{label:"Anything else",icon:"⭐",kw:null,noun:"Entry",plural:"Entries",title:"My Tracker",tab:"Tracker",pick:null,check:"Done",doneWord:"Done",stampLabel:"Date done",logName:"Done log",
+  measure:null,goal:{kind:"count",value:0,unit:"entries"},catLabel:"Category",cats:["Personal","Work","Home","Other"],want:{notes:true}}};
+const P=()=>PACKS[C.pack];
 
-/* ---------------- state ---------------- */
-let S={cfg:null,lib:[],rows:[],name:"",theme:"harbor",reward:"stars",tab:"track",f:Object.fromEntries(FEATS.map(f=>[f[0],true]))};
-let lastReached=0,lastCounts={};
+/* ---------- config + data ---------- */
+let C,D,COLS,LOG=[],VIEW="t0",FLASH=null,JUST=null,lastCounts={};
+function defaultCfg(k,keep){const p=PACKS[k];return {pack:k,title:p.title,itemLabel:p.noun,icon:p.icon,theme:keep?keep.theme:"forest",people:keep?keep.people:[],
+  goal:{...p.goal},measure:p.measure?{...p.measure,conv:1}:null,stars:5,want:{...p.want},
+  f:{banner:true,stars:true,lookup:!!(p.lib&&p.pick),stamp:true,tabs:keep?keep.people.length>1:false,dash:true,log:true,howto:true,lights:true},
+  rows:keep?keep.rows:10,sample:true,phrase:null}}
+const starsKind=()=>["up","count"].includes(C.goal.kind);
+const lookupOn=()=>C.f.lookup&&!!P().pick&&D&&D.lib.length>0;
 
-/* ---------------- parser: words → build commands ---------------- */
+function buildData(){const p=P();seed=97+C.pack.length*13+C.people.length*7+C.rows*3;
+ D={lib:(p.lib||[]).map(([name,cat,m,info])=>({name,cat,m:(C.measure&&C.measure.from==="lib")?m*(C.measure.conv||1):m,info:typeof info==="number"?"$"+info.toFixed(2):(info||""),cost:typeof info==="number"?info:0,link:p.linkBase?p.linkBase+slug(name):""})),trackers:[]};
+ const owners=(C.people.length>1&&C.f.tabs)?C.people:[C.people.length===1?C.people[0]:""];
+ D.trackers=owners.map((nm,pi)=>({name:nm,rows:genRows(pi)}));
+ scaleData();VIEW=D.trackers.length?"t0":"t0";lastCounts={}}
+const DONEP=[.56,.42,.68,.34,.6,.78];
+function sampleM(){const p=P(),g=C.goal;if(C.pack==="budget")return Math.round((60+rnd()*1500)/10)*10;
+ if(!C.measure)return null;const base=g.value?g.value/(Math.max(4,C.rows)*.55):10;return nice(base*(.5+rnd()),C.measure.unit)}
+function genRows(pi){const p=P(),n=C.rows,fill=C.sample?Math.max(3,Math.min(n,Math.round(n*.75))):0,rows=[];
+ const order=D.lib.map((_,i)=>i).sort(()=>rnd()-.5);
+ for(let i=0;i<n;i++){
+  if(i>=fill){rows.push({});continue}
+  const li=D.lib.length&&p.pick?order[i%order.length]:null,l=li!=null?D.lib[li]:null;
+  const r={pick:li,name:l?l.name:(p.names?p.names[(i+pi*3)%p.names.length]:(C.itemLabel+" "+(i+1)))};
+  if(C.pack==="inventory"){r.min=l?l.m:6;r.m=Math.floor(rnd()*(r.min*3.2))}
+  else r.m=(l&&C.measure&&C.measure.from==="lib")?l.m:sampleM();
+  r.cat=p.catLib?pickR(D.lib).name:(p.cats?pickR(p.cats):(l?l.cat:""));
+  if(p.clients)r.client=p.clients[(i+pi*2)%p.clients.length];
+  if(C.people.length>1&&!C.f.tabs)r.who=C.people[i%C.people.length];
+  r.chk=C.pack==="inventory"?rnd()<.12:rnd()<DONEP[pi%DONEP.length];
+  r.done=r.chk?new Date(TODAY-Math.floor(rnd()*26)*DAY):null;
+  r.due=new Date(TODAY.getTime()+(Math.floor(rnd()*34)-11)*DAY);
+  r.prio=pickR(["High","Medium","Medium","Low"]);
+  r.rating=r.chk?3+Math.floor(rnd()*3):0;
+  r.notes=pickR(["Off to a great start","Follow up Friday","Loved this one","","Ask about part 2","","Share with the team"]);
+  rows.push(r)}
+ return rows}
+function scaleData(){const g=C.goal;if(!C.measure||!["up","limit"].includes(g.kind))return;const u=C.measure.unit;
+ const all=D.trackers.flatMap(t=>t.rows).filter(r=>r.name);const nt=D.trackers.length>1?D.trackers.length:(C.people.length>1&&g.kind!=="limit"?C.people.length:1);
+ const fromLib=C.measure.from==="lib"&&D.lib.length&&P().pick;
+ const cur=(g.kind==="limit"?all:all.filter(r=>r.chk)).reduce((a,r)=>a+(+r.m||0),0)/nt;
+ const ratio=g.kind==="limit"?.78:.58;
+ if(!cur)return;
+ if(!g.user){g.value=nice(cur/ratio,u)}
+ else{const f=Math.min(14,Math.max(.15,g.value*ratio/cur));
+  if(fromLib){D.lib.forEach(l=>l.m=nice(l.m*f,u));all.forEach(r=>{if(r.pick!=null)r.m=D.lib[r.pick].m})}
+  else all.forEach(r=>r.m=nice(r.m*f,u))}
+ if(C.pack==="budget"){const s=D.lib.reduce((a,l)=>a+l.m,0);D.lib.forEach(l=>l.m=nice(l.m*g.value/s,"dollars"))}}
+
+/* ---------- value helpers ---------- */
+const libOf=r=>lookupOn()&&r.pick!=null?D.lib[r.pick]:null;
+const itemName=r=>{const l=libOf(r);return l?l.name:(r.name||"")};
+const hasItem=r=>!!itemName(r);
+const catOf=r=>{const l=libOf(r);if(P().catLib)return r.cat||"";return l?l.cat:(r.cat||"")};
+const mOf=r=>{if(C.pack==="inventory")return r.m;if(!C.measure)return null;const l=libOf(r);return (C.measure.from==="lib"&&l)?l.m:r.m};
+const reorderOf=r=>{const l=libOf(r);return l?l.m:(r.min??0)};
+function statusOf(r){const p=P();if(!hasItem(r))return ["",""];
+ if(C.pack==="inventory"){if(mOf(r)<=reorderOf(r))return r.chk?["Ordered","a"]:["Reorder","r"];return ["OK","g"]}
+ if(r.chk)return [p.doneWord,"g"];
+ if(C.want.due&&r.due&&r.due<TODAY)return ["Overdue","r"];
+ return [C.pack==="budget"?"Pending":"In progress","a"]}
+function fmtM(v){if(v===""||v==null)return "";if(C.pack==="inventory")return num(v,0);if(C.measure&&C.measure.cur)return "$"+num(v,0);return num(v,C.measure&&C.measure.unit==="hours"?1:0)}
+function goalMult(rows){return (D.trackers.length===1&&C.people.length>1&&starsKind()&&C.goal.value)?C.people.length:1}
+function progressOf(rows,mult=1){const g=C.goal,p=P();
+ if(g.kind==="stock"){const it=rows.filter(hasItem),ok=it.filter(r=>mOf(r)>reorderOf(r)).length;return {v:ok,goal:it.length||1,pct:it.length?ok/it.length:0,unit:"items",kind:"stock"}}
+ if(g.kind==="limit"){const v=rows.filter(hasItem).reduce((a,r)=>a+(+mOf(r)||0),0);return {v,goal:g.value,pct:g.value?v/g.value:0,unit:"dollars",kind:"limit"}}
+ if(g.kind==="count"){const v=rows.filter(r=>hasItem(r)&&r.chk).length;const goal=(g.value||rows.filter(hasItem).length||1)*mult;return {v,goal,pct:v/goal,unit:g.unit||p.plural.toLowerCase(),kind:"count"}}
+ const v=rows.filter(r=>hasItem(r)&&r.chk).reduce((a,r)=>a+(+mOf(r)||0),0);const goal=g.value*mult;return {v,goal,pct:goal?v/goal:0,unit:g.unit,kind:"up"}}
+const fmtP=(v,pr)=>pr.kind==="count"?num(v,0):fmtU(v,pr.unit,true);
+function litOf(pr){if(!C.f.stars||!starsKind())return 0;let n=0;for(let i=1;i<=C.stars;i++)if(pr.v>=pr.goal*i/C.stars-1e-9)n++;return n}
+function groups(){if(D.trackers.length>1)return D.trackers.map((t,i)=>({name:t.name||"Person "+(i+1),rows:t.rows,ti:i}));if(C.people.length>1)return C.people.map(n=>({name:n,rows:D.trackers[0].rows.filter(r=>r.who===n)}));return []}
+const allRows=()=>D.trackers.flatMap(t=>t.rows);
+
+/* ---------- the parser: words → build commands (no AI) ---------- */
+const STOP=new Set("I,My,Our,The,A,An,And,For,With,Track,Tracker,Tracking,Log,Make,Build,Create,Need,Want,Please,Spreadsheet,Sheet,Sheets,Excel,Google,Dashboard,Team,Class,Club,Students,Each,Every,Goal,Stars,Lesson,Lessons,Budget,Sales,Reading,Project,Projects,Inventory,Volunteer,Workout,Weekly,Monthly,Daily,Summer,Winter,Spring,Fall,Monday,Tuesday,Wednesday,Thursday,Friday,Saturday,Sunday,January,February,March,April,May,June,July,August,September,October,November,December,Office,Marketing,Website,Challenge".split(","));
+const UNIT={min:"minutes",mins:"minutes",minute:"minutes",minutes:"minutes",hour:"hours",hours:"hours",hr:"hours",hrs:"hours",page:"pages",pages:"pages",book:"books",books:"books",step:"steps",steps:"steps",mile:"miles",miles:"miles",km:"km",point:"points",points:"points",lesson:"lessons",lessons:"lessons",task:"tasks",tasks:"tasks",workout:"workouts",workouts:"workouts",session:"sessions",sessions:"sessions",deal:"deals",deals:"deals",dollar:"dollars",dollars:"dollars",course:"courses",courses:"courses",module:"modules",modules:"modules",shift:"shifts",shifts:"shifts",entries:"entries",calls:"calls",call:"calls",items:"items"};
+const PEOPLEW=/^(person|people|students?|kids|employees|members|volunteers|reps|learners|staff|players|readers|hires|team)$/;
+const COUNTU=["books","lessons","tasks","workouts","sessions","deals","courses","modules","shifts","entries","calls","items"];
+function findNames(raw){let best=[];const re=/\b([A-Z][a-z]+(?:\s*,\s*[A-Z][a-z]+)*(?:\s*,?\s*(?:and|&)\s+[A-Z][a-z]+)?)/g;
+ for(const m of raw.matchAll(re)){const list=m[1].split(/\s*,\s*(?:and\s+|&\s*)?|\s+(?:and|&)\s+/).map(s=>s.trim()).filter(Boolean);if(list.length>=2&&list.every(w=>!STOP.has(w))&&list.length>best.length)best=list}
+ return best}
 function parse(text){
-  const t=" "+text.toLowerCase().replace(/\s+/g," ")+" ",log=[];
-  const cmd=(c,src)=>log.push({c,src});
-  // 1. template
-  let best="general",bs=0,hit="";
-  Object.entries(SUBJ).forEach(([k,s])=>{if(!s.re)return;const m=t.match(s.re)||[];let n=m.length;if(k==="expenses")n+=(t.match(/\$\s?\d/g)||[]).length*2;if(n>bs){bs=n;best=k;hit=m[0]||"$"}});
-  const s=SUBJ[best];
-  cmd(`use_template("${best}")`,bs?`found "${hit.trim()}"`:"no topic word found, so I used a general goal tracker");
-  // 1b. nouns follow the words people use
-  const NOUN={course:"course",courses:"course",training:"course",trainings:"course",module:"module",modules:"module",webinar:"webinar",webinars:"webinar",tutorial:"tutorial",tutorials:"tutorial"};
-  let noun=null;const hw=(hit||"").trim();
-  if(best==="lessons"&&NOUN[hw]){const one=NOUN[hw],many=one+"s",M=cap(many),O=cap(one);noun={one,many,tab:"My "+M,libTab:O+" Library",base:(hw.startsWith("train")?"Training":O)+" Tracker"}}
-  const S2=Object.assign({},s,noun||{});
-  // 2. goal
-  const unitWords="minutes?|mins?|hours?|hrs?|pages?|points?|pts|dollars?|miles?|"+S2.many+"|"+S2.one+(S2.many!==s.many?"|"+s.many+"|"+s.one:"");
-  const unitW2=unitWords.replace(s.many+"|"+s.one,S2.many+"|"+S2.one+"|"+s.many+"|"+s.one);
-  const g1=t.match(new RegExp(`(?:goal|target|budget|limit|aim|reach|up to|total of)\\s*(?:of|is|at|:)?\\s*(\\$)?\\s?(\\d[\\d,]*(?:\\.\\d+)?)\\s?(k\\b)?\\s?-?\\s?(${unitWords})?`));
-  const g2=t.match(new RegExp(`(\\$)?(\\d[\\d,]*(?:\\.\\d+)?)(k\\b)?\\s?-?\\s?(${unitWords})?\\s?-?\\s?(?:goal|target|budget|limit|challenge)`));
-  const g3=t.match(new RegExp(`(\\$)?\\b(\\d[\\d,]*(?:\\.\\d+)?)(k\\b)?\\s?-?\\s?(${unitWords})\\b`));
-  const g4=s.limit?t.match(/(\$)\s?(\d[\d,]*(?:\.\d+)?)(k\b)?/):null;
-  let gm=g1||g2||g4||(g3&&!/\b(rows?|items)\b/.test(g3[4]||"")?g3:null),goal=null,goalMode="amount",gsrc="";
-  if(gm&&gm[2]){let v=parseFloat(gm[2].replace(/,/g,""));if(gm[3])v*=1000;const u=(gm[4]||"").trim();
-    if(u&&[s.many,s.one,S2.many,S2.one].includes(u)){goalMode="count"}
-    else if(s.unit==="minutes"&&/^h/.test(u))v*=60;
-    else if(s.unit==="hours"&&/^min/.test(u))v=Math.round(v/60*10)/10;
-    if(v>0){goal=v;gsrc=gm[0].trim()}}
-  // 3. rows
-  let rows=12;const rm=t.match(/\b(\d{1,3})\s?-?\s?(?:rows?|lines?|entries|slots?|students?|people|person|members?|employees?|kids|weeks?|days?|lessons?|books?|tasks?|items?|workouts?|sessions?|assignments?|expenses?|purchases?|shifts?|new hires?)\b/);
-  if(rm&&!(goalMode==="count"&&+rm[1]===goal)&&!(gm&&gm.index===rm.index)){rows=Math.max(5,Math.min(30,+rm[1]))}
-  // 4. rewards
-  let reward=s.reward,rsrc="default for "+s.many;
-  if(/\bstars?\b/.test(t)){reward="stars";rsrc='"stars"'}else if(/\bbadges?\b|\bmedals?\b/.test(t)){reward="badges";rsrc='"badges"'}
-  else if(/\blevels?\b|\bxp\b|level up|game/.test(t)){reward="levels";rsrc='"levels"'}else if(/progress bar only|no rewards?|bar only|keep it simple/.test(t)){reward="bar";rsrc='"progress bar only"'}
-  if(s.limit&&reward!=="bar"){reward="bar";rsrc="budgets use a spend bar"}
-  // 5. columns
-  const tc=t.replace(/\b\d+(?:st|nd|rd|th) grade\b/g," ");
-  const col={};const on=(k,re,label)=>{const m=tc.match(re);if(m){col[k]=1;cmd(`add_column("${label}")`,`found "${m[0].trim()}"`)}else if(s.def[k]){col[k]=1;cmd(`add_column("${label}")`,"default for "+s.many)}};
-  on("link",/\b(links?|urls?)\b/,"Link");
-  on("sum",/\b(summar(?:y|ies)|descriptions?|details?)\b/,"Summary");
-  on("owner",/\b(owners?|assign(?:ed|ee|ees)?|who's doing|each (?:person|student|member|employee)|per (?:person|student)|team members?|staff|employees)\b/,"Owner");
-  if(!col.owner&&best==="tasks"&&/\b(team|our)\b/.test(t)){col.owner=1;cmd('add_column("Owner")','found "team"')}
-  {const pm=t.match(/\b\d{1,3}\s?-?\s?(students|people|employees|members|kids|new hires|volunteers)\b/);if(!col.owner&&pm){col.owner=1;cmd(`add_column("${/student|kid/.test(pm[1])?"Student":best==="volunteer"?"Volunteer":"Name"}")`,`found "${pm[0]}"`)}}
-  on("prio",/\b(priorit(?:y|ies)|urgent)\b/,"Priority");
-  on("due",/\b(due( dates?)?|deadlines?|schedule)\b/,"Due date");
-  on("date",/\b(dates?|when|completed on|finished on|logged)\b/,"Date "+s.done.toLowerCase());
-  on("score",/\b(scores?|grades?(?! (?:class|level|students?|readers?|team))|ratings?|quiz scores?)\b/,"Score");
-  on("notes",/\b(notes?|comments?|reflections?|journal)\b/,"Notes");
-  const ownerL=/\b(students?|class|kids)\b/.test(t)&&col.owner?"Student":best==="volunteer"?"Volunteer":/\b(\d+ (people|employees|members|new hires))\b/.test(t)?"Name":"Owner";
-  // 6. look
-  let theme=null,tsrc="";const TW=[["harbor",/\b(teal|turquoise|harbor)\b/],["forest",/\b(green|forest|sage)\b/],["plum",/\b(purple|plum|violet|lavender)\b/],["coral",/\b(orange|red|coral|sunset|peach)\b/],["ocean",/\b(blue|navy|ocean)\b/],["bubble",/\b(pink|bubblegum|magenta|rose)\b/]];
-  for(const[k,re]of TW){const m=t.match(re);if(m){theme=k;tsrc=`found "${m[0].trim()}"`;break}}
-  // 7. title
-  let title=S2.base,ttsrc="default";
-  const named=text.match(/\b(?:called|titled|named)\s+["“']?([^"”'.,!?\n]{2,40})/i);
-  const forM=t.match(/\bfor (?:my|our|the|a)\s+((?:[\w&'-]+\s){0,3}?(?:class|team|department|dept|staff|group|cohort|club|office|school|unit|crew|family|kids|program|new hires?|launch|students|grade))\b/);
-  if(named){title=named[1].trim().replace(/\b\w/g,c=>c.toUpperCase());ttsrc=`found "called ${named[1].trim()}"`}
-  else if(forM){const who=cap(forM[1].replace(/\b(our|my|the)\b/g,"").replace(/\s+/g," ").trim());title=who+" "+S2.base;ttsrc=`found "for ${forM[1].trim()}"`}
-  if(!named&&!forM){const tm=t.match(/\b(my|our)\s+(team|class|department|family|office|club)(?:'s)?\b/);const bm=s.limit&&t.match(/\b(department|team|monthly|marketing|family|household|office|project|event|travel|classroom)\b/);
-    if(bm){title=cap(bm[1])+" Budget";ttsrc=`found "${bm[1]}"`}else if(tm){title=cap(tm[2])+" "+S2.base;ttsrc=`found "${tm[0].trim()}"`}}
-  // record commands in a nice order
-  const ordered=[log[0]];
-  ordered.push({c:`set_title("${title}")`,src:ttsrc});
-  ordered.push({c:`set_rows(${rows})`,src:rm&&rows===Math.max(5,Math.min(30,+rm[1]))?`found "${rm[0].trim()}"`:"default"});
-  ordered.push(goal?{c:`set_${s.limit?"budget":"goal"}(${goalMode==="count"?goal+" "+S2.many:(s.unit==="dollars"?"$"+fmtN(goal):fmtN(goal)+" "+s.unit)})`,src:`found "${gsrc}"`}:{c:`set_${s.limit?"budget":"goal"}(auto)`,src:"no number found, so I picked one that fits the sample"});
-  ordered.push({c:`set_rewards("${reward}")`,src:rsrc});
-  ordered.push(...log.slice(1));
-  if(theme)ordered.push({c:`set_theme("${THEMES[theme].n}")`,src:tsrc});
-  if(/\b(dashboard|charts?|graphs?)\b/.test(t))ordered.push({c:'add_tab("Charts")',src:'found "'+t.match(/\b(dashboard|charts?|graphs?)\b/)[0]+'"'});
-  ordered.push({c:'link_dropdowns("'+s.libTab+'")',src:"always: pick from a list, details fill in"});
-  return {cfg:{subj:best,title,rows,goal,goalMode,col,ownerL,noun},reward,theme,log:ordered,found:bs>0};
-}
+ const raw=(text||"").trim(),t=raw.toLowerCase(),L=[];const add=(type,k,v,m)=>L.push({t:type,k,v,m});
+ let best=null,bs=0,heard=[];
+ Object.entries(PACKS).forEach(([k,p])=>{if(!p.kw)return;const m=t.match(p.kw)||[];if(m.length>bs){bs=m.length;best=k;heard=[...new Set(m)]}});
+ if(/\b(budget|spend)/.test(t)&&best!=="budget"&&(t.match(PACKS.budget.kw)||[]).length>=1&&!/\b(sales?|deals?|revenue|quota)\b/.test(t))best="budget";
+ const prev=C;C=defaultCfg(best||"generic");if(prev){C.rows=10}
+ const p=P();
+ if(best)add("ok","type",p.label+" tracker",heard.slice(0,4).join(", "));
+ else{
+  const m=t.match(/\b(?:track(?:ing|er)?|log(?:ging)?|record|monitor|count|list)\s+(?:of\s+)?(?:my|our|the|all|each|every|daily|weekly)?\s*([a-z][a-z'-]*(?:\s+[a-z][a-z'-]*)?)/);
+  let phrase=m?m[1].split(/\s+/).filter(w=>!/^(with|for|and|by|in|on|to|a|an)$/.test(w)):[];
+  const cut=phrase.findIndex(w=>/^(with|for|and|by|in|on|to)$/.test(w));if(cut>=0)phrase=phrase.slice(0,cut);
+  if(phrase.length){C.phrase=phrase.join(" ");C.itemLabel=cap(sing(phrase[phrase.length-1]));C.title=tcase(C.phrase)+" Tracker";add("ok","type","General tracker for “"+C.phrase+"”","no type matched, so I used your words")}
+  else add("warn","type","General tracker","no keywords matched. Try lessons, budget, tasks, books…")}
+ /* people */
+ const names=findNames(raw).slice(0,6);
+ const pc=t.match(/(\d+)\s*-?\s*(person|people|students?|kids|employees|members|volunteers|reps|learners|staff|players|readers|hires)\b/);
+ if(names.length>=2){C.people=names;C.f.tabs=true;add("ok","people",names.join(", "),"→ a tab each + leaderboard")}
+ else if(pc){const n=+pc[1];if(n>=2&&n<=6){C.people=PEOPLE_POOL.slice(0,n);C.f.tabs=true;add("ok","people",n+" "+pc[2],"→ "+n+" sample names, a tab each")}
+  else if(n>6){C.people=PEOPLE_POOL.slice(0,6);C.f.tabs=false;C.rows=18;add("ok","people",n+" "+pc[2],"→ a Person column (6 sample names)")}}
+ else if(/\beach (student|person|member|employee|kid|learner|volunteer|rep)\b|\bper (student|person|member)\b/.test(t)){C.people=PEOPLE_POOL.slice(0,3);C.f.tabs=true;add("ok","people","3 sample people","heard “each …”")}
+ else{const one=raw.match(/\bfor\s+([A-Z][a-z]+)\b/);if(one&&!STOP.has(one[1])){C.people=[one[1]];add("ok","name",one[1],"→ name box")}}
+ if(/\b(no|without)\s+(separate\s+)?tabs?\b|\bone tab\b/.test(t)&&C.people.length>1){C.f.tabs=false;add("ok","tabs","one shared tab","→ Person column")}
+ /* goal */
+ let gm=null,gs=-1;
+ for(const m of t.matchAll(/(\$\s?)?(\d[\d,]*(?:\.\d+)?)\s*(k\b)?\s*(?:-\s*)?([a-z]+)?/g)){
+  const word=m[4]||"",dollar=!!m[1]||/^dollars?$/.test(word);if(PEOPLEW.test(word)||/^(rows?|stars?|people)$/.test(word))continue;
+  const unit=dollar?"dollars":UNIT[word];if(!unit)continue;const v=parseFloat(m[2].replace(/,/g,""))*(m[3]?1000:1);if(!v)continue;
+  const ctx=t.slice(Math.max(0,m.index-24),m.index);const sc=(/(goal|target|budget|reach|aim|up to|quota|of)\s*$|\b(goal|target)\b/.test(ctx)?2:0)+(dollar?1:0);if(sc>gs){gs=sc;gm={v,unit,txt:m[0].trim()}}}
+ if(gm){const {v,unit}=gm;
+  if(unit==="dollars"){if(C.pack==="budget"||/budget|spend/.test(t)){C.goal={kind:"limit",value:v,unit:"dollars",user:true};if(!C.measure)C.measure={label:"Amount",unit:"dollars",from:"input",cur:true}}
+   else{C.goal={kind:"up",value:v,unit:"dollars",user:true};if(!C.measure||C.measure.unit!=="dollars")C.measure={label:C.pack==="sales"?"Value":"Amount",unit:"dollars",from:C.pack==="sales"?"lib":"input",cur:true}}}
+  else if(COUNTU.includes(unit)){C.goal={kind:"count",value:v,unit,user:true};C.rows=Math.max(C.rows,Math.min(20,Math.round(v)+2))}
+  else if(C.measure&&C.measure.unit===unit){C.goal={kind:"up",value:v,unit,user:true}}
+  else if(C.measure&&["minutes","hours"].includes(C.measure.unit)&&["minutes","hours"].includes(unit)){C.measure={...C.measure,conv:unit==="hours"?1/60:60,unit,label:cap(unit)};C.goal={kind:"up",value:v,unit,user:true}}
+  else if(C.pack!=="inventory"){C.measure={label:cap(unit),unit,from:"input"};C.goal={kind:"up",value:v,unit,user:true}}
+  add("ok","goal",(C.goal.kind==="limit"?"budget ":"")+fmtU(v,C.goal.unit)+(C.people.length>1&&C.goal.kind!=="limit"?" each":""),C.goal.kind==="limit"?"→ spending bar that turns red near the limit":"→ progress bar")}
+ else if(C.goal.kind!=="stock")add("def","goal","auto from the sample data","say “goal of 600 minutes” to set one");
+ /* stars */
+ const sm=t.match(/(\d+)\s*stars?/);if(sm)C.stars=Math.max(3,Math.min(10,+sm[1]));
+ if(/\b(no|without)\s+(stars?|milestones?)\b/.test(t)){C.f.stars=false;add("ok","stars","off")}
+ else if(starsKind()){if(sm||/\b(stars?|milestones?|badges?|levels?|gamif\w*|rewards?)\b/.test(t))add("ok","stars",C.stars+" stars","→ light up at each milestone");else add("def","stars",C.stars+" stars","default")}
+ /* columns */
+ const W=[[/\b(due|deadlines?|overdue|by date)\b/,"due","Due date","→ overdue rows turn red"],[/\b(priorit\w*|urgent)\b/,"priority","Priority","dropdown"],[/\b(ratings?|rate|rated|reviews?|favorites?)\b/,"rating","Rating","→ click 1 to 5 stars"],[/\b(notes?|comments?)\b/,"notes","Notes",""],[/\b(links?|urls?)\b/,"link","Link",""],[/\b(categor\w*|types?|topics?|genres?|subjects?|phases?)\b/,"cat","Category",""],[/\b(status|stages?|traffic lights?|red flags?)\b/,"status","Status lights",""]];
+ W.forEach(([re,k,lab,m])=>{if(re.test(t)){C.want[k]=true;if(k==="status")C.f.lights=true;add("ok","column",lab,m)}});
+ if(/\b(no|without)\s+(due dates?)\b/.test(t))C.want.due=false;
+ /* tabs + features */
+ const F=[[/\b(dashboard|charts?|graphs?|overview|summary|report|leaderboard)\b/,"dash","Dashboard tab"],[/\b(log|history|done list|completed list|order list)\b/,"log",p.logName+" tab"],[/\b(instructions?|how to|directions|guide)\b/,"howto","How to Use tab"],[/\b(dropdowns?|drop-?downs?|choose from|pick from|select from|library|catalog|menu)\b/,"lookup","Dropdown auto-fill"]];
+ F.forEach(([re,k,lab])=>{if(new RegExp("\\b(no|without)\\s+"+re.source.replace(/^\\b\(/,"(")).test(t)){C.f[k]=false;add("ok","off",lab)}else if(re.test(t)){C.f[k]=true;add("ok","feature",lab)}});
+ if(/\b(blank|empty|no sample|from scratch)\b/.test(t)){C.sample=false;add("ok","rows","blank cream cells")}
+ const rm=t.match(/(\d+)\s*rows?/);if(rm){C.rows=Math.max(5,Math.min(20,+rm[1]));add("ok","rows",C.rows+" rows")}
+ /* look */
+ const TW=[[/\b(green|forest|sage|mint)\b/,"forest"],[/\b(blue|navy|teal|ocean)\b/,"ocean"],[/\b(pink|red|berry|rose|magenta)\b/,"berry"],[/\b(orange|coral|yellow|sunset|peach)\b/,"sunset"],[/\b(purple|violet|lavender|grape)\b/,"grape"],[/\b(gr[ae]y|black|dark|slate|charcoal)\b/,"slate"]];
+ const tw=TW.find(([re])=>re.test(t));if(tw){C.theme=tw[1];add("ok","theme",THEMES[tw[1]].n,"heard “"+t.match(tw[0])[0]+"”")}else{C.theme=PACK_THEME[C.pack]||"forest";add("def","theme",THEMES[C.theme].n,"say a color to change it")}
+ const em=raw.match(/\p{Extended_Pictographic}/u);if(em){C.icon=em[0];add("ok","icon",em[0])}
+ const tm=raw.match(/\b(?:called|named|titled)\s+["“']?([^"”'.,!?]{2,40})/i);
+ if(tm){C.title=tcase(tm[1].trim());add("ok","title",C.title)}
+ else if(best){const cm=t.match(/\bfor (?:my|our|the)\s+(?:\d+[- ]person\s+)?([a-z&' ]{2,24}?)\s+(team|class|club|department|group|office|crew|staff|family|launch|program)\b/);
+  if(cm){C.title=tcase(cm[1].trim())+" "+tcase(cm[2])+" "+p.title.replace(/^(Project|Supply) /,"");add("ok","title",C.title)}
+  else if(/^([a-z][a-z' ]{2,28}?)\s+(tracker|log|planner|list|calculator|sheet|challenge)\b/.test(t)&&!/^(track|make|build|create|i need|i want|a|an|my|our)\b/.test(t)){const om=t.match(/^([a-z][a-z' ]{2,28}?)\s+(tracker|log|planner|list|calculator|sheet|challenge)\b/);C.title=tcase(om[1]+" "+om[2]);add("ok","title",C.title,"from your first words")}
+  else{const pm=t.match(/\b(marketing|team|department|office|family|summer|club|class|personal|household|event|wedding|holiday|school|kitchen|classroom)\s+(?:[a-z]+\s+)?(budget|inventory|reading|project|sales|lesson|volunteer|workout|training|task)/);if(pm){C.title=tcase(pm[1])+" "+p.title;add("ok","title",C.title)}}}
+ const on=Object.entries({banner:"Dashboard at the top",stamp:"Checkbox date stamps",howto:"How to Use tab",dash:"Dashboard tab",log:p.logName+" tab",lookup:"Dropdown auto-fill"}).filter(([k])=>C.f[k]&&!L.some(l=>l.v===({howto:"How to Use tab",dash:"Dashboard tab",log:p.logName+" tab",lookup:"Dropdown auto-fill"})[k])).filter(([k])=>k!=="lookup"||(p.pick&&p.lib)).map(([,v])=>v);
+ if(on.length)add("def","defaults",on.join(" · "));
+ return L}
+const PACK_THEME={learning:"forest",tasks:"grape",budget:"ocean",inventory:"slate",reading:"berry",fitness:"sunset",volunteer:"sunset",sales:"ocean",generic:"forest"};
 
-/* ---------------- sample data ---------------- */
-function niceRound(v){if(v>=1000)return Math.round(v/50)*50;if(v>=100)return Math.round(v/10)*10;if(v>=20)return Math.round(v/5)*5;return Math.max(1,Math.round(v))}
-function makeRows(sample){const c=S.cfg,s=SUB();seed=13+c.subj.length*5;const n=c.rows;const rows=[];
-  const order=S.lib.map((_,i)=>i).sort(()=>rnd()-.5);
-  for(let i=0;i<n;i++)rows.push({pick:null,owner:"",prio:"",due:null,status:"",date:null,score:"",notes:""});
-  if(!sample)return rows;
-  const fill=Math.min(n,Math.max(6,Math.round(n*.75)));
-  for(let i=0;i<fill;i++){const r=rows[i];r.pick=order[i%order.length];
-    const doneN=Math.round(fill*.55);r.status=i<doneN?"✓ "+s.done:i<doneN+2?s.mid:"";
-    if(c.col.owner)r.owner=NAMES[i%NAMES.length];
-    if(c.col.prio)r.prio=["High","Medium","Low"][i%3];
-    if(c.col.due)r.due=new Date(TODAY.getTime()+(Math.round(rnd()*30)-12)*DAY);
-    if(r.status.startsWith("✓"))r.date=new Date(TODAY.getTime()-Math.round((doneN-i)*3.4+rnd()*2)*DAY);
-    if(c.col.score&&r.status.startsWith("✓"))r.score=Math.round(76+rnd()*24);
-    if(c.col.notes)r.notes=(NOTES[c.subj]||NOTES.general)[i%(NOTES[c.subj]||NOTES.general).length];}
-  if(c.goal){let run=0,keep=0;const cap=c.goal*(s.limit?.62:.62);rows.forEach((r,i)=>{if(!r.status.startsWith("✓"))return;const v=c.goalMode==="count"?1:(+S.lib[r.pick][2]||0);
-    if(run+v<=cap||(keep===0&&v<c.goal)){run+=v;keep++}else{r.status=i%2?s.mid:"";r.date=null;r.score=""}})}
-  if(S.f.redo&&fill<n&&["lessons","books","fitness","volunteer"].includes(c.subj)){const r=rows[fill];r.pick=rows[0].pick;r.status=s.mid}
-  return rows}
-function autoGoal(){const c=S.cfg,s=SUBJ[c.subj];if(c.goalMode==="count")return;const doneAmt=S.rows.filter(isDone).reduce((a,r)=>a+amt(r),0);
-  const all=S.lib.reduce((a,l)=>a+l[2],0);
-  c.goal=s.limit?niceRound(Math.max(all*.55,doneAmt/0.62)):niceRound(doneAmt>0?doneAmt/0.52:all*.6)}
+/* ---------- columns ---------- */
+function buildCols(){const p=P(),w=C.want,cols=[{k:"#",label:"#",type:"rownum"}];
+ const lk=lookupOn();
+ cols.push(lk?{k:"pick",label:p.pick,type:"pick",in:true}:{k:"name",label:C.itemLabel||p.noun,type:"text",in:true});
+ (p.extras||[]).forEach(e=>cols.push({...e,in:true}));
+ if(C.people.length>1&&D.trackers.length===1)cols.push({k:"who",label:"Person",type:"list",list:()=>C.people,in:true});
+ if(lk){if(p.catLabel&&w.cat!==false)cols.push({k:"cat",label:p.catLabel,type:"auto"});if(p.infoLabel&&C.pack!=="inventory")cols.push({k:"info",label:p.infoLabel,type:"auto"});if(w.link&&p.linkBase)cols.push({k:"link",label:"Link",type:"auto"})}
+ else if(w.cat||p.catLib)cols.push({k:"cat",label:p.catLabel||"Category",type:"list",in:true,list:()=>p.catLib?D.lib.map(l=>l.name):(p.cats||(D.lib.length?[...new Set(D.lib.map(l=>l.cat))]:["Personal","Work","Home","Other"]))});
+ if(C.pack==="inventory"){cols.push({k:"m",label:"On hand",type:"num",in:true});cols.push(lk?{k:"ro",label:"Reorder at",type:"auto"}:{k:"ro",label:"Reorder at",type:"num",in:true})}
+ else if(C.measure){const fl=C.measure.from==="lib"&&lk;cols.push(fl?{k:"m",label:C.measure.label,type:"auto"}:{k:"m",label:C.measure.label,type:"num",in:true})}
+ if(w.link&&!(lk&&p.linkBase))cols.push({k:"url",label:"Link",type:"text",in:true});
+ if(w.due)cols.push({k:"due",label:"Due date",type:"date",in:true});
+ if(w.priority)cols.push({k:"prio",label:"Priority",type:"list",in:true,list:()=>["High","Medium","Low"]});
+ if(w.rating)cols.push({k:"rating",label:"Rating",type:"rating",in:true});
+ if(w.notes)cols.push({k:"notes",label:"Notes",type:"text",in:true});
+ cols.push({k:"chk",label:p.check,type:"check",in:true});
+ if(C.f.stamp)cols.push({k:"done",label:p.stampLabel,type:"stamp"});
+ if(C.f.lights||w.status)cols.push({k:"status",label:"Status",type:"status"});
+ return cols}
+const EST={rownum:36,pick:220,text:175,list:135,auto:150,num:95,date:115,rating:110,check:105,stamp:125,status:125};
+const WID={rownum:36,pick:210,text:170,list:130,auto:130,num:90,date:110,rating:105,check:100,stamp:120,status:120};
+const L_=k=>{const i=COLS.findIndex(c=>c.k===k);return i<0?"?":letter(i)};
+function fxOf(c,row){const lk=lookupOn(),pk=L_("pick");const look=col=>`=IFERROR(XLOOKUP(${pk}${row},Library!A:A,Library!${col}:${col}),"")`;
+ switch(c.k){
+ case "pick":return `Dropdown: =Library!A2:A${D.lib.length+1}  (cream cell, you choose)`;
+ case "cat":return c.type==="auto"?look("B"):"Dropdown list (cream cell)";
+ case "m":return c.type==="auto"?look("C"):"Cream cell: type a number";
+ case "ro":return c.type==="auto"?look("C"):"Cream cell: type a number";
+ case "info":return look("D");case "link":return look("E");
+ case "done":return `Stamps today's date when ${P().check} is checked (onEdit script)`;
+ case "status":return C.pack==="inventory"?`=IF(${L_("m")}${row}<=${L_("ro")}${row},IF(${L_("chk")}${row},"Ordered","Reorder"),"OK")`:`=IF(${L_("chk")}${row},"${P().doneWord}",${C.want.due?`IF(${L_("due")}${row}<TODAY(),"Overdue","${C.pack==="budget"?"Pending":"In progress"}")`:`"${C.pack==="budget"?"Pending":"In progress"}"`})`;
+ case "chk":return "Checkbox (TRUE / FALSE)";case "rating":return "Click 1 to 5 stars";
+ default:return "Cream cell: type here"}}
 
-/* ---------------- calculations ---------------- */
-const SUB=()=>Object.assign({},SUBJ[S.cfg.subj],S.cfg.noun||{});
-const isDone=r=>r.pick!=null&&r.status==="✓ "+SUBJ[S.cfg.subj].done;
-const amt=r=>r.pick!=null&&S.lib[r.pick]?(+S.lib[r.pick][2]||0):0;
-const isRedo=(r,i)=>r.pick!=null&&S.rows.slice(0,i).some(x=>x.pick===r.pick);
-const isLate=r=>r.pick!=null&&!isDone(r)&&r.due&&r.due<TODAY;
-function stats(){const c=S.cfg,s=SUB();const used=S.rows.filter(r=>r.pick!=null),done=used.filter(isDone);
-  const total=c.goalMode==="count"?done.length:done.reduce((a,r)=>a+amt(r),0),goal=c.goal||1;
-  const ms=[.2,.4,.6,.8,1].map(p=>p*goal),reached=s.limit?0:ms.filter(m=>total>=m-1e-9).length;
-  const sc=done.filter(r=>r.score!==""&&r.score!=null);
-  return {used:used.length,done:done.length,mid:used.filter(r=>r.status===s.mid).length,total,goal,pct:total/goal,ms,reached,
-    late:S.rows.filter(isLate).length,redo:S.rows.filter((r,i)=>isRedo(r,i)).length,avg:sc.length?Math.round(sc.reduce((a,r)=>a+ +r.score,0)/sc.length):null}}
-const unitTxt=v=>{const s=SUB();if(S.cfg.goalMode==="count")return fmtN(v)+" "+(Math.round(v)===1?s.one:s.many);const one={hrs:"hr",pages:"page",pts:"pt"};return s.unit==="dollars"?"$"+fmtN(v):fmtN(v)+" "+(Math.abs(v-1)<1e-9&&one[s.u]?one[s.u]:s.u)}
+/* ---------- tracker tab (dashboard banner on top) ---------- */
+function legendHTML(pr){const p=P();
+ if(pr.kind==="limit")return `Budget <b>${fmtU(pr.goal,"dollars")}</b><br>The bar turns red past 90%`;
+ if(pr.kind==="stock")return `Items at or below their<br>reorder point turn <b>red</b>`;
+ if(!C.f.stars)return `Goal <b>${fmtP(pr.goal,pr)}</b> ${pr.kind==="count"?pr.unit:""}`;
+ const ms=Array.from({length:C.stars},(_,i)=>pr.goal*(i+1)/C.stars);
+ if(C.stars<=5)return ms.map((m,i)=>`<span style="white-space:nowrap">${"★".repeat(i+1)} ${fmtP(Math.round(m*10)/10,pr)}</span>`).join(" &nbsp;");
+ return `★ every <b>${fmtP(Math.round(pr.goal/C.stars*10)/10,pr)}</b><br>${C.stars} stars to the goal`}
+function barHTML(pr,ti){const pct=Math.max(0,Math.min(1,pr.pct)),lit=litOf(pr);let st="";
+ if(C.f.stars&&starsKind())for(let i=0;i<C.stars;i++){const x=Math.min(97,(i+1)/C.stars*100);st+=`<span class="pstar${i<lit?" on":""}${JUST&&JUST.ti===ti&&JUST.i===i+1?" pop":""}" style="left:${x}%">★</span>`}
+ return `<div class="pbar" role="progressbar" aria-label="Progress toward goal" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${Math.round(pct*100)}"><div class="pfill${pr.kind==="limit"&&pr.pct>.9?" warn":""}" style="width:${pct*100}%"></div>${st}<span class="ptxt">${Math.round(pr.pct*100)}%</span></div>`}
+function valHTML(pr){const p=P();
+ if(pr.kind==="limit")return `${fmtU(pr.v,"dollars")} <small>of ${fmtU(pr.goal,"dollars")} spent</small>`;
+ if(pr.kind==="stock")return `${pr.v} / ${pr.goal} <small>items stocked</small>`;
+ return `${fmtP(pr.v,pr)} / ${fmtP(pr.goal,pr)}<small>${pr.kind==="count"?pr.unit:p.check.toLowerCase()+" so far"}</small>`}
+function chipsHTML(rows,pr){const p=P(),it=rows.filter(hasItem),c=[];
+ if(pr.kind==="limit"){const left=pr.goal-pr.v;c.push(["Spent "+fmtU(pr.v,"dollars"),""],[(left<0?"Over by ":"Left ")+fmtU(Math.abs(left),"dollars"),left<0?"r":""],["Paid "+it.filter(r=>r.chk).length+" of "+it.length,""]);
+  const over=D.lib.filter(l=>it.filter(r=>r.cat===l.name).reduce((a,r)=>a+(+r.m||0),0)>l.m).length;if(over)c.push([over+" categor"+(over>1?"ies":"y")+" over plan","r"])}
+ else if(pr.kind==="stock"){const re=it.filter(r=>statusOf(r)[0]==="Reorder").length;c.push([re+" to reorder",re?"r":""],[it.filter(r=>r.chk).length+" ordered",""],[pr.v+" OK",""])}
+ else{const done=it.filter(r=>r.chk).length;c.push([p.doneWord+": "+done+" of "+it.length,""],["In progress: "+(it.length-done),""]);
+  if(C.want.due){const od=it.filter(r=>!r.chk&&r.due&&r.due<TODAY).length;c.push(["Overdue: "+od,od?"r":""])}
+  if(C.want.rating){const rr=it.filter(r=>r.rating);if(rr.length)c.push(["Avg rating ★"+(rr.reduce((a,r)=>a+r.rating,0)/rr.length).toFixed(1),""])}
+  if(C.f.stars){const lit=litOf(pr);c.push(lit>=C.stars?["All stars earned! 🎉","g"]:[fmtP(Math.max(0,Math.round((pr.goal*(lit+1)/C.stars-pr.v)*10)/10),pr)+(pr.kind==="count"?" "+pr.unit:"")+" more to "+"★".repeat(lit+1)+" · Keep going!","g"])}}
+ return `<div class="kchips">${c.map(([t,cl])=>`<span class="${cl}">${esc(t)}</span>`).join("")}</div>`}
+function tipText(){const p=P(),lk=lookupOn(),nn=p.noun.toLowerCase();
+ if(C.pack==="inventory")return `Update the On hand counts. Items at or below their reorder point turn red and jump to the ${p.logName} tab. Check Ordered ✓ when you place the order. <b>Fill in the cream cells. Everything else is automatic.</b>`;
+ if(C.pack==="budget")return `Add each expense, choose its category, and type the amount. Check Paid ✓ when it's paid. The bar shows how much of the budget is used. <b>Fill in the cream cells. Everything else is automatic.</b>`;
+ return `${lk?`Pick a ${nn} from the dropdown and the details fill in`:`Type each ${C.pack==="generic"?C.itemLabel.toLowerCase():nn}`}, then check ${p.check} ✓.${C.f.banner?(C.f.stars&&starsKind()?" The bar fills and the stars light up.":" The bar at the top fills up."):""} <b>Fill in the cream cells. Everything else is automatic.</b>`}
+function viewTracker(ti){const t=D.trackers[ti];if(!t)return "";const cols=COLS,n=cols.length,mult=goalMult(),pr=progressOf(t.rows,mult);
+ let h=`<table class="ss"><thead><tr><th></th>${cols.map((c,i)=>`<th style="min-width:${WID[c.type]||110}px">${letter(i)}</th>`).join("")}</tr></thead><tbody>`;let rn=0;
+ /* fit the banner into what's visible: K leading columns (~860px); the rest get a plain band */
+ const ww=cols.map(c=>EST[c.type]||130);let K=0,cum=36;while(K<n&&cum+ww[K]<=880){cum+=ww[K];K++}K=Math.max(Math.min(3,n),K);const fill=n-K;
+ const span=(from,px)=>{let c=0,w=0,i=from;while(i<K&&(w<px||c<1)){w+=ww[i];i++;c++}return c};
+ const band=cls=>fill>0?`<td colspan="${fill}" class="${cls||""}" data-a="${letter(K)}" data-v=""></td>`:"";
+ if(C.f.banner){const a=Math.min(K-1,Math.max(2,span(0,360))),b=K-a>=2?Math.min(K-a-1,span(a,250)):K-a,c2=K-a-b;rn++;
+  const nm=t.name;const tf=`="${C.title}"&IF(${letter(a)}1<>"","  ·  "&${letter(a)}1,"")`;
+  h+=`<tr class="bn"><th>${rn}</th><td colspan="${a}" class="bn-title" data-a="A1" data-v="${esc(tf)}"><span class="ico">${C.icon}</span><span id="bnTitle">${esc(C.title.toUpperCase())}${nm?`<small>  ·  ${esc(nm)}</small>`:""}</span></td>`;
+  if(b)h+=`<td colspan="${b}" class="bn-name" data-a="${letter(a)}1" data-v="Cream cell: type a name and the title and tab update"><label>Name <input id="bnName" data-t="${ti}" value="${esc(nm)}" placeholder="✏️ Type your name here" aria-label="Name"></label></td>`;
+  if(c2>0)h+=`<td colspan="${c2}" class="bn-leg" data-a="${letter(a+b)}1" data-v="Milestones: =Goal*{1,2,3,4,5}/5">${legendHTML(pr)}</td>`;
+  h+=band()+"</tr>";rn++;const vc=Math.min(K-1,Math.max(1,span(0,230)));const sumF=pr.kind==="count"?`=COUNTIF(${L_("chk")}:${L_("chk")},TRUE)`:pr.kind==="stock"?`=COUNTIF(Status,"OK")`:pr.kind==="limit"?`=SUM(${L_("m")}:${L_("m")})`:`=SUMIFS(${L_("m")}:${L_("m")},${L_("chk")}:${L_("chk")},TRUE)`;
+  h+=`<tr class="bn bn2"><th>${rn}</th><td colspan="${vc}" class="bn-val" data-a="A2" data-v="${esc(sumF)}">${valHTML(pr)}</td><td colspan="${K-vc}" class="bn-bar" data-a="${letter(vc)}2" data-v="${esc(`Bar: =${sumF.slice(1)}/Goal   Stars: =REPT("★",COUNTIF(Milestones,"<="&Total))`)}">${barHTML(pr,ti)}</td>${band("bn-bar")}</tr>`;
+  rn++;h+=`<tr class="bn bn3"><th>${rn}</th><td colspan="${K}" data-a="A3" data-v="Totals: COUNTIF / SUMIFS on this tab">${chipsHTML(t.rows,pr)}</td>${band()}</tr>`}
+ rn++;h+=`<tr class="tip"><th>${rn}</th><td colspan="${K}" data-a="A${rn}" data-v="Instructions">${tipText()}</td>${band()}</tr>`;
 
-/* ---------------- columns of the tracker ---------------- */
-function trackerCols(){const c=S.cfg,s=SUB(),k=c.col;const cols=[{k:"n",l:"#",w:40},{k:"pick",l:`Choose a ${s.one} ▼`,w:250,cr:1},{k:"cat",l:s.catL,w:120},{k:"amt",l:s.amtL,w:90,num:1}];
-  if(k.link)cols.push({k:"link",l:"Link",w:90});if(k.sum)cols.push({k:"sum",l:"Summary",w:260});
-  if(k.owner)cols.push({k:"owner",l:c.ownerL,w:120,cr:1});if(k.prio)cols.push({k:"prio",l:"Priority",w:100,cr:1});
-  if(k.due)cols.push({k:"due",l:"Due date",w:140,cr:1});
-  cols.push({k:"status",l:s.done==="Submitted"?"Submitted?":"Status",w:150,cr:1});
-  if(k.date)cols.push({k:"date",l:"Date "+s.done.toLowerCase(),w:140,cr:1});
-  if(k.score)cols.push({k:"score",l:"Score",w:80,cr:1});
-  cols.push({k:"cnt",l:s.limit?"Spent":"Counts toward goal",w:120,num:1});
-  if(k.notes)cols.push({k:"notes",l:"Notes",w:170,cr:1});
-  cols.forEach((c,i)=>c.L=L(i));return cols}
-const colL=k=>(trackerCols().find(c=>c.k===k)||{}).L||"A";
+ rn++;h+=`<tr><th>${rn}</th>${cols.map((c,i)=>`<td class="hd" data-a="${letter(i)}${rn}" data-v="${esc(c.label)}">${esc(c.label)}${c.type==="pick"?" ▾":""}</td>`).join("")}</tr>`;
+ t.rows.forEach((r,ri)=>{rn++;const st=statusOf(r),late=C.f.lights&&st[1]==="r";
+  h+=`<tr class="${late?"late":""}${FLASH&&FLASH.ti===ti&&FLASH.ri===ri?" fl":""}"><th>${rn}</th>`+cols.map((c,ci)=>cellHTML(c,r,ri,ti,rn,ci,st)).join("")+"</tr>"});
+ return h+"</tbody></table>"}
+function cellHTML(c,r,ri,ti,rn,ci,st){const a=letter(ci)+rn,base=`data-a="${a}" data-k="${c.k}" data-ri="${ri}" data-t="${ti}" data-v="${esc(fxOf(c,rn))}"`,has=hasItem(r);
+ switch(c.type){
+ case "rownum":return `<td class="rn" data-a="${a}" data-v="${ri+1}">${ri+1}</td>`;
+ case "pick":{const v=itemName(r);return `<td class="in pick" ${base}>${v?esc(v):`<span class="ph">Choose</span>`}<span class="caret">▾</span></td>`}
+ case "text":{const v=c.k==="name"?r.name:r[c.k];return `<td class="in" ${base}>${esc(v||"")}</td>`}
+ case "list":{const v=c.k==="cat"?r.cat:c.k==="prio"?r.prio:r[c.k];return `<td class="in list" ${base}>${has?esc(v||""):""}<span class="caret">▾</span></td>`}
+ case "auto":{if(!has)return `<td class="auto" ${base}></td>`;const l=libOf(r)||{};
+  if(c.k==="m")return `<td class="auto n" ${base}>${fmtM(mOf(r))}</td>`;if(c.k==="ro")return `<td class="auto n" ${base}>${num(reorderOf(r),0)}</td>`;
+  if(c.k==="link")return `<td class="auto lk" ${base}><span class="lnk">${esc(l.link||"")}</span></td>`;return `<td class="auto" ${base}>${esc(c.k==="cat"?catOf(r):l.info||"")}</td>`}
+ case "num":{const v=c.k==="ro"?r.min:r.m;return `<td class="in n" ${base}>${has&&v!=null&&v!==""?fmtM(v):""}</td>`}
+ case "date":return `<td class="in" ${base}>${has?fmtD(r.due):""}</td>`;
+ case "rating":return `<td class="in rate" ${base}>${[1,2,3,4,5].map(i=>`<button type="button" data-i="${i}" class="${(r.rating||0)>=i?"on":""}" aria-label="${i} star${i>1?"s":""}" ${has?"":"disabled"}>★</button>`).join("")}</td>`;
+ case "check":return `<td class="in chk" ${base}><input type="checkbox" class="cb" data-t="${ti}" data-ri="${ri}" ${r.chk?"checked":""} ${has?"":"disabled"} aria-label="${esc(c.label)}, row ${ri+1}"></td>`;
+ case "stamp":return `<td class="auto" ${base}>${has&&r.chk?fmtD(r.done):""}</td>`;
+ case "status":return `<td class="auto" ${base}>${st[0]?`<span class="lt ${st[1]}"></span>${st[0]}`:""}</td>`}
+ return "<td></td>"}
 
-/* ---------------- formula text for the formula bar ---------------- */
-function fx(k,r){const s=SUB(),n=S.lib.length+1,P=colL("pick"),lib=`'${s.libTab}'`,first=hdr()+1,last=hdr()+S.cfg.rows,st=colL("status");
-  const idx=c=>`=IF($${P}${r}="","",INDEX(${lib}!$${c}$2:$${c}$${n},MATCH($${P}${r},${lib}!$A$2:$A$${n},0)))`;
-  return {pick:`Dropdown list → ${lib}!$A$2:$A$${n}`,cat:idx("B"),amt:idx("C"),
-    sum:S.f.redo?`=IF($${P}${r}="","",IF(COUNTIF($${P}$${first}:$${P}${r},$${P}${r})>1,"🔁 REDO · ","")&INDEX(${lib}!$D$2:$D$${n},MATCH($${P}${r},${lib}!$A$2:$A$${n},0)))`:idx("D"),
-    link:`=IF($${P}${r}="","",HYPERLINK(INDEX(${lib}!$E$2:$E$${n},MATCH($${P}${r},${lib}!$A$2:$A$${n},0)),"Open ↗"))`,
-    cnt:S.cfg.goalMode==="count"?`=IF($${st}${r}="✓ ${s.done}",1,0)`:`=IF(AND($${st}${r}="✓ ${s.done}",$${P}${r}<>""),$${colL("amt")}${r},0)`,
-    status:`Dropdown list → "", "${s.mid}", "✓ ${s.done}"   ·   row turns ${THEMES[S.theme].n.toLowerCase()} when ✓`,
-    date:S.f.stamp?`Auto-stamp: a small script writes TODAY() here when ${st}${r} becomes "✓ ${s.done}"`:"Type the date",
-    due:`Type a date · turns red when it passes and ${st}${r} isn't "✓ ${s.done}"`,owner:"Type a name",prio:'Dropdown list → "High", "Medium", "Low"',score:"Type a score from 0 to 100",notes:"Type anything",
-    n:`=ROW()-${hdr()}`,total:`=SUM($${colL("cnt")}$${first}:$${colL("cnt")}$${last})`}[k]||""}
-const hdr=()=>S.f.banner?5:1;
+/* ---------- dashboard tab ---------- */
+function viewDash(){const p=P(),th=THEMES[C.theme],G=groups(),rows=allRows(),it=rows.filter(hasItem);
+ let pr;if(G.length>1&&starsKind()){const ps=G.map(g=>progressOf(g.rows));pr={v:ps.reduce((a,x)=>a+x.v,0),goal:ps.reduce((a,x)=>a+x.goal,0),unit:ps[0].unit,kind:C.goal.kind};pr.pct=pr.goal?pr.v/pr.goal:0}else pr=progressOf(rows);
+ const tiles=[];
+ if(pr.kind==="limit"){tiles.push(["Spent",fmtU(pr.v,"dollars")],["Budget",fmtU(pr.goal,"dollars")],["Left",fmtU(pr.goal-pr.v,"dollars"),pr.goal-pr.v<0],["Paid",it.filter(r=>r.chk).length+" of "+it.length])}
+ else if(pr.kind==="stock"){const re=it.filter(r=>statusOf(r)[0]==="Reorder").length;tiles.push(["Items",it.length],["To reorder",re,re>0],["Ordered",it.filter(r=>r.chk).length],["Stock health",Math.round(pr.pct*100)+"%"])}
+ else{tiles.push([G.length>1?"Team progress":"Progress",fmtP(pr.v,pr)+(pr.kind==="count"?" "+pr.unit:"")],["Of goal",Math.round(pr.pct*100)+"%"],[p.doneWord,it.filter(r=>r.chk).length+" of "+it.length]);
+  if(C.want.due){const od=it.filter(r=>!r.chk&&r.due&&r.due<TODAY).length;tiles.push(["Overdue",od,od>0])}
+  if(C.want.rating){const rr=it.filter(r=>r.rating);if(rr.length)tiles.push(["Avg rating","★ "+(rr.reduce((a,r)=>a+r.rating,0)/rr.length).toFixed(1)])}}
+ let h=`<div class="dash"><div class="dash-top"><h3>📊 DASHBOARD · ${esc(C.title.toUpperCase())}</h3><span>Fills itself from ${D.trackers.length>1?"every person's tab":"the "+esc(p.tab)+" tab"}</span></div>
+  <div class="kp">${tiles.map(([l,v,red])=>`<div><span>${esc(l)}</span><b class="${red?"r":""}">${esc(String(v))}</b></div>`).join("")}</div><div class="charts">`;
+ /* ring */
+ const pct=Math.max(0,Math.min(1,pr.pct)),R=62,Cc=2*Math.PI*R;const ringCol=pr.kind==="limit"&&pr.pct>.9?"#D6452C":th.a;
+ h+=`<div class="chart"><h4>${pr.kind==="limit"?"Budget used":pr.kind==="stock"?"Stock health":G.length>1?"Team goal":"Goal"}</h4><svg class="ring" viewBox="0 0 180 170" role="img" aria-label="${Math.round(pr.pct*100)} percent"><circle cx="90" cy="84" r="${R}" fill="none" stroke="#EEF1EC" stroke-width="18"/><circle cx="90" cy="84" r="${R}" fill="none" stroke="${ringCol}" stroke-width="18" stroke-linecap="round" stroke-dasharray="${Cc*pct} ${Cc}" transform="rotate(-90 90 84)"/><text x="90" y="86" text-anchor="middle" font-size="30" font-weight="700" fill="#1C211C">${Math.round(pr.pct*100)}%</text><text x="90" y="108" text-anchor="middle" font-size="10" fill="#6B756C">${esc(pr.kind==="limit"?"of budget":pr.kind==="stock"?"stocked":"of "+fmtP(pr.goal,pr)+(pr.kind==="count"?" "+pr.unit:""))}</text></svg>`;
+ if(C.f.stars&&starsKind()){const lit=litOf(pr);h+=`<div class="ring-stars" aria-label="${lit} of ${C.stars} stars">${"<b>★</b>".repeat(lit)}${"★".repeat(C.stars-lit)}</div>`}
+ h+=`</div>`;
+ /* bars by category */
+ const cats={};it.forEach(r=>{const k=catOf(r)||"Other";cats[k]=cats[k]||{v:0,plan:0};
+  if(pr.kind==="limit")cats[k].v+=(+mOf(r)||0);else if(pr.kind==="stock"){if(statusOf(r)[0]==="Reorder")cats[k].v++}else if(r.chk)cats[k].v+=pr.kind==="up"?(+mOf(r)||0):1});
+ if(pr.kind==="limit")D.lib.forEach(l=>{cats[l.name]=cats[l.name]||{v:0,plan:0};cats[l.name].plan=l.m});
+ const ce=Object.entries(cats).sort((a,b)=>b[1].v-a[1].v).slice(0,7);const mx=Math.max(1,...ce.map(([,o])=>Math.max(o.v,o.plan)));
+ const BW=420,LW=118,bh=30;let bs=`<svg viewBox="0 0 ${BW} ${ce.length*bh+8}" role="img" aria-label="Bar chart by ${esc(p.catLabel||"category")}">`;
+ ce.forEach(([k,o],i)=>{const y=i*bh+4,w=(BW-LW-70);bs+=`<text x="${LW-8}" y="${y+17}" text-anchor="end" font-size="12" fill="#26302B">${esc(k.length>16?k.slice(0,15)+"…":k)}</text>`;
+  if(pr.kind==="limit")bs+=`<rect x="${LW}" y="${y+5}" width="${w*o.plan/mx}" height="16" rx="3" fill="${th.s}" stroke="${th.a}" stroke-opacity=".35"/>`;
+  bs+=`<rect x="${LW}" y="${y+5}" width="${Math.max(2,w*o.v/mx)}" height="16" rx="3" fill="${pr.kind==="limit"&&o.v>o.plan?"#D6452C":pr.kind==="stock"?"#D6452C":th.a}"/><text x="${LW+w*Math.max(o.v,o.plan)/mx+6}" y="${y+18}" font-size="11.5" font-family="IBM Plex Mono" fill="#26302B">${pr.kind==="limit"?fmtU(o.v,"dollars")+(o.plan?" / "+fmtU(o.plan,"dollars"):""):pr.kind==="up"?fmtP(o.v,pr):o.v}</text>`});
+ bs+="</svg>";
+ h+=`<div class="chart"><h4>${pr.kind==="limit"?"Spent vs. plan by category":pr.kind==="stock"?"Items to reorder by location":(pr.kind==="up"?C.measure.label:p.doneWord)+" by "+esc((C.want.cat||lookupOn()?p.catLabel:"category").toLowerCase())}</h4>${ce.length?bs:'<p class="empty">Nothing yet.</p>'}</div>`;
+ /* leaderboard or trend */
+ if(G.length>1&&starsKind()){const sc=G.map((g,i)=>{const q=progressOf(g.rows);return {...g,q,i}}).sort((a,b)=>b.q.pct-a.q.pct);
+  h+=`<div class="chart wide"><h4>🏆 Leaderboard</h4><div class="lb">${sc.map((g,r)=>`<div class="lb-row"><span class="rk">${["🥇","🥈","🥉"][r]||r+1}</span><span class="av" style="background:${AVC[g.i%AVC.length]}">${esc((g.name||"?")[0])}</span><b>${esc(g.name)}</b><span class="tr"><i style="width:${Math.min(100,g.q.pct*100)}%"></i></span><span class="v">${fmtP(g.q.v,g.q)} / ${fmtP(g.q.goal,g.q)}</span><span class="st">${C.f.stars?"★".repeat(litOf(g.q))+`<i>${"★".repeat(C.stars-litOf(g.q))}</i>`:Math.round(g.q.pct*100)+"%"}</span></div>`).join("")}</div></div>`}
+ else if(starsKind()&&C.f.stamp){const days=28,pts=[];const doneR=it.filter(r=>r.chk&&r.done);for(let d=days-1;d>=0;d--){const day=new Date(TODAY-d*DAY);pts.push(doneR.filter(r=>r.done<=day).reduce((a,r)=>a+(pr.kind==="up"?(+mOf(r)||0):1),0))}
+  const W=640,H=180,L=46,top=14,B=26,ymax=Math.max(pr.goal,...pts)*1.08||1,sx=(W-L-12)/(days-1),sy=v=>top+(H-top-B)*(1-v/ymax);const path=pts.map((v,i)=>`${i?"L":"M"}${(L+i*sx).toFixed(1)},${sy(v).toFixed(1)}`).join("");
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Running total over the last four weeks">`;[0,.5,1].forEach(f=>{const v=ymax*f,y=sy(v);s+=`<line x1="${L}" x2="${W-12}" y1="${y}" y2="${y}" stroke="#EEF1EC"/><text x="${L-6}" y="${y+4}" text-anchor="end" font-size="10.5" fill="#6B756C" font-family="IBM Plex Mono">${num(v,0)}</text>`});
+  s+=`<line x1="${L}" x2="${W-12}" y1="${sy(pr.goal)}" y2="${sy(pr.goal)}" stroke="${th.g}" stroke-width="2" stroke-dasharray="6 5"/><text x="${W-14}" y="${sy(pr.goal)-5}" text-anchor="end" font-size="11" font-weight="700" fill="#8A6400">Goal</text>`;
+  s+=`<path d="${path} L${L+(days-1)*sx},${sy(0)} L${L},${sy(0)}Z" fill="${th.a}" opacity=".12"/><path d="${path}" fill="none" stroke="${th.a}" stroke-width="2.6"/>`;
+  [0,13,27].forEach(i=>{s+=`<text x="${L+i*sx}" y="${H-6}" text-anchor="middle" font-size="10.5" fill="#6B756C">${fmtD(new Date(TODAY-(days-1-i)*DAY))}</text>`});
+  h+=`<div class="chart wide"><h4>Running total, last 4 weeks</h4>${s}</svg></div>`}
+ h+=`</div><p class="note">Every number on this tab recalculates from the other tabs. Edit a cream cell and come back.</p></div>`;return h}
 
-/* ---------------- rendering: tracker ---------------- */
-function rewardLegend(st){const s=SUB(),R=REW[S.reward];if(s.limit)return `Budget ${unitTxt(st.goal)}`;
-  if(S.reward==="bar")return `Goal: ${unitTxt(st.goal)}`;
-  return st.ms.map((m,i)=>`<span>${R.ic[i]} ${S.cfg.goalMode==="count"?fmtN(Math.ceil(m-1e-9)):(SUB().unit==="dollars"?"$":"")+fmtN(Math.ceil(m-1e-9))}</span>`).join("")}
-function message(st){const s=SUB(),R=REW[S.reward],who=S.name.trim();
-  if(s.limit){const left=st.goal-st.total;if(st.total===0)return["Log your first purchase to see your budget update.",""];
-    if(left<0)return[`⚠ Over budget by $${fmtN(-left)}. Time to review the Needs attention tab.`,"bad"];
-    if(st.pct>=.85)return[`Heads up: ${Math.round(st.pct*100)}% of the budget is spent. $${fmtN(left)} left.`,"bad"];
-    return[`$${fmtN(st.total)} spent · $${fmtN(left)} left (${Math.round(st.pct*100)}% used). Nicely on track.`,""]}
-  if(st.total===0)return[`${who?who+", pick":"Pick"} your first ${s.one} to get started! ${S.reward==="bar"?"":R.ic[0]+" unlocks at "+unitTxt(Math.ceil(st.ms[0]))+"."}`,""];
-  if(st.total>=st.goal)return[`${S.reward==="bar"?"🎉 GOAL REACHED!":R.ic[4]+"  "+(S.reward==="stars"?"ALL 5 STARS!":R.names[4].toUpperCase()+" UNLOCKED!")} Amazing work${who?", "+who:""}!`,"win"];
-  const next=st.ms[st.reached],need=Math.max(0,next-st.total);
-  if(S.reward==="bar")return[`${Math.round(st.pct*100)}% of the way there. ${unitTxt(Math.ceil(st.goal-st.total))} to go${who?", "+who:""}!`,""];
-  const have=st.reached?`${R.ic[st.reached-1]} ${S.reward==="stars"?st.reached+(st.reached===1?" star":" stars"):R.names[st.reached-1]}! `:"";
-  return[`${have}${unitTxt(Math.ceil(need))} more to ${R.ic[st.reached]}${S.reward==="stars"?"":" "+R.names[st.reached]}. Keep going${who?", "+who:""}!`,""]}
-function banner(cols,st){const s=SUB(),R=REW[S.reward],span=cols.length,pct=Math.min(1,st.pct);
-  const segs=[...Array(20)].map((_,i)=>{const lo=i/20,hi=(i+1)/20,f=Math.max(0,Math.min(1,(pct-lo)/(hi-lo)));return `<i><b style="transform:scaleX(${f})"></b></i>`}).join("");
-  const segCls=s.limit?(st.pct>1?"over":st.pct>=.85?"warn":""):"";
-  const mks=s.limit?`<span class="mk ${st.pct>=1?"on":""}" style="left:100%">⚑</span>`:S.reward==="bar"?"":st.ms.map((m,i)=>`<span class="mk ${i<st.reached?"on":""}" style="left:${(i+1)*20-2.5}%">${S.reward==="stars"?"★".repeat(1):R.ic[i]}</span>`).join("");
-  const [msg,cls]=message(st);const ch=[];
-  ch.push(`<span class="chip">✓ ${st.done} ${s.done.toLowerCase()}</span>`);if(st.mid)ch.push(`<span class="chip">◐ ${st.mid} ${s.mid.toLowerCase()}</span>`);
-  ch.push(`<span class="chip">${st.used} of ${S.cfg.rows} rows used</span>`);
-  if(S.cfg.col.due)ch.push(`<span class="chip ${st.late?"r":""}">⚠ ${st.late} overdue</span>`);
-  if(st.avg!=null)ch.push(`<span class="chip">Avg score ${st.avg}%</span>`);
-  if(S.f.redo&&st.redo)ch.push(`<span class="chip b">🔁 ${st.redo} redo</span>`);
-  const T=SUB().icon+"  "+esc(S.cfg.title);
-  return `<tr><th>1</th><td class="bn" colspan="${span}" data-a="A1" data-v="=&quot;${esc(s.icon)} &quot;&amp;UPPER(Title)"><div class="bn1"><span class="tt">${T}</span><label class="nm">Tracker for <input id="nameIn" value="${esc(S.name)}" placeholder="✏️ Type your name here" maxlength="40"></label><span class="lg">${rewardLegend(st)}</span></div></td></tr>
-  <tr><th>2</th><td class="bn" colspan="${span}" data-a="B2:U2" data-v="Conditional fill: each cell lights up when ${esc(fx("total",0))} passes its share of ${esc(unitTxt(st.goal))}"><div class="bn2"><span class="ic">${s.limit?"💰":"⏱"}</span><div class="bar">${mks}<div class="segs ${segCls}">${segs}</div></div><span class="tot">${unitTxt(st.total)} / ${unitTxt(st.goal)}</span></div></td></tr>
-  <tr><th>3</th><td class="bn" colspan="${span}" data-a="A3" data-v="=IF(total>=goal,&quot;ALL DONE!&quot;,&quot;…more to the next milestone&quot;)"><div class="bn3 ${cls}">${esc(msg)}</div></td></tr>
-  <tr><th>4</th><td class="bn" colspan="${span}" data-a="A4" data-v="Live counts: COUNTIF, COUNTIFS, AVERAGEIF across the rows below"><div class="bn4">${ch.join("")}</div></td></tr>`}
-function vTrack(){const cols=trackerCols(),st=stats(),s=SUB(),h=hdr();
-  let x=`<table class="ss"><thead><tr><th></th>${cols.map(c=>`<th style="min-width:${c.w}px">${c.L}</th>`).join("")}</tr></thead><tbody>`;
-  if(S.f.banner)x+=banner(cols,st);
-  x+=`<tr><th>${h}</th>${cols.map(c=>`<td class="hd" data-a="${c.L}${h}" data-v="${esc(c.l)}">${esc(c.l)}</td>`).join("")}</tr>`;
-  S.rows.forEach((r,i)=>{const rn=h+1+i,d=isDone(r),redo=S.f.redo&&isRedo(r,i),lib=r.pick!=null?S.lib[r.pick]:null;
-    x+=`<tr class="${d?"done":""} ${redo?"redo":""}"><th>${rn}</th>`+cols.map(c=>{const a=c.L+rn,f=esc(fx(c.k,rn));
-      switch(c.k){
-       case"n":return `<td class="c mu num0" data-a="${a}" data-v="${f}">${d?'<span class="chk">✓</span>':i+1}</td>`;
-       case"pick":return `<td class="cr pk" data-a="${a}" data-v="${f}"><select data-k="pick" data-ri="${i}" class="${r.pick==null?"empty":""}" aria-label="${esc(c.l)} row ${rn}"><option value="">Choose a ${s.one} ▼</option>${S.lib.map((l,li)=>`<option value="${li}" ${r.pick===li?"selected":""}>${esc(l[0])}</option>`).join("")}</select></td>`;
-       case"cat":return `<td class="au" data-a="${a}" data-v="${f}">${lib?esc(lib[1]):""}</td>`;
-       case"amt":return `<td class="n au" data-a="${a}" data-v="${f}">${lib?(s.unit==="dollars"?"$":"")+fmtN(lib[2]):""}</td>`;
-       case"link":return `<td data-a="${a}" data-v="${f}">${lib?'<span class="lnk">Open ↗</span>':""}</td>`;
-       case"sum":return `<td class="sm" data-a="${a}" data-v="${f}" title="${lib?esc(lib[3]):""}">${lib?(redo?"🔁 REDO · ":"")+esc(lib[3]):""}</td>`;
-       case"owner":return `<td class="cr" data-a="${a}" data-v="${f}"><input data-k="owner" data-ri="${i}" value="${esc(r.owner)}" placeholder="Name" aria-label="${esc(c.l)} row ${rn}"></td>`;
-       case"prio":return `<td class="cr" data-a="${a}" data-v="${f}"><select data-k="prio" data-ri="${i}" class="${r.prio?"":"empty"}" aria-label="Priority row ${rn}"><option value="">▼</option>${["High","Medium","Low"].map(o=>`<option ${r.prio===o?"selected":""}>${o}</option>`).join("")}</select></td>`;
-       case"due":return `<td class="cr ${isLate(r)?"late":""}" data-a="${a}" data-v="${f}"><input type="date" data-k="due" data-ri="${i}" value="${iso(r.due)}" aria-label="Due date row ${rn}"></td>`;
-       case"status":return `<td class="cr" data-a="${a}" data-v="${f}"><select data-k="status" data-ri="${i}" class="${r.status?"":"empty"}" aria-label="${esc(c.l)} row ${rn}"><option value="">▼</option><option ${r.status===s.mid?"selected":""}>${s.mid}</option><option ${r.status==="✓ "+s.done?"selected":""}>✓ ${s.done}</option></select></td>`;
-       case"date":return `<td class="cr" data-a="${a}" data-v="${f}"><input type="date" data-k="date" data-ri="${i}" value="${iso(r.date)}" aria-label="${esc(c.l)} row ${rn}"></td>`;
-       case"score":return `<td class="cr" data-a="${a}" data-v="${f}"><input type="number" min="0" max="100" data-k="score" data-ri="${i}" value="${esc(r.score)}" aria-label="Score row ${rn}"></td>`;
-       case"cnt":{const v=S.cfg.goalMode==="count"?(d?1:0):(d?amt(r):0);return `<td class="n cnt" data-a="${a}" data-v="${f}">${r.pick==null?"":S.cfg.goalMode==="count"?v:(s.unit==="dollars"?"$":"")+fmtN(v)}</td>`}
-       case"notes":return `<td class="cr" data-a="${a}" data-v="${f}"><input data-k="notes" data-ri="${i}" value="${esc(r.notes)}" placeholder="" aria-label="Notes row ${rn}"></td>`}}).join("")+"</tr>"});
-  return x+"</tbody></table>"}
+/* ---------- log tab ---------- */
+function logItems(){const out=[];D.trackers.forEach((t,ti)=>t.rows.forEach(r=>{if(!hasItem(r))return;
+ if(C.pack==="inventory"){if(statusOf(r)[0]==="Reorder")out.push({t,r})}else if(r.chk)out.push({t,r})}));
+ if(C.pack!=="inventory")out.sort((a,b)=>(b.r.done||0)-(a.r.done||0));return out}
+function viewLog(){const p=P(),items=logItems(),multi=groups().length>1;let cols;
+ if(C.pack==="inventory")cols=[["Item",x=>itemName(x.r)],["Location",x=>catOf(x.r)],["On hand",x=>num(mOf(x.r),0),1],["Reorder at",x=>num(reorderOf(x.r),0),1],["Order qty",x=>num(Math.max(reorderOf(x.r)*3-mOf(x.r),1),0),1],["Est. cost",x=>{const l=libOf(x.r);return l&&l.cost?"$"+num(Math.max(reorderOf(x.r)*3-mOf(x.r),1)*l.cost,2):""},1]];
+ else{cols=[];if(C.f.stamp)cols.push([p.stampLabel,x=>fmtD(x.r.done)]);if(multi)cols.push(["Person",x=>x.r.who||x.t.name]);cols.push([lookupOn()?p.noun:(C.itemLabel||p.noun),x=>itemName(x.r)]);
+  if(C.want.cat||lookupOn()||p.catLib)cols.push([p.catLabel||"Category",x=>catOf(x.r)]);if(C.measure)cols.push([C.measure.label,x=>fmtM(mOf(x.r)),1]);if(C.want.rating)cols.push(["Rating",x=>x.r.rating?"★".repeat(x.r.rating):"",0,1])}
+ const n=cols.length,fx=C.pack==="inventory"?`=FILTER(Stock!A:Z,Stock!Status="Reorder")`:`=SORT(FILTER(${D.trackers.length>1?"VSTACK("+D.trackers.map(t=>`'${t.name}'!A:Z`).join(",")+")":`'${p.tab}'!A:Z`},${p.check}=TRUE),Date,-1)`;
+ let h=`<table class="ss"><thead><tr><th></th>${cols.map((c,i)=>`<th style="min-width:${i===0?130:120}px">${letter(i)}</th>`).join("")}</tr></thead><tbody>`;
+ h+=`<tr class="bn"><th>1</th><td colspan="${n}" class="bn-title" data-a="A1" data-v="${esc(fx)}"><span class="ico">${C.pack==="inventory"?"🛒":"✓"}</span>${esc(p.logName.toUpperCase())} <small> · fills itself</small></td></tr>`;
+ h+=`<tr class="tip"><th>2</th><td colspan="${n}" data-a="A2" data-v="${esc(fx)}">${C.pack==="inventory"?"Anything at or below its reorder point that isn't ordered yet shows up here automatically, with how many to buy.":`Anything checked ${esc(p.check)} on ${D.trackers.length>1?"any person's tab":"the tracker"} appears here automatically, newest first.`} Nothing to copy or paste.</td></tr>`;
+ h+=`<tr><th>3</th>${cols.map((c,i)=>`<td class="hd" data-a="${letter(i)}3" data-v="${esc(fx)}">${esc(c[0])}</td>`).join("")}</tr>`;
+ if(!items.length)h+=`<tr><th>4</th><td colspan="${n}" class="auto" data-a="A4" data-v="${esc(fx)}" style="text-align:center;color:#6B756C;height:60px">Nothing here yet. It fills in as soon as something qualifies.</td></tr>`;
+ items.forEach((x,i)=>{h+=`<tr><th>${i+4}</th>${cols.map((c,ci)=>`<td class="auto${c[2]?" n":""}${c[3]?" gstar":""}" data-a="${letter(ci)}${i+4}" data-v="Spilled from the formula in A1">${esc(c[1](x))}</td>`).join("")}</tr>`});
+ if(C.pack==="inventory"&&items.length){const tot=items.reduce((a,x)=>{const l=libOf(x.r);return a+(l&&l.cost?Math.max(reorderOf(x.r)*3-mOf(x.r),1)*l.cost:0)},0);h+=`<tr><th>${items.length+4}</th><td colspan="${n-1}" class="auto" style="text-align:right;font-weight:700" data-a="A${items.length+4}" data-v="Total">Estimated total</td><td class="auto n" style="font-weight:700" data-a="${letter(n-1)}${items.length+4}" data-v="=SUM(above)">$${num(tot,2)}</td></tr>`}
+ return h+"</tbody></table>"}
 
-/* ---------------- rendering: other tabs ---------------- */
-function vLib(){const s=SUB(),n=S.lib.length,link=S.cfg.col.link;const tot=S.lib.reduce((a,l)=>a+(+l[2]||0),0);
-  let x=`<table class="ss"><thead><tr><th></th><th style="min-width:250px">A</th><th style="min-width:120px">B</th><th style="min-width:90px">C</th><th style="min-width:300px">D</th>${link?'<th style="min-width:200px">E</th>':""}</tr></thead><tbody><tr><th>1</th>${[s.one[0].toUpperCase()+s.one.slice(1),s.catL,s.amtL,"Summary"].concat(link?["URL"]:[]).map((h,i)=>`<td class="hd" data-a="${L(i)}1" data-v="${h}">${h}</td>`).join("")}</tr>`;
-  S.lib.forEach((l,i)=>{const r=i+2;x+=`<tr><th>${r}</th><td class="cr" data-a="A${r}" data-v="Edit me: every row that picked this updates"><input data-li="${i}" data-lk="0" value="${esc(l[0])}" aria-label="Name ${r}"></td><td class="au" data-a="B${r}" data-v="${esc(l[1])}">${esc(l[1])}</td><td class="cr" data-a="C${r}" data-v="Edit me: totals, bar, and charts recalculate"><input type="number" min="0" step="any" data-li="${i}" data-lk="2" value="${l[2]}" aria-label="${esc(s.amtL)} ${r}"></td><td class="mu" data-a="D${r}" data-v="${esc(l[3])}">${esc(l[3])}</td>${link?`<td class="mu" data-a="E${r}" data-v="https://example.org/${s.many}/${i+1}">example.org/${s.many}/${i+1}</td>`:""}</tr>`});
-  x+=`<tr><th>${n+2}</th><td colspan="${link?5:4}" class="mu" data-a="A${n+2}" data-v="=&quot;All &quot;&amp;COUNTA(A2:A${n+1})&amp;&quot; ${s.many} add up to &quot;&amp;SUM(C2:C${n+1})" style="white-space:normal">All ${n} ${s.many} together add up to <b>${unitTxt(tot)}</b>. Edit a cream cell here and every row that uses it updates.</td></tr>`;
-  return x+"</tbody></table>"}
-function vHow(){const s=SUB(),c=S.cfg,R=REW[S.reward],st=stats();const cream=[["Tracker for",`Click the box at the top and type your name.`],[`Choose a ${s.one} ▼`,`Click the box, click the ▼ arrow, and pick a ${s.one}. The ${[s.catL.toLowerCase(),s.amtL.toLowerCase()].concat(c.col.sum?["summary"]:[]).concat(c.col.link?["link"]:[]).join(", ")} fill in by themselves.`]];
-  if(c.col.owner)cream.push([c.ownerL,"Type the name of the person doing it."]);if(c.col.prio)cream.push(["Priority","Pick High, Medium, or Low."]);if(c.col.due)cream.push(["Due date","Type the date it's due. It turns red if it passes."]);
-  cream.push([s.done==="Submitted"?"Submitted?":"Status",`Pick ${s.mid} while you work, then ✓ ${s.done} when it's finished.`]);if(c.col.date)cream.push(["Date "+s.done.toLowerCase(),S.f.stamp?"Fills in today's date by itself when you mark ✓. You can change it.":"Type the date you finished."]);
-  if(c.col.score)cream.push(["Score","Type your score from 0 to 100."]);if(c.col.notes)cream.push(["Notes","Anything you want to remember."]);
-  const steps=[["Type your name",`At the top of the ${s.tab} tab, click the cream box and type your name.`],[`Pick a ${s.one}`,`Click a cream "Choose a ${s.one}" box and pick from the list. Details fill in from the ${s.libTab} tab.`],[`Mark it ✓ ${s.done}`,`When you finish, set the status to ✓ ${s.done}.${S.f.stamp&&c.col.date?" The date stamps itself.":""}`]];
-  steps.push(s.limit?["Watch the budget bar","The bar fills as you spend. It turns amber near the limit and red if you go over."]:S.reward==="bar"?["Watch the bar fill","The bar at the top fills as you go. The message tells you how much is left."]:["Watch the rewards light up",`Earn ${R.n.toLowerCase()} at every 20% of your goal: ${st.ms.map((m,i)=>R.ic[i]+" "+unitTxt(Math.ceil(m-1e-9))).join(", ")}.`]);
-  const auto=[];if(S.f.attention)auto.push("Needs attention");if(S.f.summary)auto.push("Summary");if(S.f.dash)auto.push("Charts");
-  if(auto.length)steps.push(["Check the other tabs",`The ${auto.join(", ")} tab${auto.length>1?"s":""} build${auto.length>1?"":"s"} themselves from your entries. Nothing to type there.`]);
-  const good=[`Your choice: pick any ${s.one}, in any order.`];if(S.f.redo)good.push(`Doing a ${s.one} again? Pick it in a new row. It's marked 🔁 REDO and still counts.`);
-  good.push(`Changed your mind? Set the status back and the ${S.reward==="bar"?"bar":R.n.toLowerCase()} update right away.`,"Protected cells: only the cream boxes can be changed. Everything else fills in by itself.");
-  return `<div class="pad howto"><h3>${esc(s.icon)}  ${esc(c.title)}: how to use</h3><p class="lead">${s.limit?"Track every purchase against your budget.":`Reach ${unitTxt(c.goal)} by finishing ${s.many}.`} Fill in the cream cells. Everything else is automatic.</p>
-   <h4>Step by step</h4><div class="steps">${steps.map((st,i)=>`<div><span class="no">${i+1}</span><b>${esc(st[0])}</b><span>${esc(st[1])}</span></div>`).join("")}</div>
-   <h4>What goes in each cream box</h4><div class="steps cream">${cream.map(c=>`<div style="grid-template-columns:200px minmax(0,1fr)"><b>${esc(c[0])}</b><span>${esc(c[1])}</span></div>`).join("")}</div>
-   <h4>Good to know</h4><ul>${good.map(g=>`<li>${esc(g)}</li>`).join("")}</ul></div>`}
-function vAttn(){const s=SUB(),c=S.cfg;const list=S.rows.map((r,i)=>({r,i})).filter(o=>o.r.pick!=null&&!isDone(o.r));
-  const days=r=>r.due?Math.round((r.due-TODAY)/DAY):null;
-  list.sort((a,b)=>{const da=days(a.r),db=days(b.r);if(da==null&&db==null)return a.i-b.i;if(da==null)return 1;if(db==null)return -1;return da-db});
-  if(!list.length)return `<div class="empty">🎉 Nothing needs attention. Every ${s.one} that's been picked is ${s.done.toLowerCase()}.<br><span class="note">This tab fills itself in again as soon as something is open.</span></div>`;
-  const P=colL("pick"),st=colL("status"),h=hdr();
-  let x=`<table class="ss"><thead><tr><th></th>${["A","B","C","D","E"].slice(0,c.col.owner?5:4).map(l=>`<th>${l}</th>`).join("")}</tr></thead><tbody><tr><th>1</th>${[s.one[0].toUpperCase()+s.one.slice(1),c.col.owner?c.ownerL:null,"Status",c.col.due?"Due":"Row","Flag"].filter(v=>v!==null).map((v,i)=>`<td class="hd" data-a="${L(i)}1" data-v="=SORT(FILTER('${s.tab}'!${P}${h+1}:${st}${h+c.rows},('${s.tab}'!${P}${h+1}:${P}${h+c.rows}<&gt;&quot;&quot;)*('${s.tab}'!${st}${h+1}:${st}${h+c.rows}<&gt;&quot;✓ ${s.done}&quot;)))">${v}</td>`).join("")}</tr>`;
-  list.forEach((o,k)=>{const r=o.r,d=days(r),rn=k+2;const flag=d==null?["No due date","mu"]:d<0?[`⚠ ${-d} day${d===-1?"":"s"} overdue`,"late"]:d===0?["Due today","late"]:d<=7?[`Due in ${d} day${d===1?"":"s"}`,""]:[`Due in ${d} days`,"mu"];
-    x+=`<tr><th>${rn}</th><td data-a="A${rn}" data-v="Spilled from the FILTER in A1">${esc(S.lib[r.pick][0])}</td>${c.col.owner?`<td>${esc(r.owner)}</td>`:""}<td>${esc(r.status||"Not started")}</td><td class="mu">${c.col.due?fmtD(r.due)||"—":"Row "+(h+1+o.i)}</td><td style="${flag[1]==="late"?"color:#B3361F;font-weight:700":""}" class="${flag[1]==="mu"?"mu":""}">${flag[0]}</td></tr>`});
-  return x+"</tbody></table>"}
-function vSum(){const s=SUB(),c=S.cfg;const grp=(key)=>{const m={};S.rows.forEach(r=>{if(r.pick==null)return;const g=key(r)||"(blank)";(m[g]=m[g]||{picked:0,done:0,amt:0});m[g].picked++;if(isDone(r)){m[g].done++;m[g].amt+=c.goalMode==="count"?1:amt(r)}});return Object.entries(m).sort((a,b)=>b[1].amt-a[1].amt)};
-  const table=(title,rows,lab,startRow)=>{const max=Math.max(1,...rows.map(r=>r[1].amt));
-    let x=`<tr><th>${startRow}</th>${[lab,"Picked","Done",s.limit?"Spent":"Counted","Share"].map((h,i)=>`<td class="hd" data-a="${L(i)}${startRow}" data-v="${i===0?"=SORT(UNIQUE(…))":i===1?"=COUNTIF(…)":i===2?"=COUNTIFS(…,&quot;✓ "+s.done+"&quot;)":"=SUMIFS(…)"}">${h}</td>`).join("")}</tr>`;
-    rows.forEach(([g,v],k)=>{const rn=startRow+1+k;x+=`<tr><th>${rn}</th><td data-a="A${rn}" data-v="Spilled from SORT(UNIQUE(…))">${esc(g)}</td><td class="n">${v.picked}</td><td class="n">${v.done}</td><td class="n cnt">${c.goalMode==="count"?v.amt:unitTxt(v.amt)}</td><td style="min-width:180px"><div style="display:flex;align-items:center;gap:8px"><span style="flex:1;height:10px;background:var(--t-pale);border:1px solid var(--t-light);border-radius:2px;overflow:hidden"><i style="display:block;height:100%;width:${v.amt/max*100}%;background:var(--t-mid)"></i></span><span class="mu" style="font-family:var(--f-mono);font-size:12px">${Math.round(v.amt/max*100)}%</span></div></td></tr>`});return [x,rows.length+1]};
-  const a=grp(r=>S.lib[r.pick][1]);if(!a.length)return `<div class="empty">Pick a few ${s.many} on the ${esc(s.tab)} tab and this summary builds itself.</div>`;
-  let [x,n]=table("",a,s.catL,1);let body=x;
-  if(c.col.owner){const b=grp(r=>r.owner);body+=`<tr><th>${n+1}</th><td colspan="5" style="background:#fff;border-left:0;border-right:0"></td></tr>`;const [y]=table("",b,c.ownerL,n+2);body+=y}
-  return `<table class="ss"><thead><tr><th></th>${["A","B","C","D","E"].map(l=>`<th>${l}</th>`).join("")}</tr></thead><tbody>${body}</tbody></table>`}
-function vDash(){const s=SUB(),c=S.cfg,st=stats(),T=THEMES[S.theme],R=REW[S.reward];
-  const k=[[s.limit?"Spent":"Progress",unitTxt(st.total)],[s.limit?"Budget left":"Goal",s.limit?"$"+fmtN(Math.max(0,st.goal-st.total)):unitTxt(st.goal)],["✓ "+s.done,st.done],[st.avg!=null?"Avg score":c.col.due?"Overdue":s.mid,st.avg!=null?st.avg+"%":c.col.due?st.late:st.mid]];
-  // ring
-  const p=Math.min(1,st.pct),R0=62,C=2*Math.PI*R0;const ringCol=s.limit&&st.pct>1?"#C9452C":s.limit&&st.pct>=.85?"#E0A021":T.mid;
-  const ring=`<svg viewBox="0 0 200 170" role="img" aria-label="${Math.round(st.pct*100)}% of goal"><circle cx="100" cy="80" r="${R0}" fill="none" stroke="${T.pale}" stroke-width="18"/><circle cx="100" cy="80" r="${R0}" fill="none" stroke="${ringCol}" stroke-width="18" stroke-linecap="round" stroke-dasharray="${C*p} ${C}" transform="rotate(-90 100 80)"/><text x="100" y="86" text-anchor="middle" font-size="30" font-family="IBM Plex Mono" fill="#1F2421">${Math.round(st.pct*100)}%</text><text x="100" y="106" text-anchor="middle" font-size="11" fill="#5B6460">${s.limit?"of budget":"of goal"}</text>${s.limit||S.reward==="bar"?"":R.ic.map((ic,i)=>`<text x="${40+i*30}" y="164" text-anchor="middle" font-size="${S.reward==="levels"?11:16}" font-weight="700" fill="${i<st.reached?T.dark:"#C8CFCB"}">${S.reward==="stars"?"★":ic}</text>`).join("")}</svg>`;
-  // by category bars
-  const m={};S.rows.forEach(r=>{if(r.pick==null)return;const g=S.lib[r.pick][1];m[g]=m[g]||{d:0,o:0};const v=c.goalMode==="count"?1:amt(r);if(isDone(r))m[g].d+=v;else m[g].o+=v});
-  const cats=Object.entries(m).sort((a,b)=>(b[1].d+b[1].o)-(a[1].d+a[1].o)),mx=Math.max(1,...cats.map(x=>x[1].d+x[1].o));
-  const W=420,rh=28,Lw=110,bw=W-Lw-60;let bars=`<svg viewBox="0 0 ${W} ${Math.max(1,cats.length)*rh+6}" role="img" aria-label="Amount by ${esc(s.catL.toLowerCase())}">`;
-  cats.forEach(([g,v],i)=>{const y=i*rh+4,a=bw*v.d/mx,b=bw*v.o/mx;bars+=`<text x="${Lw-8}" y="${y+15}" text-anchor="end" font-size="12" fill="#1F2421">${esc(g)}</text><rect x="${Lw}" y="${y+4}" width="${Math.max(0,a)}" height="15" rx="2" fill="${T.mid}"/><rect x="${Lw+a}" y="${y+4}" width="${Math.max(0,b)}" height="15" rx="2" fill="${T.light}"/><text x="${Lw+a+b+6}" y="${y+16}" font-size="11.5" font-family="IBM Plex Mono" fill="#5B6460">${c.goalMode==="count"?v.d:(s.unit==="dollars"?"$":"")+fmtN(v.d)}</text>`});bars+="</svg>";
-  // cumulative line
-  const pts=S.rows.filter(r=>isDone(r)&&r.date).map(r=>({d:r.date,v:c.goalMode==="count"?1:amt(r)})).sort((a,b)=>a.d-b.d);
-  let line=`<div class="empty" style="padding:20px">Mark a few ${s.many} ✓ ${s.done.toLowerCase()} with dates and this chart draws itself.</div>`;
-  if(pts.length){const W2=640,H2=200,l=44,r=14,t=14,b=26;const d0=new Date(Math.min(pts[0].d,TODAY-21*DAY)),d1=TODAY;const span=Math.max(DAY,d1-d0);
-    let cum=0;const P=pts.map(p=>({x:l+(p.d-d0)/span*(W2-l-r),y:(cum+=p.v)}));const ymax=Math.max(st.goal,cum)*1.05;const Y=v=>t+(H2-t-b)*(1-v/ymax);
-    const path=`M${l},${Y(0)} `+P.map((p,i)=>`L${p.x.toFixed(1)},${Y(i?P[i-1].y:0).toFixed(1)} L${p.x.toFixed(1)},${Y(p.y).toFixed(1)}`).join(" ")+` L${W2-r},${Y(cum)}`;
-    line=`<svg viewBox="0 0 ${W2} ${H2}" role="img" aria-label="Cumulative ${s.unit} over time">`;
-    [0,.5,1].forEach(f=>{const v=ymax*f,y=Y(v);line+=`<line x1="${l}" x2="${W2-r}" y1="${y}" y2="${y}" stroke="#E7EAE8"/><text x="${l-6}" y="${y+4}" text-anchor="end" font-size="10.5" font-family="IBM Plex Mono" fill="#5B6460">${fmtN(Math.round(v))}</text>`});
-    line+=`<line x1="${l}" x2="${W2-r}" y1="${Y(st.goal)}" y2="${Y(st.goal)}" stroke="${s.limit?"#C9452C":T.dark}" stroke-dasharray="5 4" stroke-width="1.5"/><text x="${W2-r}" y="${Y(st.goal)-5}" text-anchor="end" font-size="11" font-weight="700" fill="${s.limit?"#C9452C":T.dark}">${s.limit?"Budget":"Goal"} ${unitTxt(st.goal)}</text>`;
-    line+=`<path d="${path} L${W2-r},${Y(0)} Z" fill="${T.mid}" opacity=".12"/><path d="${path}" fill="none" stroke="${T.mid}" stroke-width="2.4" stroke-linejoin="round"/>`;
-    [d0,new Date((+d0+ +d1)/2),d1].forEach((d,i)=>line+=`<text x="${[l,(l+W2-r)/2,W2-r][i]}" y="${H2-6}" text-anchor="${["start","middle","end"][i]}" font-size="10.5" fill="#5B6460">${fmtD(d)}</text>`);line+="</svg>"}
-  return `<div class="pad"><div class="kpis">${k.map(([a,b])=>`<div><span>${esc(a)}</span><b>${esc(String(b))}</b></div>`).join("")}</div>
-   <div class="charts"><div class="chart"><h4>${s.limit?"Budget used":"Progress to goal"}</h4>${ring}</div><div class="chart"><h4>By ${esc(s.catL.toLowerCase())}</h4>${cats.length?bars:`<div class="empty" style="padding:20px">Pick some ${s.many} to see this chart.</div>`}<div class="legend"><span><i style="background:${T.mid}"></i>${s.done}</span><span><i style="background:${T.light}"></i>Not yet</span></div></div>
-   <div class="chart wide"><h4>${s.limit?"Spending":"Progress"} over time</h4>${line}</div></div><p class="note">Every number and chart on this tab recalculates from the ${esc(s.tab)} tab. Change a cream cell there and come back.</p></div>`}
+/* ---------- library tab ---------- */
+function viewLib(){const p=P(),rows=allRows();let cols,h;
+ if(C.pack==="budget"){cols=[["Category",(l)=>esc(l.name)],["Planned",(l,i)=>"$"+num(l.m,0),"in","m"],["Spent",(l)=>"$"+num(spentOf(l),0)],["Left",(l)=>{const v=l.m-spentOf(l);return `<span style="color:${v<0?"#C23B22":"inherit"}">${v<0?"−":""}$${num(Math.abs(v),0)}</span>`}],["Used",(l)=>{const u=l.m?spentOf(l)/l.m:0;return `<span class="pbar" style="display:inline-block;width:110px;height:12px;vertical-align:middle"><span class="pfill${u>.9?" warn":""}" style="display:block;width:${Math.min(100,u*100)}%"></span></span> ${Math.round(u*100)}%`}]]}
+ else{cols=[["Name",(l)=>esc(l.name)]];if(p.catLabel)cols.push([p.catLabel,(l)=>esc(l.cat)]);
+  if(C.pack==="inventory")cols.push(["Reorder at",(l)=>num(l.m,0),"in","m"],["Unit cost",(l)=>esc(l.info)]);
+  else{if(C.measure&&C.measure.from==="lib")cols.push([C.measure.label,(l)=>fmtM(l.m),"in","m"]);if(p.infoLabel)cols.push([p.infoLabel,(l)=>esc(l.info)]);if(p.linkBase)cols.push(["Link",(l)=>`<span class="lnk">${esc(l.link)}</span>`])}
+  cols.push(["Times used",(l,i)=>rows.filter(r=>r.pick===i&&hasItem(r)).length])}
+ const n=cols.length;
+ h=`<table class="ss"><thead><tr><th></th>${cols.map((c,i)=>`<th style="min-width:${i===0?200:110}px">${letter(i)}</th>`).join("")}</tr></thead><tbody>`;
+ h+=`<tr class="bn"><th>1</th><td colspan="${n}" class="bn-title" data-a="A1" data-v="Lookup list"><span class="ico">📒</span>${C.pack==="budget"?"BUDGET BY CATEGORY":"LIBRARY"} <small> · ${C.pack==="budget"?"spent fills itself":"the dropdowns read from here"}</small></td></tr>`;
+ h+=`<tr class="tip"><th>2</th><td colspan="${n}" data-a="A2" data-v="Instructions">${C.pack==="budget"?"Type each category's planned amount in the cream cells. Spent, Left, and Used add up from the Expenses tab on their own.":"Change a cream value here and every row that uses it updates on its own. That's how one list keeps every tab consistent."}</td></tr>`;
+ h+=`<tr><th>3</th>${cols.map((c,i)=>`<td class="hd" data-a="${letter(i)}3" data-v="${esc(c[0])}">${esc(c[0])}</td>`).join("")}</tr>`;
+ D.lib.forEach((l,i)=>{h+=`<tr><th>${i+4}</th>${cols.map((c,ci)=>{const fx=c[2]?"Cream cell: type a number":C.pack==="budget"?(c[0]==="Spent"?`=SUMIFS(Expenses!Amount,Expenses!Category,A${i+4})`:c[0]==="Left"?`=B${i+4}-C${i+4}`:c[0]==="Used"?`=C${i+4}/B${i+4}`:""):c[0]==="Times used"?`=COUNTIF(Tracker!B:B,A${i+4})`:"";
+  return `<td class="${c[2]?"in":"auto"}${/^\$|^\d/.test(String(c[1](l,i)))?" n":""}" data-a="${letter(ci)}${i+4}" data-v="${esc(fx||String(c[1](l,i)).replace(/<[^>]+>/g,""))}" ${c[2]?`data-lib="${i}" data-k="${c[3]}"`:""}>${c[1](l,i)}</td>`}).join("")}</tr>`});
+ return h+"</tbody></table>"}
+const spentOf=l=>allRows().filter(r=>hasItem(r)&&r.cat===l.name).reduce((a,r)=>a+(+r.m||0),0);
 
-/* ---------------- tabs + render ---------------- */
-function tabs(){const s=SUB(),st=stats(),open=S.rows.filter(r=>r.pick!=null&&!isDone(r)).length;const t=[];
-  if(S.f.howto)t.push(["how","How to Use"]);t.push(["track",s.tab]);t.push(["lib",s.libTab]);
-  if(S.f.attention)t.push(["attn","Needs attention",open,1]);if(S.f.summary)t.push(["sum","Summary",null,1]);if(S.f.dash)t.push(["dash","Charts",null,1]);return t}
-function render(keepScroll){const T=THEMES[S.theme],bk=$("#book");Object.entries({"--t-dark":T.dark,"--t-mid":T.mid,"--t-light":T.light,"--t-pale":T.pale,"--t-acc":T.acc}).forEach(([k,v])=>bk.style.setProperty(k,v));
-  const tl=tabs();if(!tl.find(x=>x[0]===S.tab))S.tab="track";
-  $("#fname").textContent=S.cfg.title+".xlsx";
-  const v=$("#view"),sx=v.scrollLeft,sy=v.scrollTop;
-  v.innerHTML={how:vHow,track:vTrack,lib:vLib,attn:vAttn,sum:vSum,dash:vDash}[S.tab]();
-  v.style.setProperty("--vw",(v.clientWidth-38)+"px");
-  if(keepScroll){v.scrollLeft=sx;v.scrollTop=sy}else{v.scrollLeft=0;v.scrollTop=0}
-  $("#tabs").innerHTML=tl.map(([k,l,c,auto])=>`<button role="tab" data-t="${k}" aria-selected="${S.tab===k}">${esc(l)}${auto?'<span class="auto">AUTO</span>':""}${c!=null?`<span class="cnt${lastCounts[k]!==undefined&&lastCounts[k]!==c?" bump":""}">${c}</span>`:""}</button>`).join("");
-  tl.forEach(([k,,c])=>lastCounts[k]=c);
-  $("#tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>{S.tab=b.dataset.t;render()});
-  const s=SUB();$("#hint2").textContent=S.tab==="track"?`Try it: pick a ${s.one}, then set it to ✓ ${s.done}.`:S.tab==="lib"?"Try it: change an amount and watch the other tabs.":"";
-  $("#hint").hidden=!["track","lib"].includes(S.tab);bind()}
-function bind(){const v=$("#view");
-  v.querySelectorAll("td[data-a]").forEach(td=>td.addEventListener("click",()=>{v.querySelectorAll(".sel").forEach(x=>x.classList.remove("sel"));td.classList.add("sel");$("#cellRef").textContent=td.dataset.a;$("#cellVal").textContent=td.dataset.v||td.textContent||" "}));
-  v.querySelectorAll("[data-ri]").forEach(el=>{el.addEventListener("focus",()=>el.closest("td").click());el.addEventListener("change",()=>edit(el))});
-  v.querySelectorAll("[data-li]").forEach(el=>{el.addEventListener("focus",()=>el.closest("td").click());el.addEventListener("change",()=>{const l=S.lib[+el.dataset.li],k=+el.dataset.lk;l[k]=k===2?Math.max(0,+el.value||0):(el.value.trim()||l[k]);changed(`${SUB().libTab} updated, every row that uses it changed`)})});
-  const ni=$("#nameIn");if(ni){ni.addEventListener("change",()=>{S.name=ni.value;changed("Name added to the dashboard")});ni.addEventListener("focus",()=>ni.closest("td").click())}}
-function edit(el){const r=S.rows[+el.dataset.ri],k=el.dataset.k,s=SUB();let v=el.value;
-  if(k==="pick")r.pick=v===""?null:+v;else if(k==="due"||k==="date")r[k]=fromIso(v);else if(k==="score")r.score=v===""?"":Math.max(0,Math.min(100,+v));else r[k]=v;
-  let msg="Updated. Every tab recalculated";
-  if(k==="status"&&S.f.stamp&&S.cfg.col.date){if(v==="✓ "+s.done&&!r.date){r.date=new Date(TODAY);msg="Marked done, date stamped, rewards updated"}else if(v!=="✓ "+s.done){r.date=null}}
-  if(k==="pick"&&v!=="")msg=`Details filled in from the ${s.libTab} tab`;
-  changed(msg)}
-let liveT;
-function changed(msg){render(true);const l=$("#live");l.textContent="✓ "+msg;l.classList.add("flash");clearTimeout(liveT);liveT=setTimeout(()=>{l.classList.remove("flash");l.textContent="Live preview"},2800);
-  const st=stats(),s=SUB();
-  if(!s.limit&&S.f.party&&st.reached>lastReached){const R=REW[S.reward];celebrate(st.reached>=5||st.total>=st.goal?(S.reward==="bar"?"Goal reached!":R.ic[4]+" "+(S.reward==="stars"?"All 5 stars!":R.names[4]+"!")):(S.reward==="bar"?Math.round(st.pct*100)+"% there!":R.ic[st.reached-1]+" "+(S.reward==="stars"?st.reached+" stars!":R.names[st.reached-1]+" unlocked!")),S.reward==="bar"?"":"Milestone "+st.reached+" of 5")}
-  lastReached=st.reached}
-function celebrate(t,sub){const T=THEMES[S.theme],box=$("#confetti");box.innerHTML="";const cols=[T.mid,T.acc,T.dark,T.light,"#fff"];
-  if(!matchMedia("(prefers-reduced-motion: reduce)").matches){for(let i=0;i<46;i++){const c=document.createElement("i");c.style.left=(Math.random()*100)+"%";c.style.background=cols[i%cols.length];c.style.setProperty("--dx",(Math.random()*160-80)+"px");c.style.setProperty("--r",(Math.random()*720-360)+"deg");c.style.animationDelay=(Math.random()*.25)+"s";box.appendChild(c)}
-    setTimeout(()=>box.innerHTML="",2200)}
-  const p=$("#pop");p.innerHTML=esc(t)+(sub?`<small>${esc(sub)}</small>`:"");p.classList.remove("show");void p.offsetWidth;p.classList.add("show")}
+/* ---------- how to use tab (written from the build) ---------- */
+function viewHow(){const p=P(),lk=lookupOn(),nn=p.noun.toLowerCase(),G=groups(),pr=progressOf(D.trackers[0].rows,goalMult());const S=[];
+ if(D.trackers.length>1)S.push(["Find your tab",`Each person has their own tab at the bottom: ${D.trackers.map(t=>t.name).join(", ")}. Type in the name box to rename a tab.`]);
+ else if(C.f.banner)S.push(["Type your name",`Use the cream box at the top of the ${p.tab} tab. The title updates with it.`]);
+ if(C.pack==="inventory")S.push(["Choose an item and count it",`Pick it from the dropdown, then type how many are on hand.`]);
+ else if(C.pack==="budget")S.push(["Add an expense","Type what it is, choose a category, and enter the amount."]);
+ else S.push(lk?[`Choose a ${nn}`,`Pick from the dropdown. The ${COLS.filter(c=>c.type==="auto"&&!["done","status"].includes(c.k)).map(c=>c.label.toLowerCase()).join(", ")||"details"} fill in automatically.`]:[`Add each ${C.pack==="generic"?C.itemLabel.toLowerCase():nn}`,`Type it in the cream ${esc(C.itemLabel||p.noun)} column.`]);
+ if(C.want.due)S.push(["Add a due date","Anything past due that isn't checked turns red."]);
+ S.push([`Check ${p.check} ✓`,C.f.stamp?`The ${p.stampLabel.toLowerCase()} fills in by itself.`:"Your totals update right away."]);
+ if(C.f.banner&&C.f.stars&&starsKind())S.push(["Watch the stars light up",`A star lights up every ${fmtP(Math.round(pr.goal/C.stars*10)/10,pr)}${pr.kind==="count"?" "+pr.unit:""}. Fill the bar to earn all ${C.stars}.`]);
+ else if(C.f.banner)S.push(["Watch the bar",pr.kind==="limit"?"It shows how much of the budget is used and turns red past 90%.":"It fills as you go."]);
+ if(C.f.dash)S.push(["Check the Dashboard",`Totals and charts${G.length>1?", plus a leaderboard,":""} update on every edit.`]);
+ if(C.f.log)S.push([`Open the ${p.logName} tab`,"It fills itself. Nothing to copy or paste."]);
+ const ins=COLS.filter(c=>c.in);const DESC={pick:"Choose from the list. It reads from the Library tab.",name:"Type the name.",client:"Who the deal is with.",who:"Choose who it belongs to.",cat:"Choose from the dropdown.",m:C.pack==="inventory"?"How many you have right now.":"Type a number.",ro:"The count that triggers a reorder.",due:"Pick the date it's due.",prio:"High, Medium, or Low.",rating:"Click 1 to 5 stars.",notes:"Anything you want to remember.",chk:"Check it when it's "+p.doneWord.toLowerCase()+"."};
+ return `<div class="how"><div class="how-top"><h3>${C.icon} ${esc(C.title.toUpperCase())} · HOW TO USE</h3><p>Fill in the cream cells. Everything else is automatic.</p></div>
+ <h4>Step by step</h4><div class="steps">${S.map((s,i)=>`<div class="stp"><b>${i+1}</b><div><strong>${esc(s[0])}</strong>${esc(s[1])}</div></div>`).join("")}</div>
+ <h4>What goes in each cream box</h4><table class="boxes">${ins.map(c=>`<tr><td>${esc(c.label)}</td><td>${esc(DESC[c.k]||"Type here.")}</td></tr>`).join("")}</table>
+ <h4>Color key</h4><div class="keyrow"><span><i style="background:var(--c)"></i>Cream: you type or choose</span><span><i style="background:#fff"></i>White: fills in automatically</span><span><i style="background:#FCE4DF"></i>Red row: needs attention</span><span><i style="background:var(--a)"></i>Theme color: switch it with 🎨</span></div>
+ <h4>Good to know</h4><ul class="know"><li>You can change anything in a cream cell at any time. Totals, stars, and every other tab catch up instantly.</li>${starsKind()?`<li>The goal is ${esc(fmtP(pr.goal,pr))}${pr.kind==="count"?" "+esc(pr.unit):""}${G.length>1?" per person":""}.</li>`:""}<li>This tab was written automatically from the options used to build the spreadsheet.</li></ul></div>`}
 
-/* ---------------- controls ---------------- */
-function renderControls(){
-  $("#themes").innerHTML=Object.entries(THEMES).map(([k,t])=>`<button class="th" data-k="${k}" aria-pressed="${k===S.theme}"><i><b style="background:${t.dark}"></b><b style="background:${t.mid}"></b><b style="background:${t.acc}"></b></i>${t.n}</button>`).join("");
-  $("#themes").querySelectorAll("button").forEach(b=>b.onclick=()=>{S.theme=b.dataset.k;renderControls();render(true);flashLive("Theme changed to "+THEMES[S.theme].n)});
-  const lim=SUB().limit;
-  $("#rewards").innerHTML=Object.entries(REW).map(([k,r])=>`<button data-k="${k}" aria-pressed="${k===S.reward}" ${lim&&k!=="bar"?"disabled title='Budgets use a spend bar'":""} style="${lim&&k!=="bar"?"opacity:.4;cursor:not-allowed":""}">${r.n}</button>`).join("");
-  $("#rewards").querySelectorAll("button:not([disabled])").forEach(b=>b.onclick=()=>{S.reward=b.dataset.k;lastReached=stats().reached;renderControls();render(true);flashLive("Rewards set to "+REW[S.reward].n.toLowerCase())});
-  $("#feats").innerHTML=FEATS.map(([k,l])=>`<label class="feat"><input type="checkbox" data-f="${k}" ${S.f[k]?"checked":""}><span>${l}</span></label>`).join("");
-  $("#feats").querySelectorAll("input").forEach(i=>i.onchange=()=>{S.f[i.dataset.f]=i.checked;lastReached=stats().reached;render(true);flashLive((i.checked?"Turned on: ":"Turned off: ")+FEATS.find(f=>f[0]===i.dataset.f)[1])})}
-function flashLive(m){const l=$("#live");l.textContent="✓ "+m;l.classList.add("flash");clearTimeout(liveT);liveT=setTimeout(()=>{l.classList.remove("flash");l.textContent="Live preview"},2400)}
-function showLog(p){const lines=[`<div class="h">// Sheet Studio build log · rule-based, no AI</div>`];
-  p.log.forEach(e=>lines.push(`<div><span class="c">▸ ${esc(e.c)}</span>  <span class="s">← ${esc(e.src)}</span></div>`));
-  lines.push(`<div class="h">// ${p.log.length} commands · workbook ready</div>`);
-  if(!p.found)lines.push(`<div class="w">Tip: add a topic word like lessons, books, tasks, budget, volunteer hours, workouts, or assignments.</div>`);
-  $("#log").innerHTML=lines.join("")}
-function build(){const p=parse($("#desc").value);const s=SUBJ[p.cfg.subj];S.cfg=p.cfg;S.lib=s.lib.map(l=>l.slice());S.reward=p.reward;if(p.theme)S.theme=p.theme;S.name="";
-  S.rows=makeRows(true);if(!p.cfg.goal)autoGoal();S.tab="track";lastCounts={};lastReached=stats().reached;showLog(p);renderControls();render()}
-$("#build").onclick=build;
-new ResizeObserver(()=>{const v=$("#view");v.style.setProperty("--vw",(v.clientWidth-38)+"px")}).observe($("#view"));
+/* ---------- tabs + render ---------- */
+function tabList(){const p=P(),L=[];if(C.f.howto)L.push({id:"how",label:"How to Use"});
+ D.trackers.forEach((t,i)=>L.push({id:"t"+i,label:D.trackers.length>1?(t.name||"Person "+(i+1)):p.tab,sw:D.trackers.length>1}));
+ if(C.f.dash)L.push({id:"dash",label:"Dashboard",auto:true});
+ if(C.f.log)L.push({id:"log",label:p.logName,auto:true,count:logItems().length});
+ if(D.lib.length&&(lookupOn()||p.catLib))L.push({id:"lib",label:p.catLib?"Budget by category":"Library",auto:p.catLib});
+ return L}
+function renderTabs(){const L=tabList();if(!L.find(x=>x.id===VIEW))VIEW=L.find(x=>x.id[0]==="t").id;
+ $("#tabs").innerHTML=L.map(x=>`<button role="tab" data-v="${x.id}" aria-selected="${VIEW===x.id}">${x.sw?'<span class="sw"></span>':""}${esc(x.label)}${x.auto?'<span class="auto">AUTO</span>':""}${x.count!=null?`<span class="cnt${lastCounts[x.id]!==undefined&&lastCounts[x.id]!==x.count?" bump":""}">${x.count}</span>`:""}</button>`).join("");
+ L.forEach(x=>lastCounts[x.id]=x.count)}
+function applyTheme(){const th=THEMES[C.theme],s=$("#sheet").style;Object.entries({b:th.b,a:th.a,s:th.s,g:th.g,c:th.c}).forEach(([k,v])=>s.setProperty("--"+k,v))}
+function render(){applyTheme();$("#fname").textContent=C.title+".xlsx";
+ const v=VIEW;$("#view").innerHTML=v==="how"?viewHow():v==="dash"?viewDash():v==="log"?viewLog():v==="lib"?viewLib():viewTracker(+v.slice(1));
+ renderTabs();FLASH=null;JUST=null}
+function renderAll(){COLS=buildCols();renderControls();render()}
+
+/* ---------- editing ---------- */
+const view=$("#view");
+function selectCell(td){view.querySelectorAll(".sel").forEach(x=>x.classList.remove("sel"));td.classList.add("sel");$("#cellRef").textContent=td.dataset.a||"";$("#cellVal").textContent=td.dataset.v||" "}
+view.addEventListener("click",e=>{const b=e.target.closest(".rate button");if(b&&!b.disabled){const td=b.closest("td"),r=D.trackers[+td.dataset.t].rows[+td.dataset.ri],i=+b.dataset.i;r.rating=r.rating===i?0:i;changed("Rating saved, averages updated");return}
+ const td=e.target.closest("td[data-a]");if(!td)return;selectCell(td);
+ if(td.classList.contains("in")&&!e.target.closest("input,select,button")&&td.dataset.k&&!["chk","rating"].includes(td.dataset.k))startEdit(td)});
+view.addEventListener("change",e=>{const cb=e.target.closest("input.cb");if(!cb)return;const ti=+cb.dataset.t,t=D.trackers[ti],r=t.rows[+cb.dataset.ri];
+ const before=litOf(progressOf(t.rows,goalMult()));r.chk=cb.checked;r.done=r.chk?(r.done||new Date(TODAY)):null;if(r.chk&&C.want.rating&&!r.rating)r.rating=4;
+ const pr=progressOf(t.rows,goalMult()),after=litOf(pr);
+ if(after>before){JUST={ti,i:after};if(after>=C.stars){toast(`🎉 Goal reached! All ${C.stars} stars${t.name?" for "+t.name:""}!`);confetti()}else toast(`⭐ Star ${after} unlocked! ${fmtP(pr.v,pr)} of ${fmtP(pr.goal,pr)}${pr.kind==="count"?" "+pr.unit:""}`)}
+ changed(r.chk?(C.f.stamp?"Date stamped · totals, stars, and tabs updated":"Totals, stars, and tabs updated"):"Unchecked · everything recalculated")});
+view.addEventListener("input",e=>{if(e.target.id!=="bnName")return;const ti=+e.target.dataset.t,t=D.trackers[ti];t.name=e.target.value;if(D.trackers.length===1)C.people=t.name?[t.name]:[];else C.people[ti]=t.name;
+ const ttl=$("#bnTitle");if(ttl)ttl.innerHTML=esc(C.title.toUpperCase())+(t.name?`<small>  ·  ${esc(t.name)}</small>`:"");renderTabs();$("#peopleIn").value=C.people.join(", ")});
+function startEdit(td){const k=td.dataset.k;let el,commit;
+ if(td.dataset.lib!=null){const l=D.lib[+td.dataset.lib];el=document.createElement("input");el.type="number";el.step="any";el.value=l[k];
+  commit=()=>{const v=parseFloat(el.value);if(!isNaN(v))l[k]=v;allRows().forEach(r=>{if(r.pick===+td.dataset.lib&&C.pack!=="inventory"&&C.measure&&C.measure.from==="lib")r.m=l.m;if(r.pick===+td.dataset.lib&&C.pack==="inventory")r.min=l.m});changed("Library changed · every row using it updated")}}
+ else{const t=D.trackers[+td.dataset.t],r=t.rows[+td.dataset.ri],c=COLS.find(x=>x.k===k);if(!c)return;
+  if(c.type==="pick"){el=document.createElement("select");el.innerHTML=`<option value="">(clear)</option>`+D.lib.map((l,i)=>`<option value="${i}" ${r.pick===i?"selected":""}>${esc(l.name)}</option>`).join("");
+   commit=()=>{if(el.value===""){Object.keys(r).forEach(x=>delete r[x]);changed("Row cleared")}else{const was=hasItem(r);r.pick=+el.value;const l=D.lib[r.pick];r.name=l.name;r.cat=l.cat;if(C.pack==="inventory"){r.min=l.m;if(r.m==null)r.m=0}else r.m=l.m;if(!was){r.chk=false;r.due=r.due||new Date(TODAY.getTime()+7*DAY);r.prio=r.prio||"Medium"}FLASH={ti:+td.dataset.t,ri:+td.dataset.ri};changed("Details pulled in from the Library tab")}}}
+  else if(c.type==="list"){el=document.createElement("select");const opts=c.list();el.innerHTML=opts.map(o=>`<option ${r[k]===o?"selected":""}>${esc(o)}</option>`).join("");commit=()=>{r[k]=el.value;if(!hasItem(r)&&!lookupOn())r.name=r.name||"";changed(c.label+" updated")}}
+  else if(c.type==="date"){el=document.createElement("input");el.type="date";const d=r.due;el.value=d?`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`:"";commit=()=>{if(el.value){const [y,m,dd]=el.value.split("-").map(Number);r.due=new Date(y,m-1,dd)}else r.due=null;changed("Due date updated · overdue check rerun")}}
+  else if(c.type==="num"){el=document.createElement("input");el.type="number";el.step="any";el.value=(k==="ro"?r.min:r.m)??"";commit=()=>{const v=el.value===""?null:parseFloat(el.value);if(k==="ro")r.min=v;else r.m=v;if(!hasItem(r)&&!lookupOn()&&v!=null)r.name=r.name||(C.itemLabel+" "+(+td.dataset.ri+1));changed(c.label+" updated · totals recalculated")}}
+  else{el=document.createElement("input");el.type="text";el.value=(k==="name"?r.name:r[k])||"";commit=()=>{const was=hasItem(r);r[k]=el.value;if(k==="name"&&!was&&el.value){r.chk=false;r.cat=r.cat||(c.list?"":(P().cats||[""])[0]);r.due=r.due||new Date(TODAY.getTime()+7*DAY);r.prio=r.prio||"Medium";if(C.measure&&r.m==null)r.m=nice((C.goal.value||10)/(C.rows*.55),C.measure.unit)}changed(c.label+" saved")}}}
+ td.innerHTML="";td.appendChild(el);el.focus();let done=false;
+ const fin=()=>{if(done)return;done=true;commit()};el.addEventListener("blur",fin);
+ el.addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();el.blur()}if(e.key==="Escape"){done=true;render()}});if(el.tagName==="SELECT")el.addEventListener("change",()=>el.blur())}
+let liveT;function changed(msg){render();const l=$("#live");l.textContent="✓ "+msg;l.classList.add("flash");clearTimeout(liveT);liveT=setTimeout(()=>{l.classList.remove("flash");l.textContent="Live preview"},2800)}
+function toast(t){const el=$("#toast");el.textContent=t;el.classList.remove("gone");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.add("gone"),3200)}
+function confetti(){if(matchMedia("(prefers-reduced-motion: reduce)").matches)return;const s=$("#sheet"),th=THEMES[C.theme],cols=[th.a,th.g,th.b,"#fff","#E0A021"];
+ for(let i=0;i<36;i++){const c=document.createElement("span");c.className="confetti";c.style.left=(Math.random()*100)+"%";c.style.background=cols[i%cols.length];c.style.animationDelay=(Math.random()*.4)+"s";s.appendChild(c);setTimeout(()=>c.remove(),2400)}}
+$("#tabs").addEventListener("click",e=>{const b=e.target.closest("button[data-v]");if(!b)return;VIEW=b.dataset.v;render()});
+view.addEventListener("copy",e=>{e.preventDefault();toast("This is a live demo. For a custom spreadsheet, email bianca.augustin0318@gmail.com")});
+
+/* ---------- builder controls ---------- */
+const FEATS=[["banner","Dashboard at the top","Progress bar, totals, and a name box"],["stars","Stars & milestones","Light up as the goal fills, with a celebration"],["lookup","Dropdown auto-fill","Pick from a list and the details fill in"],["stamp","Checkbox date stamps","Today's date appears when checked"],["tabs","A tab for each person","Plus a leaderboard on the Dashboard"],["dash","Dashboard tab","KPIs and charts that redraw on every edit"],["log","Self-filling log tab","Finished items collect themselves"],["howto","How to Use tab","Instructions written from your choices"],["lights","Status lights & red flags","Overdue or low-stock rows turn red"]];
+function featOk(k){if(k==="lookup")return !!(P().pick&&P().lib);if(k==="tabs")return C.people.length>1;if(k==="stars")return starsKind();return true}
+function renderControls(){const p=P();
+ $("#types").innerHTML=Object.entries(PACKS).map(([k,v])=>`<button data-k="${k}" aria-pressed="${k===C.pack}">${v.icon} ${v.label}</button>`).join("");
+ $("#titleIn").value=C.title;$("#peopleIn").value=C.people.join(", ");
+ const gk=C.goal.kind;$("#goalIn").disabled=gk==="stock";$("#goalIn").value=gk==="stock"?"":(gk==="count"&&!C.goal.value?progressOf(D.trackers[0].rows).goal:C.goal.value);
+ $("#goalLbl").textContent=gk==="stock"?"Goal (not used for inventory)":gk==="limit"?"Budget ($)":"Goal ("+(gk==="count"?(C.goal.unit||p.plural.toLowerCase()):C.goal.unit)+(groups().length>1?" each":"")+")";
+ $("#starsIn").value=String(C.stars);$("#starsIn").disabled=!starsKind()||!C.f.stars;
+ $("#feats").innerHTML=FEATS.map(([k,l,d])=>{const ok=featOk(k);return `<label class="feat${ok?"":" off"}"><input type="checkbox" data-f="${k}" ${C.f[k]&&ok?"checked":""} ${ok?"":"disabled"}><span><b>${l}</b><small>${ok?d:k==="tabs"?"Add 2+ people above to turn this on":k==="lookup"?"This type uses typed names":"Needs a goal you count up to"}</small></span></label>`}).join("");
+ const dots=Object.entries(THEMES).map(([k,v])=>`<button style="background:linear-gradient(135deg,${v.b} 50%,${v.g} 50%)" data-th="${k}" aria-pressed="${k===C.theme}" aria-label="${v.n} theme" title="${v.n}"></button>`).join("");$("#themes").innerHTML=dots;$("#themes2").innerHTML=dots;
+ $("#icons").innerHTML=ICONS.concat(ICONS.includes(C.icon)?[]:[C.icon]).map(i=>`<button data-ic="${i}" aria-pressed="${i===C.icon}" aria-label="Icon ${i}">${i}</button>`).join("");
+ $("#rows").value=C.rows;$("#rowsOut").textContent=C.rows;$("#sampleIn").checked=C.sample}
+const note=(k,v)=>{LOG.push({t:"ok",k,v,m:"you changed this"});renderLog(true)};
+$("#types").addEventListener("click",e=>{const b=e.target.closest("[data-k]");if(!b)return;C=defaultCfg(b.dataset.k,C);C.theme=PACK_THEME[C.pack]||C.theme;buildData();note("type",PACKS[C.pack].label);renderAll()});
+$("#titleIn").addEventListener("input",e=>{C.title=e.target.value||P().title;$("#fname").textContent=C.title+".xlsx";const ttl=$("#bnTitle");if(ttl){const t=D.trackers[+(VIEW.slice(1))||0];ttl.innerHTML=esc(C.title.toUpperCase())+(t&&t.name?`<small>  ·  ${esc(t.name)}</small>`:"")}});
+$("#titleIn").addEventListener("change",()=>{note("title",C.title);render()});
+$("#peopleIn").addEventListener("change",e=>{const was=C.people.length;C.people=e.target.value.split(/\s*,\s*|\s+and\s+/).map(s=>s.trim()).filter(Boolean).slice(0,6).map(cap);if(C.people.length>1&&was<2)C.f.tabs=true;if(C.people.length<2)C.f.tabs=false;buildData();note("people",C.people.join(", ")||"none");renderAll()});
+$("#goalIn").addEventListener("change",e=>{const v=parseFloat(e.target.value);if(!(v>0))return;C.goal.value=v;C.goal.user=true;note("goal",C.goal.kind==="limit"?fmtU(v,"dollars"):v+" "+(C.goal.unit||""));renderAll()});
+$("#starsIn").addEventListener("change",e=>{C.stars=+e.target.value;note("stars",C.stars+" stars");renderAll()});
+$("#feats").addEventListener("change",e=>{const i=e.target.closest("[data-f]");if(!i)return;C.f[i.dataset.f]=i.checked;if(i.dataset.f==="tabs")buildData();note(i.checked?"on":"off",FEATS.find(f=>f[0]===i.dataset.f)[1]);renderAll()});
+function pickTheme(e){const b=e.target.closest("[data-th]");if(!b)return;C.theme=b.dataset.th;note("theme",THEMES[C.theme].n);renderControls();render()}
+$("#themes").addEventListener("click",pickTheme);$("#themes2").addEventListener("click",pickTheme);
+$("#icons").addEventListener("click",e=>{const b=e.target.closest("[data-ic]");if(!b)return;C.icon=b.dataset.ic;note("icon",C.icon);renderControls();render()});
+$("#rows").addEventListener("input",e=>{C.rows=+e.target.value;$("#rowsOut").textContent=C.rows});
+$("#rows").addEventListener("change",()=>{buildData();note("rows",C.rows+" per tab");renderAll()});
+$("#sampleIn").addEventListener("change",e=>{C.sample=e.target.checked;buildData();note("rows",C.sample?"sample data":"blank cream cells");renderAll()});
+function renderLog(toEnd){const d=$("#desc").value.trim();$("#cmdHead").textContent=`$ build "${d.length>70?d.slice(0,68)+"…":d}"`;
+ $("#cmdlog").innerHTML=LOG.map(l=>`<div class="cl ${l.t}"><span class="ck">${l.t==="ok"?"✓":l.t==="def"?"•":"!"}</span><span class="ky">${esc(l.k)}</span><span class="vl">${esc(l.v)}</span>${l.m?`<span class="mt">${esc(l.m)}</span>`:""}</div>`).join("");
+ const term=$("#cmdlog").parentElement;term.scrollTop=toEnd?term.scrollHeight:0}
+function build(){C=null;LOG=parse($("#desc").value);buildData();renderAll();renderLog();VIEW="t0";render()}
+$("#build").addEventListener("click",build);
+document.querySelectorAll("[data-ex]").forEach(b=>b.addEventListener("click",()=>{$("#desc").value=b.dataset.ex;build()}));
 $("#desc").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey)){e.preventDefault();build()}});
-document.querySelectorAll("[data-ex]").forEach(b=>b.onclick=()=>{$("#desc").value=b.dataset.ex;build();if(innerWidth<1120)$("#book").scrollIntoView({behavior:"smooth",block:"start"})});
-$("#blank").onclick=()=>{S.rows=makeRows(false);S.name="";S.tab="track";lastReached=0;render();flashLive("Blank workbook. Fill in the cream cells")};
-$("#sample").onclick=()=>{S.rows=makeRows(true);S.tab="track";lastReached=stats().reached;render();flashLive("Sample data loaded")};
-/* keep the demo a demo */
-$("#view").addEventListener("copy",e=>{if(e.target.closest&&e.target.closest("input"))return;e.preventDefault();const t=$("#toast");t.textContent="This is a live demo. For a custom spreadsheet, email bianca.augustin0318@gmail.com";t.classList.remove("gone");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.add("gone"),3500)});
 build();
 </script>
 </body>
