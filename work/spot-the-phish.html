@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Spot the Phish · Case Study · Bianca Augustin</title>
+<meta name="description" content="How I designed Spot the Phish, a 20-minute security awareness course with an animated video, branching scenario, and gamified practice.">
+<meta property="og:image" content="https://bianca-augustin.github.io/assets/phish-flags.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600;700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head"><div class="wrap">
+  <a class="logo" href="../"><i>BA</i>Bianca Augustin</a>
+  <nav class="nav" aria-label="Main">
+    <a href="../#work" aria-current="page">Work</a><a href="../solutions/">Problems &amp; Solutions</a><a href="../#approach">Approach</a><a href="../#contact">Contact</a>
+  </nav>
+</div></header>
+
+<main id="main" class="wrap">
+  <div class="cs-hero narrow">
+    <span class="eyebrow">Case study · Security awareness eLearning</span>
+    <h1>Spot the Phish</h1>
+    <p class="lede">Most phishing training is a slide deck people click through while answering email. I designed this course around practice instead: learners spend most of their time spotting, sorting, and deciding.</p>
+    <div class="btns"><a class="btn" href="../lessons/spot-the-phish/">Take the course</a><a class="btn ghost" href="../lessons/spot-the-phish/briefing.mp4">Watch the video only</a></div>
+  </div>
+  <figure class="cs-shot" style="margin:0"><img src="../assets/phish-overview.jpg" alt="Video frame: a laptop showing a phishing email with six red flags circled and numbered" width="1280" height="720"></figure>
+
+  <div class="meta-grid">
+    <div><b>Role</b><span>Instructional designer and developer: analysis, script, storyboard, video, build</span></div>
+    <div><b>Audience</b><span>All employees at Harborline Logistics, a fictional 1,200-person company</span></div>
+    <div><b>Format</b><span>Self-paced web course, 20 minutes, desktop and mobile</span></div>
+    <div><b>Tools</b><span>HTML, CSS, JavaScript, GSAP animation, AI voice narration, AI-assisted development</span></div>
+  </div>
+
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>In this scenario, Harborline's security team had a recurring problem: employees kept clicking links in simulated phishing emails, and one real incident nearly sent an $18,400 vendor payment to an attacker. The existing training was an annual, 30-slide module with a quiz at the end. People passed the quiz and still clicked.</p>
+    <div class="callout"><b>The real gap wasn't knowledge.</b> Most employees could define phishing. What they couldn't do was <strong>notice</strong> the warning signs in a busy inbox, and <strong>choose the safe action</strong> when an email felt urgent.</div>
+
+    <h2>Learning objectives</h2>
+    <p>I wrote objectives as observable behaviors, then built at least one practice activity for each.</p>
+    <ul>
+      <li><strong>Identify</strong> the common red flags in a phishing email (look-alike senders, urgency, disguised links, unexpected attachments, credential requests, generic tone).</li>
+      <li><strong>Choose</strong> a safe response to a suspicious message: stop, verify through a trusted channel, report, delete.</li>
+      <li><strong>Apply</strong> the SLAM check (Sender, Links, Attachments, Message) to any email in under a minute.</li>
+    </ul>
+
+    <h2 id="design">Designing the experience</h2>
+    <p>The course follows a show, try, decide, keep structure. A short video builds the mental model, a sequence of activities moves from guided to independent practice, and a job aid supports the behavior after the course ends.</p>
+    <div class="flow" aria-label="Course flow"><span>Briefing video</span><i>→</i><span>Labeled graphic</span><i>→</i><span>Flip cards</span><i>→</i><span>Knowledge check</span><i>→</i><span>Phish hunt</span><i>→</i><span>Inbox sort</span><i>→</i><span>Branching scenario</span><i>→</i><span>SLAM job aid</span><i>→</i><span>Certificate</span></div>
+    <div class="shots">
+      <figure><img src="../assets/phish-hook.jpg" alt="Video frame showing the bait, hook, catch metaphor" width="1280" height="720"><figcaption>A bait, hook, catch metaphor makes the attack pattern memorable.</figcaption></figure>
+      <figure><img src="../assets/phish-hover.jpg" alt="Video frame showing a cursor hovering over a link to reveal the real address" width="1280" height="720"><figcaption>The video models the exact habit learners practice later.</figcaption></figure>
+    </div>
+
+    <h2>Key design decisions</h2>
+  </div>
+  <div class="narrow" style="max-width:860px;margin-top:8px">
+    <div class="decision"><h3>A character guide in a short video</h3><div><p>Professor Hoot, an original owl character, narrates a two-minute animated briefing with lip-synced dialogue and captions. A friendly guide lowers the "compliance dread" that security training usually carries.</p><p class="why">Why: short, story-driven video builds the mental model fast, so the practice that follows has something to hang on.</p></div></div>
+    <div class="decision"><h3>An interactive pause inside the video</h3><div><p>The video stops itself and asks learners to click the detail that proves an email is fake, with spoken feedback for each choice.</p><p class="why">Why: retrieval practice in the middle of instruction keeps learners active instead of passively watching.</p></div></div>
+    <div class="decision"><h3>Misses count in the phish hunt</h3><div><p>Learners click every warning sign in an email with no markers to guide them. Clicking something harmless counts as a miss and explains why that part is normal.</p><p class="why">Why: real inboxes don't highlight the danger. Penalizing guessing rewards careful reading, and explaining "normal" parts prevents over-suspicion.</p></div></div>
+    <div class="decision"><h3>A realistic payment-fraud scenario</h3><div><p>As Maya in accounts payable, learners respond to a vendor's "new bank details" email. Three endings show consequences, including a "safe but incomplete" path where they forget to report.</p><p class="why">Why: business email compromise is one of the costliest real threats, and the decision to verify through a trusted channel is exactly what I want learners to rehearse.</p></div></div>
+    <div class="decision"><h3>A job aid, not just a quiz</h3><div><p>The SLAM check is an interactive checklist that gives a recommendation based on what the learner notices.</p><p class="why">Why: the course lasts 20 minutes, but the inbox is forever. Performance support carries the behavior back to work.</p></div></div>
+    <div class="decision"><h3>Sequential unlocking, with a reviewer mode</h3><div><p>Each section unlocks after the one before it, progress saves automatically, and a certificate unlocks at the end. Reviewers can switch on a mode that opens everything.</p><p class="why">Why: sequencing protects the scaffolding from guided to independent practice, while reviewer mode respects a hiring manager's time.</p></div></div>
+  </div>
+
+  <div class="prose" style="margin-top:20px">
+    <h2 id="access">Accessibility</h2>
+    <ul>
+      <li>Every interaction works with a keyboard, with visible focus states throughout.</li>
+      <li>The video has synchronized captions that can be toggled, and the narration script doubles as a transcript.</li>
+      <li>Color is never the only signal: correct and incorrect states also use icons, borders, and text.</li>
+      <li>Animations respect the "reduce motion" setting, and the layout adapts to phones and dark mode.</li>
+    </ul>
+
+    <h2>How I'd measure success</h2>
+    <p>I planned evaluation across the four Kirkpatrick levels, with the emphasis on behavior rather than quiz scores.</p>
+  </div>
+  <div class="kirk narrow" style="margin-top:16px">
+    <div><b>Reaction</b><span>Two-question pulse survey at the end: was it relevant, and was it worth the time?</span></div>
+    <div><b>Learning</b><span>First-attempt accuracy on the knowledge check, inbox sort, and video question, captured on the certificate.</span></div>
+    <div><b>Behavior</b><span>Click rate and report rate on simulated phishing emails at 30 and 90 days, compared to the pre-training baseline.</span></div>
+    <div><b>Results</b><span>Fewer real incidents reaching the security team, and faster reporting time when they do.</span></div>
+  </div>
+
+  <div class="prose" style="margin-top:20px;padding-bottom:40px">
+    <h2>What I'd do next</h2>
+    <ul>
+      <li>Pilot with a small group and watch where people hesitate or guess.</li>
+      <li>Add short monthly "spot the fake" challenges to keep the skill fresh between annual trainings.</li>
+      <li>Package it as SCORM or xAPI so an LMS can track completion and scores.</li>
+    </ul>
+    <div class="btns" style="margin-top:12px"><a class="btn" href="../lessons/spot-the-phish/">Take the course</a><a class="btn ghost" href="../solutions/">See more problem solving</a></div>
+  </div>
+</main>
+
+<footer class="site-foot"><div class="wrap"><span>© 2026 Bianca Augustin · <a href="mailto:bianca.augustin0318@gmail.com">Email</a> · <a href="https://www.linkedin.com/in/bianca-augustin-6a15b3177/">LinkedIn</a></span><span>Harborline Logistics is a fictional company created for this sample.</span></div></footer>
+</body>
+</html>
