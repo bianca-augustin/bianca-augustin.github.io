@@ -16,6 +16,7 @@ Contact: [LinkedIn](https://www.linkedin.com/in/bianca-augustin-6a15b3177/) · b
 | [Pulse (dashboard)](https://bianca-augustin.github.io/analytics/) | A learning analytics dashboard with employee profiles, skills-gap heatmap, compliance tracking, and recommended actions |
 | [Pulse (case study)](https://bianca-augustin.github.io/work/pulse.html) | Metrics strategy, design decisions, ethics and privacy |
 | [Sheet Studio (tool)](https://bianca-augustin.github.io/tools/sheet-studio/) | A rule-based spreadsheet builder (no AI): describe what you want to track and a live workbook builds itself, with a dashboard, rewards, color themes, and self-filling tabs |
+| [Meetings Worth Having (slide deck)](https://bianca-augustin.github.io/slides/meetings/) | A 7-slide interactive presentation with click builds, a live cost calculator, a card-sort game, a data story, speaker notes, designer notes, slide overview, laser pointer, and presenter timer |
 | [Problems & Solutions](https://bianca-augustin.github.io/solutions/) | A "Is it a training problem?" diagnostic and four workplace problems with working demos |
 
 ## Built with
