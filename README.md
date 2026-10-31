@@ -1,4 +1,4 @@
-# Bianca Augustin · Instructional Design Portfolio
+# Bianca Augustin · Learning Design Portfolio
 
 Live site: **https://bianca-augustin.github.io**
 
@@ -13,6 +13,8 @@ Contact: [LinkedIn](https://www.linkedin.com/in/bianca-augustin-6a15b3177/) · b
 | [Spot the Phish (case study)](https://bianca-augustin.github.io/work/spot-the-phish.html) | Problem, objectives, design decisions, accessibility, evaluation plan |
 | [Line Check (game)](https://bianca-augustin.github.io/lessons/line-check/) | A bilingual 3D food-safety hazard hunt with sound design, an accessible list mode, and an xAPI analytics dashboard |
 | [Line Check (case study)](https://bianca-augustin.github.io/work/line-check.html) | Design decisions, uncommon ID skills, evaluation plan |
+| [Pulse (dashboard)](https://bianca-augustin.github.io/analytics/) | A learning analytics dashboard with employee profiles, skills-gap heatmap, compliance tracking, and recommended actions |
+| [Pulse (case study)](https://bianca-augustin.github.io/work/pulse.html) | Metrics strategy, design decisions, ethics and privacy |
 | [Problems & Solutions](https://bianca-augustin.github.io/solutions/) | A "Is it a training problem?" diagnostic and four workplace problems with working demos |
 
 ## Built with
