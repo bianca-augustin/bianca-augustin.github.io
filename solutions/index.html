@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Problems &amp; Solutions · Bianca Augustin</title>
+<meta name="description" content="How Bianca Augustin diagnoses common workplace problems and designs creative learning and performance solutions.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600;700&family=Figtree:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head"><div class="wrap">
+  <a class="logo" href="../"><i>BA</i>Bianca Augustin</a>
+  <nav class="nav" aria-label="Main">
+    <a href="../#work">Work</a><a href="./" aria-current="page">Problems &amp; Solutions</a><a href="../#approach">Approach</a><a href="../#contact">Contact</a>
+  </nav>
+</div></header>
+
+<main id="main" class="wrap">
+  <div class="ps-hero">
+    <span class="eyebrow">Problems &amp; Solutions</span>
+    <h1>Not every problem is a training problem</h1>
+    <p>When someone asks for "a training," my first job is to find out what's really getting in the way. Here's how I'd approach four problems almost every workplace has, with a small working demo for each.</p>
+    <nav class="toc" aria-label="On this page"><a href="#diagnose">Diagnostic tool</a><a href="#onboarding">Onboarding</a><a href="#compliance">Compliance</a><a href="#feedback">Feedback conversations</a><a href="#expenses">Expense reports</a></nav>
+  </div>
+
+  <!-- DIAGNOSTIC -->
+  <section class="case" id="diagnose" style="border-top:0;padding-top:32px">
+    <div class="demo" style="margin-top:0">
+      <span class="eyebrow">Start here · Interactive tool</span>
+      <h3>Is it a training problem?</h3>
+      <p class="muted">A quick version of the questions I ask stakeholders before designing anything. Think of a performance problem at your workplace and answer honestly.</p>
+      <div class="demo-card diag" id="diag" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- CASE 1 -->
+  <section class="case" id="onboarding">
+    <div class="case-head">
+      <span class="case-num">Problem 1</span>
+      <h2>New hires feel lost in their first week</h2>
+      <span class="verdict v-mix">Training + support</span>
+      <div class="scenario-box"><b>What the manager says</b>"We give them a 60-page handbook and a login. By Friday they're overwhelmed, and three of our last ten hires quit within 90 days."</div>
+    </div>
+    <div class="cols">
+      <div>
+        <p class="label">What's really going on</p>
+        <ul class="causes">
+          <li>Information overload: everything arrives on day one, with no priority.</li>
+          <li>No clear definition of a "successful" first week.</li>
+          <li>New hires don't know who to ask, so they don't ask.</li>
+          <li>Managers are busy and onboarding varies by team.</li>
+        </ul>
+        <p class="label" style="margin-top:24px">How I'd measure it</p>
+        <div class="measure"><span>90-day retention</span><span>Time to first independent task</span><span>Week-one confidence survey</span></div>
+      </div>
+      <div class="sol">
+        <p class="label">Creative solutions</p>
+        <div class="sol-item"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span><div><h4>The first-week quest</h4><p>Replace the handbook dump with a short checklist of real tasks, each worth points. New hires see progress, and managers see exactly where someone is stuck.</p><p class="fmt">INTERACTIVE CHECKLIST · TRY IT BELOW</p></div></div>
+        <div class="sol-item"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20a6 6 0 0 1 12 0M14 20a4 4 0 0 1 7 0"/></svg></span><div><h4>Buddy program with conversation cards</h4><p>Pair each hire with a peer and give them five prompt cards ("Who do people go to when…?") so the coffee chat is actually useful.</p><p class="fmt">PRINTABLE CARDS · PEER LEARNING</p></div></div>
+        <div class="sol-item"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3z" fill="currentColor"/></svg></span><div><h4>Five-minute daily videos</h4><p>One short video per day: the culture, the tools, the people. Spaced over the week instead of crammed into orientation.</p><p class="fmt">MICROLEARNING VIDEO · SPACED</p></div></div>
+      </div>
+    </div>
+    <div class="demo">
+      <span class="eyebrow">Demo</span>
+      <h3>Week-one quest</h3>
+      <p class="muted">Check off tasks to earn XP. In a real rollout, this would sync with the manager's dashboard.</p>
+      <div class="demo-card">
+        <div class="xprow"><span id="xpLevel">Level 1 · Newcomer</span><span id="xpNum">0 / 100 XP</span></div>
+        <div class="xpbar"><i id="xpFill"></i></div>
+        <div class="quest" id="quest"></div>
+        <p class="fb good" id="questDone" hidden><b>Quest complete!</b> In the real version, this would trigger a celebration message from the team and unlock week two.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE 2 -->
+  <section class="case" id="compliance">
+    <div class="case-head">
+      <span class="case-num">Problem 2</span>
+      <h2>Everyone clicks through compliance training</h2>
+      <span class="verdict v-train">Training, redesigned</span>
+      <div class="scenario-box"><b>What HR says</b>"Completion is 98%, so technically we're fine. But people still make the same data privacy mistakes, and nobody remembers the training a month later."</div>
+    </div>
+    <div class="cols">
+      <div>
+        <p class="label">What's really going on</p>
+        <ul class="causes">
+          <li>The course tests recall of rules, not decisions in real situations.</li>
+          <li>Once a year means forgotten by February.</li>
+          <li>The content feels like it was written for lawyers, not employees.</li>
+        </ul>
+        <p class="label" style="margin-top:24px">How I'd measure it</p>
+        <div class="measure"><span>Policy incidents per quarter</span><span>Challenge participation</span><span>Scenario accuracy over time</span></div>
+      </div>
+      <div class="sol">
+        <p class="label">Creative solutions</p>
+        <div class="sol-item"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3v6M18 15v6M6 15a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM18 3a3 3 0 1 0 0 6 3 3 0 0 0 0-6zM6 9c0 4 12 2 12 6"/></svg></span><div><h4>Decisions instead of slides</h4><p>Rebuild the course around realistic situations where the "right" answer isn't obvious, like my <a href="../lessons/spot-the-phish/">Spot the Phish</a> course.</p><p class="fmt">BRANCHING SCENARIOS</p></div></div>
+        <div class="sol-item"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg></span><div><h4>The two-minute weekly challenge</h4><p>One quick scenario per week, delivered in email or chat. Spaced practice beats one long annual session.</p><p class="fmt">SPACED MICROLEARNING · TRY IT BELOW</p></div></div>
+        <div class="sol-item"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.9M16 3.1a4 4 0 0 1 0 7.8"/></svg></span><div><h4>Manager huddle cards</h4><p>A five-minute discussion prompt managers use in team meetings, so the conversation keeps going after the course.</p><p class="fmt">DISCUSSION GUIDE</p></div></div>
+      </div>
+    </div>
+    <div class="demo">
+      <span class="eyebrow">Demo</span>
+      <h3>This week's two-minute challenge</h3>
+      <div class="demo-card">
+        <div class="bubble-row"><span class="avatar" style="background:#7A4FC9">DK</span><div class="bubble">"Hey! I'm working from home today and can't get into the shared drive. Can you email the customer list to my personal Gmail so I can finish the report?"</div></div>
+        <p style="font-weight:600">Your coworker Dana needs this today. What do you do?</p>
+        <div style="display:grid;gap:8px" id="chal"></div>
+        <div id="chalFb" aria-live="polite"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CASE 3 -->
+  <section class="case" id="feedback">
+    <div class="case-head">
+      <span class="case-num">Problem 3</span>
+      <h2>Managers avoid tough feedback conversations</h2>
+      <span class="verdict v-train">Practice needed</span>
+      <div class="scenario-box"><b>What the VP says</b>"Our managers know they should give feedback. They took the workshop. But problems sit for months, and then someone gets a surprise at review time."</div>
+    </div>
+    <div class="cols">
+      <div>
+        <p class="label">What's really going on</p>
+        <ul class="causes">
+          <li>Knowing a model isn't the same as saying the words out loud.</li>
+          <li>Fear of the other person's reaction, with no safe place to practice.</li>
+          <li>Vague feedback ("be more proactive") that nobody can act on.</li>
+        </ul>
+        <p class="label" style="margin-top:24px">How I'd measure it</p>
+        <div class="measure"><span>Feedback frequency (pulse survey)</span><span>Review-time surprises</span><span>Manager confidence rating</span></div>
+      </div>
+      <div class="sol">
+        <p class="label">Creative solutions</p>
+        <div class="sol-item"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span><div><h4>Conversation simulator</h4><p>Managers practice a realistic conversation, choose what to say, and see how the employee reacts. Mistakes are free here.</p><p class="fmt">BRANCHING DIALOGUE · TRY IT BELOW</p></div></div>
+        <div class="sol-item"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 7h6M9 11h6M9 15h4"/></svg></span><div><h4>The SBI pocket card</h4><p>Situation, Behavior, Impact. A one-page job aid with sentence starters managers can glance at before a conversation.</p><p class="fmt">JOB AID</p></div></div>
+        <div class="sol-item"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0M11 20a6 6 0 0 1 12 0"/></svg></span><div><h4>Peer practice labs</h4><p>Monthly 30-minute sessions where managers role-play real (anonymized) situations in pairs.</p><p class="fmt">LIVE PRACTICE</p></div></div>
+      </div>
+    </div>
+    <div class="demo">
+      <span class="eyebrow">Demo</span>
+      <h3>Conversation simulator</h3>
+      <p class="muted">Jordan has missed three project deadlines this month. You've asked for a quick one-on-one.</p>
+      <div class="demo-card" id="sim" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <!-- CASE 4 -->
+  <section class="case" id="expenses">
+    <div class="case-head">
+      <span class="case-num">Problem 4</span>
+      <h2>Expense reports keep getting rejected</h2>
+      <span class="verdict v-no">Not a training problem</span>
+      <div class="scenario-box"><b>What Finance says</b>"Forty percent of expense reports come back for corrections. We need a mandatory training on the expense policy."</div>
+    </div>
+    <div class="cols">
+      <div>
+        <p class="label">What's really going on</p>
+        <ul class="causes">
+          <li>People submit reports a few times a year, so nobody remembers the rules.</li>
+          <li>The most common errors are a missing receipt and the wrong category.</li>
+          <li>The form allows mistakes it could easily prevent.</li>
+          <li>A course would be forgotten long before the next report.</li>
+        </ul>
+        <p class="label" style="margin-top:24px">How I'd measure it</p>
+        <div class="measure"><span>Rejection rate</span><span>Finance hours spent on corrections</span><span>Time to reimbursement</span></div>
+      </div>
+      <div class="sol">
+        <p class="label">Creative solutions</p>
+        <div class="sol-item"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.8-3.8a6 6 0 0 1-7.9 7.9l-6.9 6.9a2.1 2.1 0 0 1-3-3l6.9-6.9a6 6 0 0 1 7.9-7.9z"/></svg></span><div><h4>Fix the form first</h4><p>Make the receipt upload required and add plain-language category descriptions. Prevent the error instead of training people to avoid it.</p><p class="fmt">PROCESS FIX · TRY IT BELOW</p></div></div>
+        <div class="sol-item"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M9.1 9a3 3 0 0 1 5.8 1c0 2-3 3-3 3M12 17h.01"/></svg></span><div><h4>Inline help, right where it's needed</h4><p>Short tips next to each field ("Client dinner? Use Meals: Client and list attendees"). Help shows up at the moment of need.</p><p class="fmt">PERFORMANCE SUPPORT</p></div></div>
+        <div class="sol-item"><span class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg></span><div><h4>A 60-second pre-submit checklist</h4><p>Three questions before "Submit": receipt attached? Category matches? Attendees listed for meals?</p><p class="fmt">JOB AID</p></div></div>
+      </div>
+    </div>
+    <div class="demo">
+      <span class="eyebrow">Demo</span>
+      <h3>Before and after: the smarter expense form</h3>
+      <p class="muted">Toggle between the original form and the redesign.</p>
+      <div class="demo-card">
+        <div class="diag-btns" role="group" aria-label="Form version"><button class="btn ghost" id="fBefore" aria-pressed="true">Before</button><button class="btn ghost" id="fAfter" aria-pressed="false">After</button></div>
+        <div class="form-mock" id="formMock"></div>
+      </div>
+    </div>
+  </section>
+
+  <div style="padding-block:24px 72px;border-top:1px solid var(--line);display:grid;gap:14px;justify-items:start">
+    <h2 style="font-size:1.8rem">Want to see a full course?</h2>
+    <p class="muted">Spot the Phish puts several of these ideas into practice: scenarios, spaced checks, and a job aid.</p>
+    <div class="btns"><a class="btn" href="../lessons/spot-the-phish/">Take the course</a><a class="btn ghost" href="../work/spot-the-phish.html">Read the case study</a></div>
+  </div>
+</main>
+
+<footer class="site-foot"><div class="wrap"><span>© 2026 Bianca Augustin · <a href="mailto:bianca.augustin0318@gmail.com">Email</a> · <a href="https://www.linkedin.com/in/bianca-augustin-6a15b3177/">LinkedIn</a></span><span>Scenarios are fictional composites of common workplace situations.</span></div></footer>
+
+<script>
+const $=s=>document.querySelector(s);
+
+/* diagnostic */
+const DQ={
+  start:{q:"If their job depended on it, could people do the task correctly right now?",a:[["Yes, they know how","env"],["No, they don't know how","freq"],["Not sure","freq"]]},
+  env:{q:"Do they have the time, tools, and a clear process to do it well?",a:[["Yes","motiv"],["No, something gets in the way","R_env"]]},
+  motiv:{q:"Is doing it right noticed or rewarded, and doing it wrong ever addressed?",a:[["Yes","R_else"],["Not really","R_motiv"]]},
+  freq:{q:"Do they do this task often, and does it require judgment?",a:[["Often, with judgment calls","R_train"],["Rarely, or it's step-by-step","R_aid"]]}};
+const DR={
+  R_env:["v-no","Fix the environment","Training won't help if the process, tools, or workload are the problem. Start with the system: simplify the process, fix the tool, or free up time.","See Problem 4","#expenses"],
+  R_motiv:["v-mix","Fix feedback and consequences","People know how but have no reason to change. Look at feedback, recognition, and what managers reinforce. Practice may help managers have those conversations.","See Problem 3","#feedback"],
+  R_else:["v-mix","Dig deeper","Skills, tools, and motivation look fine. The issue may be unclear expectations, a hiring mismatch, or a communication gap. Interview a few people before designing anything.","",""],
+  R_train:["v-train","Training with practice","This is a real skill gap on a frequent, judgment-heavy task. Design realistic practice with feedback, like scenarios or simulations, not just information.","See Problem 2","#compliance"],
+  R_aid:["v-mix","A job aid may beat a course","For rare or procedural tasks, people forget training before they need it. Put the steps where the work happens: a checklist, inline help, or a quick-reference guide.","See Problem 4","#expenses"]};
+let dpath=[];
+function diag(node){const box=$("#diag");
+  if(DR[node]){const [cls,t,d,ln,href]=DR[node];
+    box.innerHTML=`<div class="diag-path">${dpath.map(p=>`<span>${p}</span>`).join("")}</div><div class="result ${cls==="v-train"?"fb good":cls==="v-no"?"fb bad":"fb mid"}"><span class="verdict ${cls}">Recommendation</span><b>${t}</b><span>${d}</span></div><div class="diag-btns">${ln?`<a class="btn" href="${href}">${ln}</a>`:""}<button class="btn ghost" id="dAgain">Try another problem</button></div>`;
+    $("#dAgain").onclick=()=>{dpath=[];diag("start")};return}
+  const n=DQ[node];
+  box.innerHTML=`${dpath.length?`<div class="diag-path">${dpath.map(p=>`<span>${p}</span>`).join("")}</div>`:""}<p class="diag-q">${n.q}</p><div class="diag-btns">${n.a.map(([t,to])=>`<button class="btn ghost" data-to="${to}">${t}</button>`).join("")}</div>`;
+  box.querySelectorAll("[data-to]").forEach(b=>b.onclick=()=>{dpath.push(b.textContent);diag(b.dataset.to)})}
+diag("start");
+
+/* quest */
+const Q=[["Set up your laptop and log in to email",10],["Meet your buddy for coffee",15],["Shadow a teammate for one hour",20],["Find the answer to one question in the team wiki",15],["Complete your first small task solo",25],["Share one thing you learned with your manager",15]];
+const LV=[[0,"Newcomer"],[30,"Explorer"],[60,"Contributor"],[100,"Teammate"]];
+let xp=0;
+Q.forEach(([t,p],i)=>{const l=document.createElement("label");l.className="qrow";l.innerHTML=`<input type="checkbox" id="q${i}"><span>${t}</span><span class="xp">+${p} XP</span>`;
+  l.querySelector("input").addEventListener("change",e=>{xp+=e.target.checked?p:-p;l.classList.toggle("done",e.target.checked);
+    $("#xpFill").style.width=xp+"%";$("#xpNum").textContent=xp+" / 100 XP";const lv=LV.filter(v=>xp>=v[0]).length;$("#xpLevel").textContent=`Level ${lv} · ${LV[lv-1][1]}`;$("#questDone").hidden=xp<100});
+  $("#quest").appendChild(l)});
+
+/* challenge */
+const CH=[["Email it to Dana's Gmail. She's a coworker and it's urgent.",0,"Risky. Customer data in a personal account is outside company protection, and it's a common source of data breaches, even with good intentions."],
+  ["Help Dana get back into the shared drive, or ask IT for access.",1,"That's the one. You solve Dana's real problem (access) without moving customer data somewhere it shouldn't be."],
+  ["Send it, but put a password on the file.",0,"Better than nothing, but the data still ends up in a personal account. The real fix is getting Dana proper access."]];
+CH.forEach(([t,ok,fb])=>{const b=document.createElement("button");b.className="choice";b.textContent=t;
+  b.onclick=()=>{document.querySelectorAll("#chal .choice").forEach(x=>x.disabled=true);b.classList.add(ok?"right":"wrong");
+    $("#chalFb").innerHTML=`<p class="fb ${ok?"good":"bad"}"><b>${ok?"Nice.":"Not quite."}</b> ${fb}</p><button class="btn ghost" id="chAgain" style="margin-top:10px">Try again</button>`;
+    $("#chAgain").onclick=()=>{document.querySelectorAll("#chal .choice").forEach(x=>{x.disabled=false;x.classList.remove("right","wrong")});$("#chalFb").innerHTML=""}};
+  $("#chal").appendChild(b)});
+
+/* simulator */
+const SIM={
+  s1:{them:"Hi! You wanted to chat?",opts:[["\"Jordan, you've been really unreliable lately. What's going on?\"","s1b"],["\"Thanks for making time. In the last month, the client report, the budget draft, and the vendor list all came in after their deadlines. That pushed the launch back a week. Can you help me understand what's happening?\"","s2g"],["\"Oh, nothing big. Just checking in. How's everything?\"","s1c"]]},
+  s1b:{them:"(crosses arms) \"Unreliable? I've been working late every night. I don't think that's fair.\"",note:["bad","Labels like \"unreliable\" describe a person, not a behavior, so they trigger defensiveness. Try naming specific situations and their impact."],opts:[["Start over","s1"]]},
+  s1c:{them:"\"Everything's good! Busy, but good.\"",note:["mid","Avoiding the topic feels kinder, but Jordan leaves without knowing there's a problem. That's how review-time surprises happen."],opts:[["Start over","s1"]]},
+  s2g:{them:"(sighs) \"Yeah… honestly, I've been covering for Sam since he went on leave, and I didn't want to say I was underwater.\"",note:["good","Specific situation, behavior, and impact, followed by an open question. Jordan feels safe enough to share the real cause."],opts:[["\"Okay. You'll just need to manage your time better.\"","s3b"],["\"Thanks for telling me. Let's look at your list together and decide what to hand off or push back.\"","s3g"]]},
+  s3b:{them:"\"…Sure. I'll try.\" (looks down)",note:["bad","Jordan just told you the real problem is workload, and the response ignored it. The deadlines will likely keep slipping."],opts:[["Go back","s2g"],["Start over","s1"]]},
+  s3g:{them:"\"That would really help. Can we move the vendor list to next week?\"",note:["good","Conversation complete. You named the issue clearly, listened, and agreed on a next step together. That's the whole SBI model in action."],end:true,opts:[["Practice again","s1"]]}};
+function sim(id){const n=SIM[id],box=$("#sim");
+  box.innerHTML=`<div class="bubble-row"><span class="avatar" style="background:#2C7449">JR</span><div class="bubble">${n.them}</div></div>${n.note?`<p class="fb ${n.note[0]}"><b>${n.note[0]==="good"?"Coach's note:":"Coach's note:"}</b> ${n.note[1]}</p>`:""}<div style="display:grid;gap:8px">${n.opts.map(([t,to])=>`<button class="choice" data-to="${to}">${t.startsWith('"')?`<span class="avatar" style="background:#1E3A5F;width:30px;height:30px;font-size:12px">You</span>`:""}<span>${t}</span></button>`).join("")}</div>`;
+  box.querySelectorAll("[data-to]").forEach(b=>b.onclick=()=>sim(b.dataset.to))}
+sim("s1");
+
+/* expense form */
+function form(after){$("#fBefore").setAttribute("aria-pressed",!after);$("#fAfter").setAttribute("aria-pressed",after);
+  $("#fBefore").className="btn"+(after?" ghost":"");$("#fAfter").className="btn"+(after?"":" ghost");
+  const rows=after?[
+    ["Category",'<span>Meals: Client</span><span class="hintchip">Includes client dinners and lunches</span>'],
+    ["Attendees",'<span>Priya Shah (Coastal Freight)</span><span class="hintchip">Required for client meals</span>'],
+    ["Amount","<span>$84.20</span>"],
+    ["Receipt",'<span class="ok">✓ receipt_0412.jpg attached</span><span class="hintchip">Required</span>'],
+    ["Before you submit",'<span class="ok">✓ Receipt ✓ Category ✓ Attendees</span>']]:[
+    ["Category","<span>Misc / Other (14 options)</span>"],
+    ["Attendees","<span style=\"color:var(--ink-soft)\">(optional)</span>"],
+    ["Amount","<span>$84.20</span>"],
+    ["Receipt","<span style=\"color:var(--ink-soft)\">(optional)</span>"],
+    ["",'<span style="color:var(--bad);font-weight:600">Submitted… returned 3 days later: missing receipt, wrong category.</span>']];
+  $("#formMock").innerHTML=rows.map(([k,v])=>`<div class="frow"><span style="font-weight:600">${k}</span><div class="field">${v}</div></div>`).join("")+(after?'<p class="fb good"><b>Result:</b> the two most common errors are now impossible or obvious, without a single minute of training.</p>':"")}
+$("#fBefore").onclick=()=>form(false);$("#fAfter").onclick=()=>form(true);form(false);
+</script>
+</body>
+</html>
