@@ -1,0 +1,362 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Sheet Studio · Spreadsheet Builder</title>
+<meta name="description" content="Sheet Studio: describe what you need and get a working Excel spreadsheet with formulas, dropdowns, and highlighting. A workplace tool designed and built by Bianca Augustin.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* Layout: ledger workbench. Graph-paper ground, a builder column on the left (describe → adjust → download), a live spreadsheet preview on the right. Deep ledger green is the one accent. */
+:root{
+  --paper:#F6F7F2; --grid:#E3E8DD; --surface:#FFFFFF; --ink:#1C211C; --ink-2:#4F5A50; --ink-3:#7D877E; --line:#D5DBD0;
+  --green:#17603F; --green-2:#1E7A51; --green-soft:#E3F0E8; --red:#B3361F; --red-soft:#FBE6E1; --amber:#A86A08; --amber-soft:#FBF0D8;
+  --f-ui:"Archivo",system-ui,-apple-system,"Segoe UI",sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root{
+  --paper:#121512; --grid:#1D221D; --surface:#191E19; --ink:#E8ECE6; --ink-2:#AAB4AB; --ink-3:#7F8A80; --line:#2C342C;
+  --green:#5FC28F; --green-2:#7FD3A6; --green-soft:#16301F; --red:#F08D78; --red-soft:#3A1E18; --amber:#E6B04E; --amber-soft:#33270F; color-scheme:dark}}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--paper);color:var(--ink);font-family:var(--f-ui);font-size:16px;line-height:1.5;
+  background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:2.5px solid var(--green);outline-offset:2px;border-radius:4px}
+a{color:var(--green)}
+.wrap{max-width:1360px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-block:16px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--ink)}
+.logo i{width:34px;height:34px;background:var(--green);border-radius:6px;display:grid;place-items:center}
+.logo b{font-stretch:75%;font-weight:800;font-size:22px;letter-spacing:.01em;text-transform:uppercase}
+.logo small{display:block;font-size:12px;color:var(--ink-3);margin-top:-4px;font-weight:500}
+.top nav{display:flex;gap:16px;font-size:14px;font-weight:600}
+.hero{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:24px;align-items:end;padding-block:18px 26px}
+.hero h1{font-stretch:68%;font-weight:800;font-size:clamp(2.6rem,6vw,4.6rem);line-height:.92;margin:0;text-transform:uppercase;letter-spacing:-.005em}
+.hero h1 span{color:var(--green)}
+.hero p{font-size:1.1rem;color:var(--ink-2);max-width:58ch;margin:14px 0 0}
+.credit{background:var(--surface);border:1.5px solid var(--ink);border-radius:4px;padding:16px 18px;display:grid;gap:6px;box-shadow:5px 5px 0 var(--green)}
+.credit .k{font-family:var(--f-mono);font-size:12px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.06em}
+.credit b{font-size:17px}
+.credit p{margin:0;font-size:14.5px;color:var(--ink-2)}
+.bench{display:grid;grid-template-columns:420px minmax(0,1fr);gap:22px;align-items:start;padding-bottom:28px}
+.panel{background:var(--surface);border:1.5px solid var(--line);border-radius:6px;padding:18px;display:grid;gap:14px}
+.step{display:grid;gap:10px;padding-bottom:16px;border-bottom:1.5px dashed var(--line)}
+.step:last-child{border-bottom:0;padding-bottom:0}
+.step h2{margin:0;display:flex;gap:10px;align-items:center;font-size:15px;font-stretch:85%;font-weight:800;text-transform:uppercase;letter-spacing:.04em}
+.step h2 i{font-style:normal;font-family:var(--f-mono);font-size:12px;background:var(--ink);color:var(--paper);border-radius:3px;padding:2px 6px}
+textarea{width:100%;min-height:96px;resize:vertical;border:1.5px solid var(--line);border-radius:4px;padding:10px 12px;background:var(--paper);line-height:1.45}
+textarea:focus,input[type=text]:focus{outline:none;border-color:var(--green)}
+.ex{display:flex;flex-wrap:wrap;gap:6px}
+.ex button{border:1px solid var(--line);background:var(--paper);border-radius:99px;padding:4px 10px;font-size:13px;cursor:pointer;text-align:left}
+.ex button:hover{border-color:var(--green)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1.5px solid var(--ink);border-radius:4px;padding:10px 16px;font-weight:700;cursor:pointer;background:var(--surface)}
+.btn.primary{background:var(--green);border-color:var(--green);color:#fff}
+.btn.primary:hover{background:var(--green-2)}
+.btn:disabled{opacity:.5;cursor:default}
+.understood{display:flex;flex-wrap:wrap;gap:6px}
+.understood span{font-family:var(--f-mono);font-size:12px;font-weight:500;background:var(--green-soft);color:var(--green);border-radius:3px;padding:3px 7px}
+.tpls{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.tpl{display:grid;gap:2px;text-align:left;border:1.5px solid var(--line);background:var(--paper);border-radius:4px;padding:10px;cursor:pointer}
+.tpl b{font-size:14.5px}
+.tpl small{font-size:12.5px;color:var(--ink-3)}
+.tpl[aria-pressed="true"]{border-color:var(--green);background:var(--green-soft);box-shadow:inset 0 0 0 1px var(--green)}
+label.f{display:grid;gap:4px;font-size:13px;font-weight:700;color:var(--ink-2)}
+input[type=text]{border:1.5px solid var(--line);border-radius:4px;padding:8px 10px;background:var(--paper);font-weight:600}
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:6px 12px}
+.checks label{display:flex;gap:8px;align-items:center;font-size:14px;cursor:pointer}
+.checks input{accent-color:var(--green);width:16px;height:16px}
+.checks label.off{opacity:.45;cursor:default}
+.range{display:flex;align-items:center;gap:10px}
+.range input{flex:1;accent-color:var(--green)}
+.range b{font-family:var(--f-mono);min-width:3ch}
+.swatches{display:flex;gap:8px}
+.swatches button{width:30px;height:30px;border-radius:4px;border:2px solid transparent;cursor:pointer}
+.swatches button[aria-pressed="true"]{border-color:var(--ink);box-shadow:0 0 0 2px var(--surface) inset}
+.dl{display:grid;gap:8px}
+.note{font-size:13px;color:var(--ink-3);margin:0}
+
+/* spreadsheet preview */
+.sheet{background:var(--surface);border:1.5px solid var(--ink);border-radius:4px;overflow:hidden;box-shadow:6px 6px 0 rgba(23,96,63,.18);min-width:0}
+.ribbon{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line);background:var(--paper);flex-wrap:wrap}
+.ribbon .file{font-weight:700;font-size:14px;display:flex;align-items:center;gap:8px}
+.ribbon .file i{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:3px;background:var(--green);color:#fff;font-style:normal;font-size:11px;font-weight:800}
+.ribbon .meta{font-family:var(--f-mono);font-size:12px;color:var(--ink-3)}
+.fx{display:grid;grid-template-columns:70px 28px minmax(0,1fr);align-items:center;border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:13px}
+.fx span{padding:6px 10px;border-right:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fx em{font-style:italic;color:var(--ink-3);text-align:center;border-right:1px solid var(--line);padding:6px 0}
+.grid-wrap{overflow:auto;max-height:560px}
+table.ss{border-collapse:collapse;font-size:13.5px;min-width:100%}
+.ss th,.ss td{border:1px solid var(--line);padding:5px 9px;white-space:nowrap;height:28px}
+.ss thead th{position:sticky;top:0;background:var(--paper);color:var(--ink-3);font-family:var(--f-mono);font-weight:500;font-size:12px;z-index:2}
+.ss tbody th{position:sticky;left:0;background:var(--paper);color:var(--ink-3);font-family:var(--f-mono);font-weight:500;font-size:12px;width:40px;text-align:center;z-index:1}
+.ss td{cursor:cell;max-width:240px;overflow:hidden;text-overflow:ellipsis}
+.ss td.hd{font-weight:700;color:#fff}
+.ss td.n{text-align:right;font-family:var(--f-mono);font-size:13px}
+.ss td.f{color:var(--green)}
+.ss td.list::after{content:"▾";float:right;margin-left:8px;color:var(--ink-3);font-size:11px}
+.ss td.sel{outline:2px solid var(--green);outline-offset:-2px}
+.ss tr.hl-red td{background:var(--red-soft);color:var(--red)}
+.ss tr.hl-amber td{background:var(--amber-soft)}
+.ss tr.tot td{font-weight:700;border-top:2px solid var(--ink)}
+.tabs{display:flex;gap:2px;border-top:1px solid var(--line);background:var(--paper);padding:0 8px;overflow-x:auto}
+.tabs button{border:0;background:none;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer;border-bottom:3px solid transparent;color:var(--ink-2);white-space:nowrap}
+.tabs button[aria-selected="true"]{background:var(--surface);color:var(--green);border-bottom-color:var(--green)}
+.inside{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;margin-top:16px}
+.inside div{background:var(--surface);border:1.5px solid var(--line);border-radius:4px;padding:10px 12px;font-size:13.5px}
+.inside b{display:block;font-size:14px;margin-bottom:2px}
+.more{padding-block:28px 56px;border-top:1.5px solid var(--ink);margin-top:12px}
+.more h2{font-stretch:70%;font-weight:800;text-transform:uppercase;font-size:clamp(1.8rem,4vw,2.6rem);line-height:1;margin:0 0 6px}
+.more>p{color:var(--ink-2);max-width:66ch;margin:0 0 18px}
+.cards{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.card{background:var(--surface);border:1.5px solid var(--line);border-radius:4px;padding:16px;display:grid;gap:6px;align-content:start}
+.card .k{font-family:var(--f-mono);font-size:12px;color:var(--green);font-weight:600}
+.card b{font-size:16px}
+.card p{margin:0;font-size:14px;color:var(--ink-2)}
+.cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:20px}
+.toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:var(--paper);padding:10px 16px;border-radius:4px;font-weight:600;font-size:14px;z-index:9;transition:opacity .3s}
+.toast.gone{opacity:0;pointer-events:none}
+.bench>*{min-width:0}
+@media (max-width:1080px){.bench{grid-template-columns:minmax(0,1fr)}.hero{grid-template-columns:1fr}.inside{grid-template-columns:repeat(2,minmax(0,1fr))}.cards{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.tpls,.checks{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.inside{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header class="wrap top">
+  <a class="logo" href="./"><i aria-hidden="true"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg></i><span><b>Sheet Studio</b><small>A spreadsheet builder by Bianca Augustin</small></span></a>
+  <nav><a href="../../">← Portfolio</a><a href="#more">Other tools I build</a></nav>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div>
+      <h1>Describe it.<br><span>Get a working spreadsheet.</span></h1>
+      <p>Tell Sheet Studio what you need to track in plain words. It picks the right layout, writes the formulas, adds dropdown menus and highlighting, and hands you a real Excel file. No formula skills needed.</p>
+    </div>
+    <aside class="credit" aria-label="About this tool">
+      <span class="k">Designed &amp; built by Bianca Augustin</span>
+      <b>Why I built this</b>
+      <p>Most teams don't need more spreadsheet training. They need the spreadsheet already done right. I build simple tools like this so anyone on a team can create what they need in a minute, and I can build similar ones for your reports, trackers, and forms.</p>
+    </aside>
+  </section>
+
+  <section class="bench">
+    <div class="panel" aria-label="Spreadsheet builder">
+      <div class="step">
+        <h2><i>01</i>Describe what you need</h2>
+        <label for="desc" style="position:absolute;left:-9999px">Describe your spreadsheet</label>
+        <textarea id="desc" placeholder="Example: Track training for my 20-person sales team with due dates, scores, and a summary.">Track required training for my 20-person sales team with due dates, scores, and a summary page.</textarea>
+        <div class="ex" aria-label="Examples">
+          <button data-ex="Monthly budget for the marketing department with planned vs actual spending and totals">Department budget</button>
+          <button data-ex="Project tasks for our website launch with owners, priority, due dates, and a summary">Project tasks</button>
+          <button data-ex="Inventory of office supplies with locations, unit cost, and reorder alerts for 30 items">Supply inventory</button>
+          <button data-ex="Track onboarding training for 12 new hires with due dates and completion status">New hire training</button>
+        </div>
+        <button class="btn primary" id="build">Build my spreadsheet</button>
+        <div class="understood" id="understood" aria-live="polite"></div>
+      </div>
+      <div class="step">
+        <h2><i>02</i>Adjust (optional)</h2>
+        <div class="tpls" id="tpls" role="group" aria-label="Spreadsheet type"></div>
+        <label class="f">Title<input type="text" id="title" maxlength="60"></label>
+        <div><div class="f" style="margin-bottom:6px">Columns</div><div class="checks" id="cols"></div></div>
+        <div><div class="f" style="margin-bottom:6px">Features</div><div class="checks" id="feats"></div></div>
+        <div class="range"><label class="f" for="rows" style="display:inline">Rows</label><input type="range" id="rows" min="5" max="50" step="1" value="20"><b id="rowsOut">20</b></div>
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap"><span class="f">Header color</span><div class="swatches" id="sw" role="group" aria-label="Header color"></div></div>
+      </div>
+      <div class="step dl">
+        <h2><i>03</i>Download</h2>
+        <button class="btn primary" id="xlsx">Download Excel file (.xlsx)</button>
+        <button class="btn" id="csv">Copy as CSV</button>
+        <p class="note">The file opens in Excel, Google Sheets, or Numbers. Formulas, dropdowns, and highlighting keep working.</p>
+      </div>
+    </div>
+
+    <div>
+      <div class="sheet">
+        <div class="ribbon"><span class="file"><i>X</i><span id="fname">Sales Team Training Tracker.xlsx</span></span><span class="meta" id="smeta"></span></div>
+        <div class="fx"><span id="cellRef">A1</span><em>fx</em><span id="cellVal">Select a cell to see its formula</span></div>
+        <div class="grid-wrap"><table class="ss" id="ss" aria-label="Spreadsheet preview"></table></div>
+        <div class="tabs" id="tabs" role="tablist"></div>
+      </div>
+      <div class="inside" aria-label="What's inside the file">
+        <div><b>Real formulas</b>Totals, differences, days overdue, and summary stats calculate automatically.</div>
+        <div><b>Dropdown menus</b>Status, priority, and category cells only accept valid choices.</div>
+        <div><b>Smart highlighting</b>Overdue, over-budget, or low-stock rows turn red on their own.</div>
+        <div><b>Ready to use</b>Frozen header row, filters on every column, and sized columns.</div>
+        <div><b>Summary sheet</b>A second tab with the numbers a manager actually asks for.</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="more" id="more">
+    <h2>Other tools I can build for a team</h2>
+    <p>Sheet Studio is one example of how I approach workplace problems: if people keep struggling with the same task, a small, well-designed tool often helps more than a training session. Here are similar tools I can design and build.</p>
+    <div class="cards">
+      <div class="card"><span class="k">TRACKERS</span><b>Training &amp; compliance trackers</b><p>Assignment lists that flag who's overdue and roll up completion by team.</p></div>
+      <div class="card"><span class="k">REPORTS</span><b>One-click report builders</b><p>Turn raw exports from an LMS or HR system into a clean monthly summary.</p></div>
+      <div class="card"><span class="k">DOCUMENTS</span><b>Document &amp; form generators</b><p>Fill in a few fields and get a formatted SOP, checklist, or letter.</p></div>
+      <div class="card"><span class="k">JOB AIDS</span><b>Interactive job aids</b><p>Step-by-step helpers and calculators people use right at the moment they need them.</p></div>
+    </div>
+    <div class="cta"><a class="btn primary" href="mailto:bianca.augustin0318@gmail.com" style="text-decoration:none">Talk to me about a tool for your team</a><a href="../../">Back to my portfolio</a></div>
+  </section>
+</main>
+<div class="toast gone" id="toast" role="status" aria-live="polite"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.4.0/dist/exceljs.min.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+const TODAY=new Date();TODAY.setHours(0,0,0,0);const DAY=864e5;
+let seed=11;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647};const pick=a=>a[Math.floor(rnd()*a.length)];
+const NAMES=["Amara Okafor","Luis Rivera","Priya Patel","Marcus Johnson","Sofia Rossi","Jamal Williams","Mei Chen","Diego Hernández","Aisha Mohammed","Grace Kim","Kwame Mensah","Elena Petrova","Ravi Shah","Nia Brown","Omar Haddad","Hannah Schmidt","Carlos Morales","Yuki Tanaka","Andre Davis","Fatima Ali","Ben Cohen","Lucía Fernández","Darnell Jackson","Ingrid Larsen","Sam Nguyen"];
+/* ---------- templates ---------- */
+const T={
+ training:{name:"Training tracker",blurb:"Who's assigned what, and who's overdue",sheet:"Training",title:"Team Training Tracker",
+  cols:[{k:"emp",l:"Employee",t:"text",w:22},{k:"dept",l:"Department",t:"list",w:16,list:["Sales","Operations","Finance","IT","People"],opt:true},{k:"course",l:"Course",t:"text",w:28},{k:"due",l:"Due date",t:"date",w:14,opt:true},{k:"done",l:"Completed on",t:"date",w:14,opt:true},{k:"status",l:"Status",t:"list",w:14,list:["Not started","In progress","Complete"]},{k:"score",l:"Score",t:"pct",w:10,opt:true},
+   {k:"late",l:"Days overdue",t:"num",w:13,opt:true,req:["due","status"],f:'IF(AND({status}{r}<>"Complete",{due}{r}<>"",{due}{r}<TODAY()),TODAY()-{due}{r},0)',calc:r=>r.status!=="Complete"&&r.due&&r.due<TODAY?Math.round((TODAY-r.due)/DAY):0}],
+  hl:{key:"overdue",label:"Highlight overdue rows",req:["due","status"],expr:'AND(${status}2<>"Complete",${due}2<>"",${due}2<TODAY())',test:r=>r.status!=="Complete"&&r.due&&r.due<TODAY},
+  totals:null,
+  sample:i=>{const st=pick(["Complete","Complete","In progress","Not started"]),due=new Date(TODAY.getTime()+(Math.floor(rnd()*60)-25)*DAY);return {emp:NAMES[i%NAMES.length],dept:pick(["Sales","Operations","Finance","IT","People"]),course:pick(["Data Privacy Essentials","Spot the Phish","Harassment Prevention","Customer Care Basics","Workplace Safety"]),due,done:st==="Complete"?new Date(due.getTime()-Math.floor(rnd()*10)*DAY):null,status:st,score:st==="Complete"?Math.round(70+rnd()*30)/100:null}},
+  summary:[["Total assignments","COUNTA({emp:range})"],["Completed",'COUNTIF({status:range},"Complete")'],["Completion rate","IFERROR(B3/B2,0)","pct"],["Overdue",'COUNTIFS({status:range},"<>Complete",{due:range},"<"&TODAY())',null,["due"]],["Average score","IFERROR(AVERAGE({score:range}),0)","pct",["score"]]]},
+ budget:{name:"Budget",blurb:"Planned vs. actual with totals",sheet:"Budget",title:"Department Budget",
+  cols:[{k:"cat",l:"Category",t:"list",w:16,list:["Staffing","Software","Travel","Training","Supplies","Events"]},{k:"item",l:"Item",t:"text",w:28},{k:"plan",l:"Planned",t:"cur",w:14},{k:"act",l:"Actual",t:"cur",w:14},
+   {k:"diff",l:"Difference",t:"cur",w:14,req:["plan","act"],f:"{act}{r}-{plan}{r}",calc:r=>(r.act||0)-(r.plan||0)},{k:"used",l:"% used",t:"pct",w:10,opt:true,req:["plan","act"],f:'IFERROR({act}{r}/{plan}{r},0)',calc:r=>r.plan?(r.act||0)/r.plan:0},{k:"notes",l:"Notes",t:"text",w:26,opt:true}],
+  hl:{key:"over",label:"Highlight over-budget rows",req:["plan","act"],expr:'${act}2>${plan}2',test:r=>(r.act||0)>(r.plan||0)},
+  totals:["plan","act","diff"],
+  sample:()=>{const plan=Math.round((300+rnd()*4700)/50)*50;return {cat:pick(["Staffing","Software","Travel","Training","Supplies","Events"]),item:pick(["Conference registration","LMS license","Team offsite","Course design tools","Printed job aids","Guest speaker","Video equipment","Snacks for workshops"]),plan,act:Math.round(plan*(.7+rnd()*.5)/10)*10,notes:""}},
+  summary:[["Total planned","SUM({plan:range})","cur"],["Total actual","SUM({act:range})","cur"],["Remaining","B2-B3","cur"],["Lines over budget",'SUMPRODUCT(--({act:range}>{plan:range}))']]},
+ project:{name:"Project tasks",blurb:"Owners, deadlines, and progress",sheet:"Tasks",title:"Project Task Tracker",
+  cols:[{k:"task",l:"Task",t:"text",w:30},{k:"owner",l:"Owner",t:"text",w:18,opt:true},{k:"prio",l:"Priority",t:"list",w:12,list:["High","Medium","Low"],opt:true},{k:"start",l:"Start",t:"date",w:13,opt:true},{k:"due",l:"Due date",t:"date",w:13},{k:"status",l:"Status",t:"list",w:14,list:["Not started","In progress","Blocked","Done"]},{k:"pct",l:"% complete",t:"pct",w:12},
+   {k:"left",l:"Days left",t:"num",w:11,opt:true,req:["due","status"],f:'IF({status}{r}="Done","",{due}{r}-TODAY())',calc:r=>r.status==="Done"?"":Math.round((r.due-TODAY)/DAY)}],
+  hl:{key:"late",label:"Highlight overdue tasks",req:["due","status"],expr:'AND(${status}2<>"Done",${due}2<TODAY())',test:r=>r.status!=="Done"&&r.due<TODAY},
+  totals:null,
+  sample:i=>{const st=pick(["Done","In progress","In progress","Not started","Blocked"]);const start=new Date(TODAY.getTime()-Math.floor(rnd()*30)*DAY);return {task:pick(["Draft storyboard","Interview SMEs","Build prototype","Pilot with learners","Record narration","Write job aid","Review with legal","Launch email","Update LMS","Collect feedback"])+(i>9?" "+(i+1):""),owner:NAMES[(i*3)%NAMES.length].split(" ")[0],prio:pick(["High","Medium","Low"]),start,due:new Date(start.getTime()+Math.floor(5+rnd()*30)*DAY),status:st,pct:st==="Done"?1:st==="Not started"?0:Math.round(rnd()*9)/10}},
+  summary:[["Total tasks","COUNTA({task:range})"],["Done",'COUNTIF({status:range},"Done")'],["Blocked",'COUNTIF({status:range},"Blocked")'],["Overdue",'COUNTIFS({status:range},"<>Done",{due:range},"<"&TODAY())'],["Average % complete","IFERROR(AVERAGE({pct:range}),0)","pct"]]},
+ inventory:{name:"Inventory",blurb:"Stock levels with reorder alerts",sheet:"Inventory",title:"Supply Inventory",
+  cols:[{k:"item",l:"Item",t:"text",w:26},{k:"sku",l:"SKU",t:"text",w:12,opt:true},{k:"loc",l:"Location",t:"list",w:16,list:["Supply closet","Warehouse A","Warehouse B","Front desk"],opt:true},{k:"qty",l:"On hand",t:"num",w:11},{k:"min",l:"Reorder at",t:"num",w:11},
+   {k:"flag",l:"Status",t:"text",w:11,req:["qty","min"],f:'IF({qty}{r}<={min}{r},"Reorder","OK")',calc:r=>r.qty<=r.min?"Reorder":"OK"},{k:"cost",l:"Unit cost",t:"cur",w:12,opt:true},{k:"val",l:"Stock value",t:"cur",w:13,opt:true,req:["qty","cost"],f:"{qty}{r}*{cost}{r}",calc:r=>(r.qty||0)*(r.cost||0)}],
+  hl:{key:"low",label:"Highlight items to reorder",req:["qty","min"],expr:'${qty}2<=${min}2',test:r=>r.qty<=r.min},
+  totals:["qty","val"],
+  sample:i=>({item:pick(["Printer paper (case)","Sticky notes","Whiteboard markers","Name badges","Shipping labels","Safety gloves (box)","Batteries AA","Hand sanitizer","Notebooks","Extension cords"]),sku:"SUP-"+String(1001+i),loc:pick(["Supply closet","Warehouse A","Warehouse B","Front desk"]),qty:Math.floor(rnd()*60),min:Math.floor(5+rnd()*20),cost:Math.round((1+rnd()*40)*100)/100}),
+  summary:[["Items tracked","COUNTA({item:range})"],["Items to reorder",'COUNTIF({flag:range},"Reorder")'],["Total stock value","SUM({val:range})","cur",["val"]]]}};
+const COLORS=[["Ledger green","#17603F"],["Navy","#1E3A5F"],["Plum","#5B2A86"],["Tomato","#C2412C"]];
+
+/* ---------- state ---------- */
+let S={tpl:"training",title:"",on:{},feat:{totals:true,lists:true,hl:true,summary:true,sample:true},rows:20,color:0,tab:"main",sel:null,data:[]};
+function defaults(k){const on={};T[k].cols.forEach(c=>on[c.k]=true);return on}
+/* ---------- plain-language parser (keyword based) ---------- */
+function parse(text){const t=text.toLowerCase(),found=[];
+  const score={training:/train|course|learn|complet|certif|onboard|compliance|module/g,budget:/budget|spend|expense|cost of|money|planned|actual|finance/g,project:/project|task|launch|milestone|deadline|deliverable|sprint/g,inventory:/inventor|stock|supplies|supply|reorder|sku|warehouse item/g};
+  let best="training",bs=0;Object.entries(score).forEach(([k,re])=>{const n=(t.match(re)||[]).length;if(n>bs){bs=n;best=k}});
+  S.tpl=best;S.on=defaults(best);T[best].cols.forEach(c=>{if(c.opt)S.on[c.k]=false});found.push("Type: "+T[best].name);
+  const want=(re,keys,label)=>{if(re.test(t)&&keys.some(k=>k in S.on)){keys.forEach(k=>{if(k in S.on)S.on[k]=true});found.push("+ "+label)}};
+  want(/due|deadline|by when|overdue/,["due","late","left"],"Due dates");want(/score|grade|quiz|test/,["score"],"Scores");want(/depart|team/,["dept"],"Department");
+  want(/complet(ed|ion) (on|date)|finished/,["done"],"Completion date");want(/owner|assign|who/,["owner"],"Owners");want(/priorit/,["prio"],"Priority");want(/start/,["start"],"Start dates");
+  want(/percent|%|used/,["used"],"% used");want(/note|comment/,["notes"],"Notes");want(/location|where|room/,["loc"],"Locations");want(/sku|code|part number/,["sku"],"SKUs");
+  want(/cost|price|value/,["cost","val"],"Unit cost & value");
+  if(best==="training"&&S.on.due)S.on.late=true;if(best==="project")S.on.left=S.on.due;
+  S.feat.summary=/summar|dashboard|report|overview|manager/.test(t);if(S.feat.summary)found.push("+ Summary sheet");
+  S.feat.totals=/total|sum/.test(t)||!!T[best].totals;S.feat.hl=true;
+  const m=t.match(/(\d{1,3})\s*[- ]?(person|people|employees|staff|rows|items|tasks|products|lines|learners|new hires|hires|members)/);if(m){S.rows=Math.max(5,Math.min(50,+m[1]));found.push(S.rows+" rows")}
+  const team=t.match(/(?:for (?:my|our|the)\s+)(?:\d+[- ]person\s+)?([a-z&]+(?:\s[a-z&]+)?)\s+(?:team|department|dept)/);const base=T[best].title;
+  S.title=team?team[1].replace(/\b\w/g,c=>c.toUpperCase())+" "+base.replace(/^(Team|Department|Supply|Project) /,""):base;
+  if(best==="project"){const pm=t.match(/for (?:our|the|my) ([a-z ]+?) (?:launch|project)/);if(pm)S.title=pm[1].replace(/\b\w/g,c=>c.toUpperCase())+" "+(t.includes("launch")?"Launch ":"")+"Tasks"}
+  return found}
+/* ---------- column resolution ---------- */
+function activeCols(){const tp=T[S.tpl];return tp.cols.filter(c=>S.on[c.k]!==false&&(!c.req||c.req.every(k=>S.on[k]!==false)))}
+const letter=i=>{let s="";i++;while(i>0){const m=(i-1)%26;s=String.fromCharCode(65+m)+s;i=Math.floor((i-1)/26)}return s};
+function refMap(cols){const m={};cols.forEach((c,i)=>m[c.k]=letter(i));return m}
+function fillF(f,map,r){return f.replace(/\{r\}/g,r).replace(/\{(\w+)\}/g,(_,k)=>map[k]||"A")}
+function genData(){seed=11+S.tpl.length*7;const tp=T[S.tpl];S.data=Array.from({length:S.rows},(_,i)=>S.feat.sample?tp.sample(i):{})}
+const fmtDate=d=>d?d.toLocaleDateString("en-US",{month:"short",day:"numeric",year:"numeric"}):"";
+function fmt(c,v){if(v===null||v===undefined||v==="")return "";if(c.t==="date")return fmtDate(v);if(c.t==="cur")return "$"+Number(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});if(c.t==="pct")return Math.round(v*100)+"%";return String(v)}
+
+/* ---------- UI build ---------- */
+function renderControls(){const tp=T[S.tpl];
+  $("#tpls").innerHTML=Object.entries(T).map(([k,v])=>`<button class="tpl" data-k="${k}" aria-pressed="${k===S.tpl}"><b>${v.name}</b><small>${v.blurb}</small></button>`).join("");
+  $("#tpls").querySelectorAll(".tpl").forEach(b=>b.onclick=()=>{S.tpl=b.dataset.k;S.on=defaults(S.tpl);S.title=T[S.tpl].title;S.feat.totals=!!T[S.tpl].totals;genData();renderAll()});
+  $("#title").value=S.title;
+  $("#cols").innerHTML=tp.cols.map(c=>{const blocked=c.req&&!c.req.every(k=>S.on[k]!==false);return `<label class="${!c.opt||blocked?"off":""}"><input type="checkbox" data-k="${c.k}" ${S.on[c.k]!==false&&!blocked?"checked":""} ${!c.opt||blocked?"disabled":""}>${c.l}${c.f?" <small style='color:var(--green)'>ƒ</small>":""}</label>`}).join("");
+  $("#cols").querySelectorAll("input").forEach(i=>i.onchange=()=>{S.on[i.dataset.k]=i.checked;if(S.tpl==="training"&&i.dataset.k==="due"&&i.checked)S.on.late=true;renderAll()});
+  const hlOk=!tp.hl.req||tp.hl.req.every(k=>S.on[k]!==false);
+  const F=[["totals","Totals row",!!tp.totals],["lists","Dropdown menus",tp.cols.some(c=>c.t==="list")],["hl",tp.hl.label,hlOk],["summary","Summary sheet",true],["sample","Fill with sample rows",true]];
+  $("#feats").innerHTML=F.map(([k,l,ok])=>`<label class="${ok?"":"off"}"><input type="checkbox" data-f="${k}" ${S.feat[k]&&ok?"checked":""} ${ok?"":"disabled"}>${l}</label>`).join("");
+  $("#feats").querySelectorAll("input").forEach(i=>i.onchange=()=>{S.feat[i.dataset.f]=i.checked;if(i.dataset.f==="sample")genData();renderAll()});
+  $("#rows").value=S.rows;$("#rowsOut").textContent=S.rows;
+  $("#sw").innerHTML=COLORS.map(([n,c],i)=>`<button style="background:${c}" aria-label="${n}" aria-pressed="${i===S.color}" data-i="${i}"></button>`).join("");
+  $("#sw").querySelectorAll("button").forEach(b=>b.onclick=()=>{S.color=+b.dataset.i;renderAll()})}
+function renderSheet(){const tp=T[S.tpl],cols=activeCols(),map=refMap(cols),hc=COLORS[S.color][1];
+  $("#fname").textContent=(S.title||tp.title)+".xlsx";
+  const tabs=[["main",tp.sheet]].concat(S.feat.summary?[["summary","Summary"]]:[]);if(!S.feat.summary&&S.tab==="summary")S.tab="main";
+  $("#tabs").innerHTML=tabs.map(([k,l])=>`<button role="tab" data-t="${k}" aria-selected="${S.tab===k}">${l}</button>`).join("");
+  $("#tabs").querySelectorAll("button").forEach(b=>b.onclick=()=>{S.tab=b.dataset.t;S.sel=null;renderSheet()});
+  let h="";
+  if(S.tab==="main"){const n=S.rows,hlOn=S.feat.hl&&(!tp.hl.req||tp.hl.req.every(k=>S.on[k]!==false));
+    h+=`<thead><tr><th></th>${cols.map((c,i)=>`<th scope="col">${letter(i)}</th>`).join("")}</tr></thead><tbody>`;
+    h+=`<tr><th>1</th>${cols.map((c,i)=>`<td class="hd" style="background:${hc}" data-a="${letter(i)}1" data-v="${c.l}">${c.l}</td>`).join("")}</tr>`;
+    S.data.forEach((r,ri)=>{const row=ri+2,cls=hlOn&&S.feat.sample&&tp.hl.test(r)?"hl-red":(S.tpl==="project"&&r.status==="Blocked"?"hl-amber":"");
+      h+=`<tr class="${cls}"><th>${row}</th>`+cols.map((c,i)=>{let v=r[c.k],fx="";if(c.f){fx="="+fillF(c.f,map,row);v=S.feat.sample?c.calc(r):""}
+        const num=["cur","num","pct"].includes(c.t),list=c.t==="list"&&S.feat.lists;return `<td class="${num?"n":""}${c.f?" f":""}${list?" list":""}" data-a="${letter(i)}${row}" data-v="${(fx||fmt(c,v)).replace(/"/g,"&quot;")}">${fmt(c,v)}</td>`}).join("")+"</tr>"});
+    if(S.feat.totals&&tp.totals){const tr=n+2;h+=`<tr class="tot"><th>${tr}</th>`+cols.map((c,i)=>{if(i===0)return `<td data-a="A${tr}" data-v="Total">Total</td>`;if(tp.totals.includes(c.k)){const f=`=SUM(${letter(i)}2:${letter(i)}${n+1})`;const v=S.feat.sample?S.data.reduce((a,r)=>a+(c.f?c.calc(r):(r[c.k]||0)),0):0;return `<td class="n f" data-a="${letter(i)}${tr}" data-v="${f}">${fmt(c,v)}</td>`}return `<td data-a="${letter(i)}${tr}" data-v=""></td>`}).join("")+"</tr>"}
+    h+="</tbody>";$("#smeta").textContent=`${cols.length} columns · ${n} rows${S.feat.totals&&tp.totals?" + totals":""}`}
+  else{const rows=summaryRows(cols,map);h+=`<thead><tr><th></th><th scope="col">A</th><th scope="col">B</th></tr></thead><tbody><tr><th>1</th><td class="hd" style="background:${hc}" data-a="A1" data-v="Measure">Measure</td><td class="hd" style="background:${hc}" data-a="B1" data-v="Value">Value</td></tr>`;
+    rows.forEach((r,i)=>{h+=`<tr><th>${i+2}</th><td data-a="A${i+2}" data-v="${r[0]}">${r[0]}</td><td class="n f" data-a="B${i+2}" data-v="${r[1].replace(/"/g,"&quot;")}">${r[2]}</td></tr>`});
+    h+=`<tr><th>${rows.length+3}</th><td colspan="2" style="color:var(--ink-3);font-size:12.5px" data-a="A${rows.length+3}" data-v="Built with Sheet Studio by Bianca Augustin">Built with Sheet Studio by Bianca Augustin</td></tr></tbody>`;$("#smeta").textContent="Summary · formulas reference the "+tp.sheet+" sheet"}
+  $("#ss").innerHTML=h;
+  $("#ss").querySelectorAll("td").forEach(td=>td.onclick=()=>{$("#ss").querySelectorAll(".sel").forEach(x=>x.classList.remove("sel"));td.classList.add("sel");$("#cellRef").textContent=td.dataset.a;$("#cellVal").textContent=td.dataset.v||" "});
+  const first=$("#ss td.f");if(first){first.classList.add("sel");$("#cellRef").textContent=first.dataset.a;$("#cellVal").textContent=first.dataset.v}}
+function summaryRows(cols,map){const tp=T[S.tpl],sh=`'${tp.sheet}'!`,n=S.rows;const rng=k=>map[k]?`${sh}${map[k]}2:${map[k]}${n+1}`:"";const out=[];
+  tp.summary.forEach(([label,f,type,needs])=>{if(needs&&!needs.every(k=>map[k]))return;const formula="="+f.replace(/\{(\w+):range\}/g,(_,k)=>rng(k));out.push([label,formula,summaryVal(label,type)])});return out}
+function summaryVal(label,type){if(!S.feat.sample)return "";const d=S.data,tp=S.tpl;let v="";
+  const cnt=(k,val)=>d.filter(r=>r[k]===val).length;
+  if(tp==="training"){v={"Total assignments":d.length,"Completed":cnt("status","Complete"),"Completion rate":d.length?cnt("status","Complete")/d.length:0,"Overdue":d.filter(r=>r.status!=="Complete"&&r.due<TODAY).length,"Average score":(()=>{const s=d.filter(r=>r.score!=null);return s.length?s.reduce((a,r)=>a+r.score,0)/s.length:0})()}[label]}
+  if(tp==="budget"){const P=d.reduce((a,r)=>a+r.plan,0),A=d.reduce((a,r)=>a+r.act,0);v={"Total planned":P,"Total actual":A,"Remaining":P-A,"Lines over budget":d.filter(r=>r.act>r.plan).length}[label]}
+  if(tp==="project"){v={"Total tasks":d.length,"Done":cnt("status","Done"),"Blocked":cnt("status","Blocked"),"Overdue":d.filter(r=>r.status!=="Done"&&r.due<TODAY).length,"Average % complete":d.reduce((a,r)=>a+r.pct,0)/d.length}[label]}
+  if(tp==="inventory"){v={"Items tracked":d.length,"Items to reorder":d.filter(r=>r.qty<=r.min).length,"Total stock value":d.reduce((a,r)=>a+r.qty*r.cost,0)}[label]}
+  return type==="pct"?Math.round(v*100)+"%":type==="cur"?"$"+Number(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}):String(v)}
+function renderAll(){renderControls();renderSheet()}
+
+/* ---------- Excel export ---------- */
+async function buildXlsx(){const tp=T[S.tpl],cols=activeCols(),map=refMap(cols),n=S.rows,hc=COLORS[S.color][1].replace("#","FF");
+  const wb=new ExcelJS.Workbook();wb.creator="Sheet Studio by Bianca Augustin";wb.created=new Date();
+  const ws=wb.addWorksheet(tp.sheet,{views:[{state:"frozen",ySplit:1}],properties:{defaultRowHeight:18}});
+  ws.columns=cols.map(c=>({header:c.l,key:c.k,width:c.w}));
+  const hr=ws.getRow(1);hr.height=22;hr.eachCell(cell=>{cell.font={bold:true,color:{argb:"FFFFFFFF"}};cell.fill={type:"pattern",pattern:"solid",fgColor:{argb:hc}};cell.alignment={vertical:"middle"};cell.border={bottom:{style:"thin",color:{argb:"FF1C211C"}}}});
+  const NF={date:"mmm d, yyyy",cur:'"$"#,##0.00',pct:"0%",num:"0"};
+  for(let i=0;i<n;i++){const r=S.data[i]||{},row=ws.getRow(i+2);
+    cols.forEach((c,ci)=>{const cell=row.getCell(ci+1);
+      if(c.f){const v=S.feat.sample?c.calc(r):null;cell.value={formula:fillF(c.f,map,i+2),result:v===""?undefined:v}}
+      else{let v=r[c.k];if(v===undefined||v===null||v==="")v=null;if(v instanceof Date)v=new Date(Date.UTC(v.getFullYear(),v.getMonth(),v.getDate()));cell.value=v}
+      if(NF[c.t])cell.numFmt=NF[c.t];
+      if(c.t==="list"&&S.feat.lists)cell.dataValidation={type:"list",allowBlank:true,formulae:[`"${c.list.join(",")}"`],showErrorMessage:true,errorTitle:"Pick from the list",error:"Choose one of: "+c.list.join(", ")}})}
+  const lastCol=letter(cols.length-1);
+  if(S.feat.totals&&tp.totals){const tr=ws.getRow(n+2);tr.getCell(1).value="Total";tr.font={bold:true};cols.forEach((c,ci)=>{if(tp.totals.includes(c.k)){const L=letter(ci),cell=tr.getCell(ci+1);cell.value={formula:`SUM(${L}2:${L}${n+1})`};cell.numFmt=NF[c.t]||"0"}});
+    tr.eachCell({includeEmpty:true},cell=>cell.border={top:{style:"medium",color:{argb:"FF1C211C"}}})}
+  const hlOn=S.feat.hl&&(!tp.hl.req||tp.hl.req.every(k=>map[k]));
+  if(hlOn){const expr=tp.hl.expr.replace(/\$\{(\w+)\}/g,(_,k)=>"$"+map[k]);ws.addConditionalFormatting({ref:`A2:${lastCol}${n+1}`,rules:[{type:"expression",priority:1,formulae:[expr],style:{fill:{type:"pattern",pattern:"solid",bgColor:{argb:"FFFBE6E1"}},font:{color:{argb:"FFB3361F"}}}}]})}
+  if(S.tpl==="project"&&map.status)ws.addConditionalFormatting({ref:`A2:${lastCol}${n+1}`,rules:[{type:"expression",priority:2,formulae:[`$${map.status}2="Blocked"`],style:{fill:{type:"pattern",pattern:"solid",bgColor:{argb:"FFFBF0D8"}}}}]});
+  ws.autoFilter={from:"A1",to:`${lastCol}1`};
+  if(S.feat.summary){const sm=wb.addWorksheet("Summary");sm.columns=[{header:"Measure",key:"m",width:28},{header:"Value",key:"v",width:18}];
+    sm.getRow(1).eachCell(cell=>{cell.font={bold:true,color:{argb:"FFFFFFFF"}};cell.fill={type:"pattern",pattern:"solid",fgColor:{argb:hc}}});
+    summaryRows(cols,map).forEach(([label,f,disp],i)=>{const t=(tp.summary.find(s=>s[0]===label)||[])[2];const r=sm.getRow(i+2);r.getCell(1).value=label;const c=r.getCell(2);c.value={formula:f.slice(1)};c.numFmt=t==="pct"?"0%":t==="cur"?'"$"#,##0.00':"0";c.font={bold:true}});
+    const note=sm.getRow(summaryRows(cols,map).length+4);note.getCell(1).value="Built with Sheet Studio by Bianca Augustin";note.getCell(1).font={italic:true,color:{argb:"FF7D877E"}}}
+  return wb.xlsx.writeBuffer()}
+function toast(t){const el=$("#toast");el.textContent=t;el.classList.remove("gone");clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.add("gone"),2600)}
+async function saveBlob(blob,name){if(window.claude&&typeof window.claude.use==="function"){const d=await window.claude.use("downloads");if(!d){toast("Downloads aren't available in this view.");return}try{await d.save({filename:name,data:blob});toast("Saved "+name)}catch(e){toast(e&&e.code==="declined"?"Download cancelled.":"Couldn't save the file here.")}return}
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);toast("Downloaded "+name)}
+$("#xlsx").onclick=async()=>{if(!window.ExcelJS){toast("The Excel library didn't load. Check your connection and refresh.");return}$("#xlsx").disabled=true;$("#xlsx").textContent="Building…";
+  try{const buf=await buildXlsx();await saveBlob(new Blob([buf],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}),(S.title||T[S.tpl].title).replace(/[^\w\- ]+/g,"").trim()+".xlsx")}catch(e){toast("Something went wrong building the file.")}
+  $("#xlsx").disabled=false;$("#xlsx").textContent="Download Excel file (.xlsx)"};
+$("#csv").onclick=async()=>{const cols=activeCols();const rows=[cols.map(c=>c.l)].concat(S.data.map(r=>cols.map(c=>fmt(c,c.f?(S.feat.sample?c.calc(r):""):r[c.k]))));
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");try{await navigator.clipboard.writeText(csv);toast("CSV copied. Paste it into any spreadsheet.")}catch(e){toast("Copy isn't allowed here. Use the Excel download instead.")}};
+/* ---------- wire up ---------- */
+$("#build").onclick=()=>{const f=parse($("#desc").value);genData();S.tab="main";$("#understood").innerHTML=`<span style="background:none;color:var(--ink-3);padding-left:0">I picked up:</span>`+f.map(x=>`<span>${x}</span>`).join("");renderAll()};
+document.querySelectorAll("[data-ex]").forEach(b=>b.onclick=()=>{$("#desc").value=b.dataset.ex;$("#build").click()});
+$("#title").oninput=e=>{S.title=e.target.value;$("#fname").textContent=(S.title||T[S.tpl].title)+".xlsx"};
+$("#rows").oninput=e=>{S.rows=+e.target.value;$("#rowsOut").textContent=S.rows;genData();renderSheet()};
+$("#build").click();
+</script>
+</body>
+</html>
