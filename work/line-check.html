@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Line Check · Case Study · Bianca Augustin</title>
+<meta name="description" content="How I designed Line Check, a bilingual 3D food-safety game with sound design, an accessible list mode, and xAPI learning analytics.">
+<meta property="og:image" content="https://bianca-augustin.github.io/assets/linecheck-kitchen.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600;700&family=Figtree:wght@400;500;600;700&family=Bagel+Fat+One&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.lc-band{background:#123F3A;color:#FFF9EA;border-radius:22px;padding:40px;display:grid;gap:18px;margin-top:8px}
+.lc-band h1{font-family:"Bagel Fat One","Arial Black",sans-serif;font-weight:400;font-size:clamp(3rem,8vw,5.4rem);line-height:.9;color:#E5432D;-webkit-text-stroke:2px #141414;text-shadow:5px 5px 0 #141414;margin:0}
+.lc-band .eyebrow{color:#F3B53F}
+.lc-band .lede{color:#CFE7DE;font-size:1.15rem;max-width:62ch}
+.lc-band .btn{background:#F3B53F;color:#141414;border:3px solid #141414;box-shadow:4px 4px 0 #141414}
+.lc-band .btn.ghost{background:#FFF9EA}
+.skill-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-block:20px 8px}
+.uskill{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:grid;gap:8px;align-content:start}
+.uskill b{font-family:var(--f-display);font-size:1.12rem}
+.uskill span{color:var(--ink-soft);font-size:15px}
+.uskill i{font-style:normal;font-size:12.5px;font-weight:700;color:var(--amber);letter-spacing:.06em;text-transform:uppercase}
+.palette{display:flex;gap:10px;flex-wrap:wrap}
+.palette span{display:grid;gap:4px;font-size:12.5px;color:var(--ink-soft);font-family:var(--f-mono)}
+.palette span i{display:block;width:64px;height:44px;border-radius:10px;border:2px solid #141414}
+@media (max-width:860px){.skill-grid{grid-template-columns:1fr 1fr}}
+@media (max-width:560px){.skill-grid{grid-template-columns:1fr}.lc-band{padding:24px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head"><div class="wrap">
+  <a class="logo" href="../"><i>BA</i>Bianca Augustin</a>
+  <nav class="nav" aria-label="Main">
+    <a href="../#work" aria-current="page">Work</a><a href="../#range">Design range</a><a href="../solutions/">Problems &amp; Solutions</a><a href="../#about">About</a><a href="../#contact">Contact</a>
+  </nav>
+</div></header>
+
+<main id="main" class="wrap" style="padding-top:32px">
+  <div class="lc-band">
+    <span class="eyebrow">Case study · Playful, immersive 3D training</span>
+    <h1>Line<br>Check</h1>
+    <p class="lede">A three-minute food-safety game for new restaurant staff. Learners walk a 3D kitchen before doors open and flag every hazard they find, in English or Spanish, on a laptop or a phone.</p>
+    <div class="btns"><a class="btn" href="../lessons/line-check/">Play Line Check</a><a class="btn ghost" href="../lessons/line-check/#manager">See the manager dashboard</a></div>
+  </div>
+  <figure class="cs-shot" style="margin:28px 0 0"><img src="../assets/linecheck-kitchen.jpg" alt="Low-poly 3D restaurant kitchen with numbered hazard pins on the cooler, cutting board, and stockpot" width="922" height="577"></figure>
+
+  <div class="meta-grid">
+    <div><b>Role</b><span>Concept, game design, 3D modeling, scripting, translation, development</span></div>
+    <div><b>Audience</b><span>New line cooks and dishwashers at Fig &amp; Fennel, a fictional restaurant with a bilingual team</span></div>
+    <div><b>Format</b><span>Browser-based 3D game, about 3 minutes, desktop and mobile</span></div>
+    <div><b>Tools</b><span>Three.js (WebGL), Web Audio API, xAPI, HTML, CSS, JavaScript, AI-assisted development</span></div>
+  </div>
+
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>New kitchen staff often start working before they finish formal food-handler training. Onboarding is a binder in English, read once, if at all. Meanwhile, health inspections keep finding the same issues: food cooling too slowly, raw meat stored above ready-to-eat food, blocked handwashing sinks.</p>
+    <div class="callout"><b>The insight:</b> food-safety hazards are <strong>spatial</strong>. You don't spot them by reading a list. You spot them by looking around a kitchen and noticing what's wrong. So the training should happen in a kitchen.</div>
+
+    <h2>Learning objectives</h2>
+    <ul>
+      <li><strong>Recognize</strong> seven common food-safety and workplace hazards in a working kitchen.</li>
+      <li><strong>Distinguish</strong> real hazards from correct practices that look similar, such as a labeled container or a properly stored sanitizer bucket.</li>
+      <li><strong>Explain</strong> the correct fix for each hazard, including the two-stage cooling rule and refrigerator storage order.</li>
+    </ul>
+
+    <h2>Skills this project shows</h2>
+    <p>I built Line Check to stretch past what most instructional design portfolios include.</p>
+  </div>
+  <div class="skill-grid">
+    <div class="uskill"><i>3D &amp; WebGL</i><b>A walkable 3D kitchen</b><span>Every object is modeled from code, with cel shading and outlines. Learners can orbit, zoom, and click anything.</span></div>
+    <div class="uskill"><i>Game design</i><b>Stakes that teach</b><span>A countdown clock, points, and a penalty for false flags. Careful observation is rewarded, guessing isn't.</span></div>
+    <div class="uskill"><i>Localization</i><b>Fully bilingual</b><span>One tap switches every label, hint, and feedback message between English and Spanish, written for kitchen vocabulary.</span></div>
+    <div class="uskill"><i>Sound design</i><b>Audio feedback cues</b><span>A bell to open, a ding for a find, a buzz for a false flag, and ticks in the final seconds, all synthesized in the browser.</span></div>
+    <div class="uskill"><i>Learning analytics</i><b>xAPI and a manager view</b><span>Every action produces an xAPI statement. A dashboard turns cohort data into a design decision.</span></div>
+    <div class="uskill"><i>Accessibility</i><b>A list mode, not just 3D</b><span>Anyone who can't use 3D can inspect the same kitchen from a keyboard-friendly list. Body text uses Atkinson Hyperlegible, a typeface designed for low-vision readers.</span></div>
+  </div>
+
+  <div class="prose">
+    <h2>Key design decisions</h2>
+  </div>
+  <div class="narrow" style="max-width:860px;margin-top:8px">
+    <div class="decision"><h3>Distractors that look like hazards</h3><div><p>Six objects are correct practice: a labeled container, a mounted extinguisher, a pan with its handle turned in. Flagging them costs points and explains why they're fine.</p><p class="why">Why: new hires need to tell right from wrong, not just hunt for anything unusual.</p></div></div>
+    <div class="decision"><h3>Hints that move the camera</h3><div><p>After 40 seconds without a find, "Ask Chef Rosa" appears. Her hint flies the camera toward an unfound hazard without naming it.</p><p class="why">Why: scaffolding keeps struggling learners moving without giving away the answer.</p></div></div>
+    <div class="decision"><h3>Data that changes the design</h3><div><p>The sample dashboard shows only 38% of new hires spot the cooling soup. The recommended response is a job aid at the prep station, not more training for everyone.</p><p class="why">Why: analytics are only useful if they lead to a decision. I show what the decision would be.</p></div></div>
+    <div class="decision"><h3>A look borrowed from the kitchen</h3><div><p>The interface is built from things a cook sees every shift: order tickets on a rail, a printed receipt for the score, checkered quarry tile.</p><p class="why">Why: familiar visuals lower anxiety and make the game feel like part of the job, not a compliance task.</p></div></div>
+  </div>
+
+  <div class="prose" style="margin-top:20px">
+    <h2>A deliberately different design language</h2>
+    <p>Spot the Phish is calm and corporate. Line Check is loud on purpose: chunky outlines, hard shadows, a playful display face, and a palette pulled from a busy kitchen.</p>
+    <div class="palette" aria-label="Line Check color palette"><span><i style="background:#123F3A"></i>Tile green</span><span><i style="background:#E5432D"></i>Tomato</span><span><i style="background:#F3B53F"></i>Mustard</span><span><i style="background:#FFF9EA"></i>Ticket paper</span><span><i style="background:#141414"></i>Ink</span></div>
+    <figure class="cs-shot" style="margin:8px 0 0"><img src="../assets/linecheck-dashboard.jpg" alt="Manager dashboard with KPI cards, a bar chart of which hazards new hires miss, and a live xAPI statement feed" width="1200" height="800"></figure>
+
+    <h2>How I'd measure success</h2>
+  </div>
+  <div class="kirk narrow" style="margin-top:16px">
+    <div><b>Reaction</b><span>Completion rate before the first shift, and whether learners replay it by choice.</span></div>
+    <div><b>Learning</b><span>Hazards found, false-flag rate, and hint usage, tracked per hazard through xAPI.</span></div>
+    <div><b>Behavior</b><span>Manager line-check audits during the first 30 days: are coolers stocked correctly and sinks kept clear?</span></div>
+    <div><b>Results</b><span>Fewer repeat violations on health inspections, especially cooling and storage.</span></div>
+  </div>
+
+  <div class="prose" style="margin-top:20px;padding-bottom:48px">
+    <h2>What I'd do next</h2>
+    <ul>
+      <li>Connect the xAPI statements to a real Learning Record Store.</li>
+      <li>Add a second level, the walk-in cooler, with temperature-log decisions.</li>
+      <li>Test the Spanish version with native-speaking kitchen staff and refine the vocabulary.</li>
+    </ul>
+    <div class="btns" style="margin-top:12px"><a class="btn" href="../lessons/line-check/">Play Line Check</a><a class="btn ghost" href="spot-the-phish.html">See the corporate project</a></div>
+  </div>
+</main>
+
+<footer class="site-foot"><div class="wrap"><span>© 2026 Bianca Augustin · <a href="mailto:bianca.augustin0318@gmail.com">Email</a> · <a href="https://www.linkedin.com/in/bianca-augustin-6a15b3177/">LinkedIn</a></span><span>Fig &amp; Fennel is a fictional restaurant. Temperatures follow the FDA Food Code.</span></div></footer>
+</body>
+</html>
