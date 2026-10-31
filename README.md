@@ -15,7 +15,7 @@ Contact: [LinkedIn](https://www.linkedin.com/in/bianca-augustin-6a15b3177/) · b
 | [Line Check (case study)](https://bianca-augustin.github.io/work/line-check.html) | Design decisions, uncommon ID skills, evaluation plan |
 | [Pulse (dashboard)](https://bianca-augustin.github.io/analytics/) | A learning analytics dashboard with employee profiles, skills-gap heatmap, compliance tracking, and recommended actions |
 | [Pulse (case study)](https://bianca-augustin.github.io/work/pulse.html) | Metrics strategy, design decisions, ethics and privacy |
-| [Sheet Studio (tool)](https://bianca-augustin.github.io/tools/sheet-studio/) | A spreadsheet builder: describe what you need and download a real Excel file with formulas, dropdowns, and highlighting |
+| [Sheet Studio (tool)](https://bianca-augustin.github.io/tools/sheet-studio/) | A live spreadsheet-builder demo: describe what you need and watch an editable sheet build itself, with self-filling tabs, progress bars, status lights, a dashboard, and reminder drafts |
 | [Problems & Solutions](https://bianca-augustin.github.io/solutions/) | A "Is it a training problem?" diagnostic and four workplace problems with working demos |
 
 ## Built with
