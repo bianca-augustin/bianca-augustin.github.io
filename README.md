@@ -11,8 +11,10 @@ Contact: [LinkedIn](https://www.linkedin.com/in/bianca-augustin-6a15b3177/) · b
 | [Home](https://bianca-augustin.github.io/) | Skills, process, featured work |
 | [Spot the Phish (course)](https://bianca-augustin.github.io/lessons/spot-the-phish/) | A complete 20-minute security awareness course: narrated animated video, seven interactive activities, branching scenario, job aid, certificate |
 | [Spot the Phish (case study)](https://bianca-augustin.github.io/work/spot-the-phish.html) | Problem, objectives, design decisions, accessibility, evaluation plan |
+| [Line Check (game)](https://bianca-augustin.github.io/lessons/line-check/) | A bilingual 3D food-safety hazard hunt with sound design, an accessible list mode, and an xAPI analytics dashboard |
+| [Line Check (case study)](https://bianca-augustin.github.io/work/line-check.html) | Design decisions, uncommon ID skills, evaluation plan |
 | [Problems & Solutions](https://bianca-augustin.github.io/solutions/) | A "Is it a training problem?" diagnostic and four workplace problems with working demos |
 
 ## Built with
 
-Plain HTML, CSS, and JavaScript (no build step), GSAP for the video animation, neural text-to-speech narration, and AI-assisted development. All sample companies and people are fictional.
+Plain HTML, CSS, and JavaScript (no build step), GSAP for the video animation, Three.js (WebGL) for the 3D kitchen, neural text-to-speech narration, and AI-assisted development. All sample companies and people are fictional.
