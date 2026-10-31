@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Pulse · Case Study · Bianca Augustin</title>
+<meta name="description" content="How I designed Pulse, a learning analytics dashboard with employee learning profiles, skills-gap heatmaps, and data-driven recommendations.">
+<meta property="og:image" content="https://bianca-augustin.github.io/assets/pulse-overview.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;600;700&family=Figtree:wght@400;500;600;700&family=Instrument+Sans:wght@500;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<link rel="stylesheet" href="../assets/style.css">
+<style>
+.pu-band{background:#FFFFFF;border:1px solid #E2E5EA;border-radius:20px;padding:40px;display:grid;gap:16px;margin-top:8px;color:#161A22}
+.pu-band .eyebrow{color:#5B2A86}
+.pu-band h1{font-family:"Instrument Sans",system-ui,sans-serif;font-weight:700;font-size:clamp(2.6rem,6vw,4.2rem);letter-spacing:-.03em;margin:0;display:flex;align-items:center;gap:14px}
+.pu-band h1 i{width:56px;height:56px;border-radius:14px;background:#5B2A86;display:grid;place-items:center;flex:none}
+.pu-band .lede{color:#5A6272;font-size:1.15rem;max-width:62ch}
+.pu-band .btn{background:#5B2A86;color:#fff}
+.pu-band .btn.ghost{background:#fff;color:#161A22;border-color:#E2E5EA}
+@media (max-width:560px){.pu-band{padding:24px}}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-head"><div class="wrap">
+  <a class="logo" href="../"><i>BA</i>Bianca Augustin</a>
+  <nav class="nav" aria-label="Main">
+    <a href="../#work" aria-current="page">Work</a><a href="../#range">Design range</a><a href="../solutions/">Problems &amp; Solutions</a><a href="../#about">About</a><a href="../#contact">Contact</a>
+  </nav>
+</div></header>
+
+<main id="main" class="wrap" style="padding-top:32px">
+  <div class="pu-band">
+    <span class="eyebrow">Case study · Learning analytics &amp; data design</span>
+    <h1><i aria-hidden="true"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12h4l3-8 4 16 3-8h6"/></svg></i>Pulse</h1>
+    <p class="lede">A learning analytics dashboard that turns training data into decisions. Leaders see where skills gaps are, managers see who needs support, and every chart ends in a recommended action.</p>
+    <div class="btns"><a class="btn" href="../analytics/">Open the dashboard</a><a class="btn ghost" href="../analytics/#people">Browse employee profiles</a></div>
+  </div>
+  <figure class="cs-shot" style="margin:28px 0 0"><img src="../assets/pulse-overview.jpg" alt="Pulse dashboard overview with KPI cards, an enrollment trend chart, completion by department, a skills-gap heatmap, and recommended actions" width="1440" height="960"></figure>
+
+  <div class="meta-grid">
+    <div><b>Role</b><span>Learning designer: metrics strategy, information design, interface and build</span></div>
+    <div><b>Audience</b><span>L&amp;D leaders and people managers at Harborline Logistics, a fictional company</span></div>
+    <div><b>Format</b><span>Interactive web dashboard with four views and employee profile drawers</span></div>
+    <div><b>Tools</b><span>HTML, CSS, JavaScript, hand-built SVG charts, AI-assisted development</span></div>
+  </div>
+
+  <div class="prose">
+    <h2>The problem</h2>
+    <p>Most learning dashboards report activity: enrollments, completions, hours. Leaders glance at them, see green numbers, and move on. They rarely answer the questions that matter: Are people getting better at their jobs? Who needs help? What should we do next?</p>
+    <div class="callout"><b>My design principle:</b> every chart should lead to a decision. If a number can't change what someone does, it doesn't earn space on the screen.</div>
+
+    <h2>What it shows</h2>
+    <ul>
+      <li><strong>Overview:</strong> five KPIs with trend lines, enrollments versus completions over time, completion by department, a skills-gap heatmap against role targets, and insight cards with one-click actions.</li>
+      <li><strong>People:</strong> a searchable, sortable directory with status flags (on track, at risk, overdue) and CSV export.</li>
+      <li><strong>Employee profiles:</strong> a skills radar against role targets, the learning path, certifications with expiry dates, recent activity, and recommended next steps generated from that person's data.</li>
+      <li><strong>Programs and compliance:</strong> how each course is performing, including Spot the Phish and Line Check, plus every certification that's due or overdue.</li>
+    </ul>
+  </div>
+  <div class="shots" style="max-width:1080px">
+    <figure><img src="../assets/pulse-profile.jpg" alt="Employee profile drawer with recommended next steps, quick facts, and a skills radar chart" width="1440" height="960"><figcaption>Profiles end with specific, personal next steps, not generic reminders.</figcaption></figure>
+    <figure><img src="../assets/linecheck-dashboard.jpg" alt="Line Check manager view" width="1200" height="800"><figcaption>Pulse connects to course-level dashboards like the one in Line Check.</figcaption></figure>
+  </div>
+
+  <div class="prose">
+    <h2>Key design decisions</h2>
+  </div>
+  <div class="narrow" style="max-width:860px;margin-top:8px">
+    <div class="decision"><h3>Skills against targets, not just scores</h3><div><p>The heatmap compares each department's average proficiency to what the role actually requires, and outlines the gaps.</p><p class="why">Why: a 3.0 is great for one role and a problem for another. Context turns a number into a priority.</p></div></div>
+    <div class="decision"><h3>Recommendations a manager can act on today</h3><div><p>Profile recommendations are specific: renew this certification, close this skill gap with a peer mentor, have a conversation after three quiet weeks.</p><p class="why">Why: managers are busy. The dashboard should do the analysis and hand them the next step.</p></div></div>
+    <div class="decision"><h3>Not every gap gets a course</h3><div><p>Insights recommend scheduling changes, mentoring, and scenario practice as often as new training.</p><p class="why">Why: the same performance-consulting mindset from my Problems &amp; Solutions page, applied to real data.</p></div></div>
+    <div class="decision"><h3>Quiet design, one accent</h3><div><p>Neutral surfaces, a single plum accent, and status colors used only for status. Numbers are set in a monospaced face so columns line up.</p><p class="why">Why: in a data tool, the data should be the loudest thing on the screen. It also works in dark mode.</p></div></div>
+  </div>
+
+  <div class="prose" style="margin-top:20px;padding-bottom:48px">
+    <h2>Ethics and privacy</h2>
+    <p>Learner data is personal. In a real rollout I'd limit profile access to each person's manager and L&amp;D, show employees their own profile, and use the data for support and development, never as a performance-review shortcut. All names and figures here are generated sample data.</p>
+    <h2>What I'd do next</h2>
+    <ul>
+      <li>Connect to a real Learning Record Store so the xAPI statements from courses like Line Check feed Pulse directly.</li>
+      <li>Add a learner-facing version where employees see their own skills radar and choose their next goal.</li>
+      <li>Test the insight cards with managers to see which recommendations they actually act on.</li>
+    </ul>
+    <div class="btns" style="margin-top:12px"><a class="btn" href="../analytics/">Open the dashboard</a><a class="btn ghost" href="line-check.html">See the playful project</a></div>
+  </div>
+</main>
+
+<footer class="site-foot"><div class="wrap"><span>© 2026 Bianca Augustin · <a href="mailto:bianca.augustin0318@gmail.com">Email</a> · <a href="https://www.linkedin.com/in/bianca-augustin-6a15b3177/">LinkedIn</a></span><span>Harborline Logistics is fictional. All data is generated for demonstration.</span></div></footer>
+</body>
+</html>
