@@ -1,0 +1,585 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Meetings Worth Having · Interactive Slide Deck · Bianca Augustin</title>
+<meta name="description" content="A 7-slide interactive presentation by Bianca Augustin: click builds, a live cost calculator, a sorting game, data storytelling, speaker notes, and designer notes.">
+<meta property="og:image" content="https://bianca-augustin.github.io/assets/deck-cost.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+:root{
+  --paper:#FBF8F3; --ink:#1D1A24; --muted:#6B6575; --line:#E8E1D8;
+  --coral:#D9512C; --coral-soft:#FBE3DA; --teal:#1F6F6B; --teal-soft:#DCEDEA; --sun:#F3B23C; --sun-soft:#FDF0D3;
+  --room:#141218; --room-2:#1E1B24; --room-3:#2A2632; --room-ink:#EDE9F2; --room-mute:#A39DAE;
+  --f-d:"Fraunces",Georgia,serif; --f-b:"Manrope",system-ui,-apple-system,"Segoe UI",sans-serif; --f-m:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0;background:var(--room);color:var(--room-ink);font-family:var(--f-b);-webkit-font-smoothing:antialiased}
+body{min-height:100svh;display:flex;flex-direction:column}
+button{font:inherit;color:inherit;cursor:pointer}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--sun);outline-offset:3px;border-radius:6px}
+
+/* ---------- presenter chrome ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px max(16px,env(safe-area-inset-left));border-bottom:1px solid var(--room-3);flex-wrap:wrap}
+.top .back{font-size:14px;color:var(--room-mute);text-decoration:none;font-weight:600}
+.top .back:hover{color:var(--room-ink)}
+.top .ttl{font-family:var(--f-d);font-weight:600;font-size:17px;display:flex;gap:10px;align-items:center}
+.top .ttl i{font-style:normal;font-family:var(--f-m);font-size:11px;letter-spacing:.06em;background:var(--coral);color:#fff;border-radius:4px;padding:3px 7px}
+.top .by{font-size:13px;color:var(--room-mute)}
+.top .by b{color:var(--room-ink)}
+main{flex:1;display:flex;flex-direction:column;align-items:center;padding:18px 16px 12px;gap:12px}
+.stage-wrap{width:100%;max-width:min(1280px,calc((100svh - 230px) * 16 / 9));min-width:min(100%,640px)}
+.progress{height:4px;border-radius:2px;background:var(--room-3);overflow:hidden;margin-bottom:10px}
+.progress b{display:block;height:100%;background:linear-gradient(90deg,var(--coral),var(--sun));width:0;transition:width .35s ease}
+.stage{container:deck/inline-size;position:relative;border-radius:10px;box-shadow:0 30px 80px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.04)}
+.stage.laser,.stage.laser *{cursor:none!important}
+.dot-laser{position:absolute;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:#FF2D2D;box-shadow:0 0 0 4px rgba(255,45,45,.25),0 0 18px 6px rgba(255,45,45,.55);pointer-events:none;z-index:30;left:-50px;top:-50px}
+
+.bar{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.nav{display:flex;align-items:center;gap:8px}
+.cbtn{background:var(--room-2);border:1px solid var(--room-3);border-radius:8px;padding:8px 12px;font-size:14px;font-weight:600;display:inline-flex;align-items:center;gap:7px;line-height:1}
+.cbtn:hover{background:var(--room-3)}
+.cbtn[aria-pressed="true"]{background:var(--room-ink);color:var(--room);border-color:var(--room-ink)}
+.cbtn.primary{background:var(--coral);border-color:var(--coral);color:#fff}
+.cbtn.primary:hover{background:#E8653F}
+.cbtn kbd{font-family:var(--f-m);font-size:11px;opacity:.6}
+.count{font-family:var(--f-m);font-size:13px;color:var(--room-mute);min-width:52px;text-align:center}
+.builds{display:flex;gap:4px;margin-left:2px}
+.builds i{width:6px;height:6px;border-radius:50%;background:var(--room-3)}
+.builds i.on{background:var(--sun)}
+.tools{display:flex;gap:6px;flex-wrap:wrap}
+
+/* notes */
+.notes{width:100%;background:var(--room-2);border:1px solid var(--room-3);border-radius:10px;overflow:hidden}
+.ntabs{display:flex;border-bottom:1px solid var(--room-3);align-items:center}
+.ntabs button{background:none;border:0;padding:10px 14px;font-size:13.5px;font-weight:700;color:var(--room-mute);border-bottom:2px solid transparent}
+.ntabs button[aria-selected="true"]{color:var(--room-ink);border-bottom-color:var(--sun)}
+.timer{margin-left:auto;display:flex;align-items:center;gap:6px;padding-right:10px;font-family:var(--f-m);font-size:13px;color:var(--room-mute)}
+.timer button{background:none;border:1px solid var(--room-3);border-radius:6px;padding:3px 7px;font-size:12px;color:var(--room-mute)}
+.npane{padding:12px 16px 14px;font-size:15px;line-height:1.6;color:#D9D4E0}
+.npane p{margin:0 0 6px}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.chips span{font-size:12px;font-weight:700;letter-spacing:.02em;border:1px solid #4A4456;border-radius:999px;padding:3px 10px;color:var(--sun)}
+.keys{font-size:12.5px;color:var(--room-mute);text-align:center}
+.keys kbd{font-family:var(--f-m);background:var(--room-2);border:1px solid var(--room-3);border-radius:4px;padding:1px 5px;font-size:11px}
+
+/* overview */
+.ov{position:fixed;inset:0;background:rgba(14,12,18,.94);z-index:50;overflow:auto;padding:28px max(16px,env(safe-area-inset-left))}
+.ov h2{font-family:var(--f-d);font-weight:600;margin:0 auto 18px;max-width:1200px;display:flex;justify-content:space-between;align-items:center;font-size:22px}
+.ovg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;max-width:1200px;margin:0 auto}
+.th{background:none;border:0;padding:0;text-align:left;display:grid;gap:8px}
+.th .mini{aspect-ratio:16/9;position:relative;border-radius:6px;overflow:hidden;outline:2px solid transparent;outline-offset:3px;pointer-events:none}
+.mini .tw{width:1280px;container:thumb/inline-size;transform-origin:0 0;position:absolute;left:0;top:0}
+.th:hover .mini,.th.cur .mini{outline-color:var(--sun)}
+.th span{font-size:13.5px;font-weight:600;color:var(--room-mute)}
+.th span b{font-family:var(--f-m);color:var(--room-ink);margin-right:6px}
+
+/* ---------- slides ---------- */
+.slide{--u:calc(100cqw / 1280);aspect-ratio:16/9;width:100%;background:var(--paper);color:var(--ink);border-radius:10px;overflow:hidden;position:relative;display:none;
+  padding:calc(var(--u)*64) calc(var(--u)*80) calc(var(--u)*56);font-size:calc(var(--u)*24);line-height:1.45}
+.slide.on{display:block;animation:inR .45s cubic-bezier(.2,.7,.2,1)}
+.stage[data-dir="back"] .slide.on{animation-name:inL}
+@keyframes inR{from{opacity:0;transform:translateX(calc(var(--u)*40))}to{opacity:1;transform:none}}
+@keyframes inL{from{opacity:0;transform:translateX(calc(var(--u)*-40))}to{opacity:1;transform:none}}
+.mini .slide{display:block;animation:none}
+.slide h1,.slide h2{font-family:var(--f-d);font-weight:600;letter-spacing:-.015em;margin:0;line-height:1.05;color:var(--ink)}
+.slide h2{font-size:calc(var(--u)*54)}
+.slide .kick{font-family:var(--f-m);font-size:calc(var(--u)*15);letter-spacing:.08em;text-transform:uppercase;color:var(--coral);display:block;margin-bottom:calc(var(--u)*14)}
+.slide .sub{color:var(--muted);font-size:calc(var(--u)*24);margin-top:calc(var(--u)*12);max-width:44ch}
+.slide .foot{position:absolute;left:calc(var(--u)*80);right:calc(var(--u)*80);bottom:calc(var(--u)*24);display:flex;justify-content:space-between;font-size:calc(var(--u)*13);color:#A69FAE;font-family:var(--f-m);letter-spacing:.04em}
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:calc(var(--u)*48);align-items:start;margin-top:calc(var(--u)*30)}
+.sbtn{background:#fff;border:calc(var(--u)*2) solid var(--ink);border-radius:calc(var(--u)*12);padding:calc(var(--u)*12) calc(var(--u)*20);font-size:calc(var(--u)*20);font-weight:700;color:var(--ink);transition:transform .15s,background .15s;box-shadow:0 calc(var(--u)*4) 0 var(--ink)}
+.sbtn:hover{transform:translateY(calc(var(--u)*-2))}
+.sbtn:active{transform:translateY(calc(var(--u)*2));box-shadow:0 calc(var(--u)*2) 0 var(--ink)}
+.sbtn.ink{background:var(--ink);color:#fff}
+.build{opacity:0;transform:translateY(calc(var(--u)*18));transition:opacity .45s,transform .45s cubic-bezier(.2,.7,.2,1);visibility:hidden}
+.build.in,.mini .build{opacity:1;transform:none;visibility:visible}
+
+/* S1 title */
+.s1{background:radial-gradient(circle at 92% 8%,var(--sun-soft) 0,transparent 32%),radial-gradient(circle at 6% 100%,var(--coral-soft) 0,transparent 38%),var(--paper)}
+.s1 h1{font-size:calc(var(--u)*104);max-width:9ch;margin-top:calc(var(--u)*18)}
+.s1 h1 em{font-style:italic;color:var(--coral)}
+.s1 .sub{font-size:calc(var(--u)*27)}
+.poll{position:absolute;right:calc(var(--u)*80);top:calc(var(--u)*150);width:calc(var(--u)*430);background:#fff;border:calc(var(--u)*2) solid var(--ink);border-radius:calc(var(--u)*18);padding:calc(var(--u)*24);box-shadow:calc(var(--u)*8) calc(var(--u)*8) 0 var(--ink)}
+.poll b{font-size:calc(var(--u)*15);font-family:var(--f-m);letter-spacing:.06em;text-transform:uppercase;color:var(--teal)}
+.poll p{font-size:calc(var(--u)*23);font-weight:700;margin:calc(var(--u)*6) 0 calc(var(--u)*14);line-height:1.25}
+.popt{display:grid;gap:calc(var(--u)*10)}
+.popt button{display:flex;align-items:center;gap:calc(var(--u)*12);text-align:left;border:calc(var(--u)*2) solid var(--line);background:var(--paper);border-radius:calc(var(--u)*12);padding:calc(var(--u)*11) calc(var(--u)*14);font-size:calc(var(--u)*20);font-weight:600;transition:border-color .15s,background .15s}
+.popt button:hover{border-color:var(--ink)}
+.popt button span{font-size:calc(var(--u)*26)}
+.popt button.pick{border-color:var(--coral);background:var(--coral-soft)}
+.preply{margin-top:calc(var(--u)*12);font-size:calc(var(--u)*18);color:var(--teal);font-weight:600;min-height:calc(var(--u)*52)}
+.s1 .meta{position:absolute;left:calc(var(--u)*80);bottom:calc(var(--u)*56);display:flex;gap:calc(var(--u)*28);font-size:calc(var(--u)*17);color:var(--muted)}
+.s1 .meta b{color:var(--ink)}
+
+/* S2 cost */
+.slid{display:grid;gap:calc(var(--u)*22)}
+.slid label{display:grid;gap:calc(var(--u)*6);font-weight:700;font-size:calc(var(--u)*19)}
+.slid label span{display:flex;justify-content:space-between}
+.slid label output{font-family:var(--f-m);color:var(--coral);font-size:calc(var(--u)*20)}
+.slid input[type=range]{width:100%;accent-color:var(--coral);height:calc(var(--u)*24)}
+.people{display:flex;flex-wrap:wrap;gap:calc(var(--u)*6);margin-top:calc(var(--u)*6);min-height:calc(var(--u)*80)}
+.people svg{width:calc(var(--u)*30);height:calc(var(--u)*36);animation:pop .3s}
+@keyframes pop{from{transform:scale(.3);opacity:0}}
+.cost{background:var(--ink);color:#fff;border-radius:calc(var(--u)*20);padding:calc(var(--u)*30) calc(var(--u)*34)}
+.cost small{display:block;font-family:var(--f-m);font-size:calc(var(--u)*14);letter-spacing:.08em;text-transform:uppercase;color:var(--sun)}
+.cost .big{font-family:var(--f-d);font-weight:700;font-size:calc(var(--u)*104);line-height:1;margin:calc(var(--u)*6) 0 calc(var(--u)*4);letter-spacing:-.02em}
+.cost .line{font-size:calc(var(--u)*20);color:#CFC9D8;border-top:1px solid #3A3542;padding-top:calc(var(--u)*14);margin-top:calc(var(--u)*14)}
+.cost .line b{color:#fff}
+.yr{margin-top:calc(var(--u)*14)}
+.yr .track{height:calc(var(--u)*14);background:#3A3542;border-radius:99px;overflow:hidden;margin-top:calc(var(--u)*8)}
+.yr .track i{display:block;height:100%;background:linear-gradient(90deg,var(--sun),var(--coral));border-radius:99px;transition:width .4s}
+
+.ask2{font-family:var(--f-d);font-size:calc(var(--u)*30);font-weight:500;margin-top:calc(var(--u)*34);border-left:calc(var(--u)*6) solid var(--sun);padding-left:calc(var(--u)*22);max-width:36ch;line-height:1.25}
+.ask2 b{color:var(--coral)}
+/* S3 sort */
+.sort{display:grid;grid-template-columns:1.25fr 1fr;gap:calc(var(--u)*44);margin-top:calc(var(--u)*30)}
+.deck{position:relative;height:calc(var(--u)*330);isolation:isolate}
+.card{position:absolute;inset:0;background:#fff;border:calc(var(--u)*2) solid var(--ink);border-radius:calc(var(--u)*20);padding:calc(var(--u)*30);display:flex;flex-direction:column;justify-content:space-between;transition:transform .45s cubic-bezier(.2,.7,.2,1),opacity .45s}
+.card.back1{transform:translate(calc(var(--u)*10),calc(var(--u)*10)) rotate(1.5deg);z-index:-1}
+.card.back2{transform:translate(calc(var(--u)*20),calc(var(--u)*20)) rotate(3deg);z-index:-2}
+.card.gone-l{transform:translate(-70%,0) rotate(-10deg);opacity:0}
+.card.gone-r{transform:translate(70%,0) rotate(10deg);opacity:0}
+.card .n{font-family:var(--f-m);font-size:calc(var(--u)*14);color:var(--muted);letter-spacing:.06em}
+.card .q{font-family:var(--f-d);font-weight:600;font-size:calc(var(--u)*38);line-height:1.15}
+.card .acts{display:flex;gap:calc(var(--u)*14)}
+.fb{border-radius:calc(var(--u)*16);padding:calc(var(--u)*22) calc(var(--u)*24);background:var(--teal-soft);min-height:calc(var(--u)*200);font-size:calc(var(--u)*20)}
+.fb b{display:block;font-size:calc(var(--u)*24);margin-bottom:calc(var(--u)*6)}
+.fb.bad{background:var(--coral-soft)}
+.fb.idle{background:transparent;border:calc(var(--u)*2) dashed var(--line);color:var(--muted)}
+.tally{display:flex;gap:calc(var(--u)*8);margin-top:calc(var(--u)*16)}
+.tally i{width:calc(var(--u)*34);height:calc(var(--u)*8);border-radius:99px;background:var(--line)}
+.tally i.ok{background:var(--teal)}.tally i.no{background:var(--coral)}
+.rule{font-family:var(--f-d);font-size:calc(var(--u)*30);line-height:1.2;font-weight:600}
+.rule em{color:var(--teal);font-style:normal}.rule u{color:var(--coral);text-decoration:none}
+
+/* S4 agenda */
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--u)*22);margin-top:calc(var(--u)*34)}
+.q3{background:#fff;border:calc(var(--u)*2) solid var(--ink);border-radius:calc(var(--u)*18);padding:calc(var(--u)*24);position:relative}
+.q3 .num{position:absolute;top:calc(var(--u)*-20);left:calc(var(--u)*20);width:calc(var(--u)*42);height:calc(var(--u)*42);border-radius:50%;background:var(--coral);color:#fff;display:grid;place-items:center;font-family:var(--f-d);font-weight:700;font-size:calc(var(--u)*22)}
+.q3 h3{font-family:var(--f-d);font-size:calc(var(--u)*30);margin:calc(var(--u)*10) 0 calc(var(--u)*4)}
+.q3 .ask{color:var(--muted);font-size:calc(var(--u)*19)}
+.q3 .ex{margin-top:calc(var(--u)*14);background:var(--sun-soft);border-radius:calc(var(--u)*10);padding:calc(var(--u)*10) calc(var(--u)*14);font-size:calc(var(--u)*18);font-weight:600}
+.tl{display:flex;height:calc(var(--u)*30);border-radius:calc(var(--u)*8);overflow:hidden;margin-top:calc(var(--u)*12);font-size:calc(var(--u)*13);font-weight:700;color:#fff}
+.tl i{display:grid;place-items:center;font-style:normal;white-space:nowrap;overflow:hidden}
+.invite{margin-top:calc(var(--u)*26);display:flex;align-items:center;gap:calc(var(--u)*18);background:var(--ink);color:#fff;border-radius:calc(var(--u)*16);padding:calc(var(--u)*16) calc(var(--u)*24);font-size:calc(var(--u)*19)}
+.invite .cal{background:#fff;color:var(--ink);border-radius:calc(var(--u)*10);text-align:center;font-weight:800;padding:calc(var(--u)*4) calc(var(--u)*12);line-height:1.1;font-size:calc(var(--u)*13)}
+.invite .cal b{display:block;font-size:calc(var(--u)*26);font-family:var(--f-d)}
+.invite em{color:var(--sun);font-style:normal;font-weight:700}
+
+/* S5 roles */
+.roles{display:grid;grid-template-columns:1.05fr 1fr;gap:calc(var(--u)*40);margin-top:calc(var(--u)*18);align-items:center}
+.room svg{width:100%;height:auto;display:block}
+.seat{cursor:pointer}
+.seat circle.ring{transition:stroke-width .2s}
+.seat:hover circle.ring,.seat:focus-visible circle.ring{stroke-width:5}
+.seat:focus{outline:none}
+.seat .pulse{transform-origin:center;transform-box:fill-box;animation:pulse 2s infinite}
+.seat.seen .pulse{display:none}
+@keyframes pulse{0%{transform:scale(1);opacity:.6}100%{transform:scale(1.6);opacity:0}}
+.rcard{background:#fff;border:calc(var(--u)*2) solid var(--ink);border-radius:calc(var(--u)*20);padding:calc(var(--u)*28);min-height:calc(var(--u)*290)}
+.rcard .ic{width:calc(var(--u)*56);height:calc(var(--u)*56);border-radius:calc(var(--u)*14);display:grid;place-items:center;font-size:calc(var(--u)*30);margin-bottom:calc(var(--u)*12)}
+.rcard h3{font-family:var(--f-d);font-size:calc(var(--u)*34);margin:0 0 calc(var(--u)*6)}
+.rcard p{margin:0;font-size:calc(var(--u)*20)}
+.rcard .say{margin-top:calc(var(--u)*14);font-style:italic;color:var(--muted);border-left:calc(var(--u)*4) solid var(--sun);padding-left:calc(var(--u)*14)}
+.found{margin-top:calc(var(--u)*14);font-size:calc(var(--u)*17);color:var(--muted);font-weight:600}
+
+/* S6 chart */
+.chart{margin-top:calc(var(--u)*34);display:grid;gap:calc(var(--u)*26)}
+.row{display:grid;grid-template-columns:calc(var(--u)*190) 1fr;align-items:center;gap:calc(var(--u)*18)}
+.row .lab{font-weight:800;font-size:calc(var(--u)*20)}
+.row .lab small{display:block;font-weight:600;color:var(--muted);font-size:calc(var(--u)*15)}
+.sbar{display:flex;height:calc(var(--u)*74);border-radius:calc(var(--u)*12);overflow:hidden;gap:calc(var(--u)*3)}
+.seg{position:relative;display:flex;flex-direction:column;justify-content:center;padding:0 calc(var(--u)*12);color:#fff;font-weight:700;font-size:calc(var(--u)*15);line-height:1.15;white-space:nowrap;overflow:hidden;transition:flex-grow .8s cubic-bezier(.2,.7,.2,1),filter .2s;flex-basis:0;cursor:default}
+.seg b{font-family:var(--f-m);font-size:calc(var(--u)*17)}
+.seg:hover{filter:brightness(1.08)}
+.seg.light{color:var(--ink)}
+.seg.give{background:repeating-linear-gradient(135deg,var(--teal-soft) 0 calc(var(--u)*10),#fff calc(var(--u)*10) calc(var(--u)*20));color:var(--teal);border:calc(var(--u)*2) dashed var(--teal)}
+.tip{position:absolute;z-index:5;background:var(--ink);color:#fff;font-size:calc(var(--u)*16);padding:calc(var(--u)*8) calc(var(--u)*12);border-radius:calc(var(--u)*8);pointer-events:none;white-space:nowrap;transform:translate(-50%,-115%)}
+.callouts{display:grid;grid-template-columns:repeat(3,1fr);gap:calc(var(--u)*18);margin-top:calc(var(--u)*10)}
+.co{border-top:calc(var(--u)*4) solid var(--teal);padding-top:calc(var(--u)*12)}
+.co b{font-family:var(--f-d);font-size:calc(var(--u)*48);line-height:1;display:block;color:var(--teal)}
+.co span{font-size:calc(var(--u)*18);color:var(--muted)}
+.co.c{border-color:var(--coral)}.co.c b{color:var(--coral)}
+.illus{font-family:var(--f-m);font-size:calc(var(--u)*13);color:#A69FAE;margin-top:calc(var(--u)*6)}
+
+/* S7 checklist */
+.s7 .cols{grid-template-columns:1.15fr 1fr;align-items:center}
+.check{display:grid;gap:calc(var(--u)*12)}
+.ck{display:flex;align-items:center;gap:calc(var(--u)*16);background:#fff;border:calc(var(--u)*2) solid var(--line);border-radius:calc(var(--u)*14);padding:calc(var(--u)*15) calc(var(--u)*18);text-align:left;font-size:calc(var(--u)*21);font-weight:600;transition:border-color .2s,background .2s}
+.ck:hover{border-color:var(--ink)}
+.ck .bx{flex:none;width:calc(var(--u)*34);height:calc(var(--u)*34);border-radius:calc(var(--u)*9);border:calc(var(--u)*2.5) solid var(--ink);display:grid;place-items:center;color:#fff;font-size:calc(var(--u)*20);transition:background .2s}
+.ck small{display:block;font-weight:500;color:var(--muted);font-size:calc(var(--u)*16)}
+.ck[aria-checked="true"]{border-color:var(--teal);background:var(--teal-soft)}
+.ck[aria-checked="true"] .bx{background:var(--teal);border-color:var(--teal)}
+.ready{position:relative;text-align:center;display:grid;gap:calc(var(--u)*16);justify-items:center}
+.stamp{width:calc(var(--u)*270);height:calc(var(--u)*270);border-radius:50%;border:calc(var(--u)*6) dashed var(--line);display:grid;place-items:center;font-family:var(--f-d);font-weight:700;font-size:calc(var(--u)*30);color:#BDB5C6;line-height:1.1;transition:all .4s}
+.stamp.go{border:calc(var(--u)*6) solid var(--teal);background:var(--teal);color:#fff;transform:rotate(-8deg);animation:stamp .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes stamp{from{transform:scale(1.6) rotate(-8deg);opacity:0}}
+.endlinks{display:flex;gap:calc(var(--u)*12);flex-wrap:wrap;justify-content:center}
+.endlinks a{font-size:calc(var(--u)*18);font-weight:700;text-decoration:none}
+
+/* small screens: slide reflows instead of shrinking */
+@container deck (max-width:720px){
+  .slide{--u:.62px;aspect-ratio:auto;min-height:calc(var(--u)*900);padding:28px 20px 48px;font-size:16px}
+  .slide .foot{left:20px;right:20px;bottom:14px;font-size:10px}
+  .s1 .meta{display:none!important}
+  .illus{font-size:11px}
+  .slide .kick{font-size:11px}
+  .cols,.sort,.roles,.three,.s7 .cols,.callouts{grid-template-columns:1fr}
+  .poll{position:static;width:auto;margin-top:22px}
+  .s1 h1{font-size:44px}.s1 .meta{position:static;margin-top:18px;flex-wrap:wrap;gap:10px 18px}
+  .slide h2{font-size:32px}
+  .deck{height:230px}
+  .three{gap:30px}
+  .row{grid-template-columns:1fr}
+  .sbar{height:58px}
+  .seg{font-size:11px;padding:0 6px}.seg b{font-size:12px}
+}
+@media (max-width:640px){.keys{display:none}.top .by{display:none}.cbtn .lbl{display:none}.timer{display:none}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top">
+  <a class="back" href="../../">← Back to portfolio</a>
+  <span class="ttl">Meetings Worth Having <i>INTERACTIVE DECK</i></span>
+  <span class="by">Designed &amp; built by <b>Bianca Augustin</b></span>
+</header>
+
+<main>
+  <div class="stage-wrap">
+    <div class="progress" aria-hidden="true"><b id="prog"></b></div>
+    <div class="stage" id="stage" aria-roledescription="slide deck" aria-label="Meetings Worth Having">
+
+      <!-- 1 · Title + poll -->
+      <section class="slide s1" data-title="Meetings worth having" aria-roledescription="slide">
+        <span class="kick">A 7-slide talk · 10 minutes</span>
+        <h1>Meetings <em>worth</em> having</h1>
+        <p class="sub">Three small habits that give your team its time back.</p>
+        <div class="poll">
+          <b>Quick poll</b>
+          <p>Think about the last meeting you sat through. Honestly, it was…</p>
+          <div class="popt" role="group" aria-label="Poll answers">
+            <button data-poll="0"><span>🙌</span>Worth every minute</button>
+            <button data-poll="1"><span>📨</span>Could've been an email</button>
+            <button data-poll="2"><span>😴</span>I zoned out halfway</button>
+          </div>
+          <div class="preply" aria-live="polite"></div>
+        </div>
+        <div class="meta"><span>Press <b>→</b> or click <b>Next</b> to begin</span><span><b>N</b> speaker notes · <b>G</b> all slides</span></div>
+        <div class="foot"><span>MEETINGS WORTH HAVING</span><span>01</span></div>
+      </section>
+
+      <!-- 2 · Cost calculator -->
+      <section class="slide s2" data-title="Every meeting has a price tag" aria-roledescription="slide">
+        <span class="kick">Why it matters</span>
+        <h2>Every meeting has a price tag.</h2>
+        <div class="cols">
+          <div class="slid">
+            <label><span>People in the room <output id="oP">8</output></span><input type="range" id="inP" min="2" max="20" value="8"></label>
+            <label><span>Length <output id="oM">60 min</output></span><input type="range" id="inM" min="15" max="120" step="15" value="60"></label>
+            <label><span>Average hourly cost per person <output id="oR">$45</output></span><input type="range" id="inR" min="15" max="150" step="5" value="45"></label>
+            <div class="people" id="people" aria-hidden="true"></div>
+          </div>
+          <div class="cost" aria-live="polite">
+            <small>This one meeting costs</small>
+            <div class="big" id="cBig">$360</div>
+            <div class="line">That's <b id="cHrs">8 hours</b> of work time, gone in <b id="cLen">1 hour</b>.</div>
+            <div class="yr"><div class="line" style="border:0;padding:0;margin:0">If it repeats every week: <b id="cYr">$18,720 a year</b></div><div class="track"><i id="cBar"></i></div></div>
+          </div>
+        </div>
+        <p class="ask2">The question isn't “can we afford a meeting?” It's “is this one worth <b id="cAsk">$360</b>?”</p>
+        <div class="foot"><span>MEETINGS WORTH HAVING</span><span>02</span></div>
+      </section>
+
+      <!-- 3 · Meeting or message -->
+      <section class="slide s3" data-title="Meeting or message?" aria-roledescription="slide">
+        <span class="kick">Habit 1 · Question the meeting</span>
+        <h2>Meeting or message?</h2>
+        <div class="sort">
+          <div><div class="deck" id="deck"></div><div class="tally" id="tally" aria-hidden="true"></div></div>
+          <div class="fb idle" id="fb" aria-live="polite">Pick one for each card. You'll get feedback right away.</div>
+        </div>
+        <div class="foot"><span>MEETINGS WORTH HAVING</span><span>03</span></div>
+      </section>
+
+      <!-- 4 · Agenda (click builds) -->
+      <section class="slide s4" data-title="Every invite answers three questions" data-builds="4" aria-roledescription="slide">
+        <span class="kick">Habit 2 · Put it in the invite</span>
+        <h2>Every invite answers three questions.</h2>
+        <div class="three">
+          <div class="q3 build" data-b="1"><span class="num">1</span><h3>Purpose</h3><div class="ask">Why are we meeting?</div><div class="ex">“Choose our new payroll vendor.”</div></div>
+          <div class="q3 build" data-b="2"><span class="num">2</span><h3>Outcome</h3><div class="ask">What exists when we leave?</div><div class="ex">“A final pick and one owner for next steps.”</div></div>
+          <div class="q3 build" data-b="3"><span class="num">3</span><h3>Time boxes</h3><div class="ask">Who covers what, for how long?</div>
+            <div class="tl" aria-label="30 minute agenda: context 5, options 15, decide 7, next steps 3"><i style="flex:5;background:#8E8697">5</i><i style="flex:15;background:var(--teal)">Options · 15</i><i style="flex:7;background:var(--coral)">Decide · 7</i><i style="flex:3;background:var(--ink)">3</i></div></div>
+        </div>
+        <div class="invite build" data-b="4"><div class="cal">THU<b>14</b></div><div><b>Payroll vendor decision</b> · 30 min<br><span style="opacity:.8">Purpose, outcome, and agenda included. </span><em>People can prepare, or decline with a reason.</em></div></div>
+        <div class="foot"><span>MEETINGS WORTH HAVING</span><span>04</span></div>
+      </section>
+
+      <!-- 5 · Roles -->
+      <section class="slide s5" data-title="Give every seat a job" aria-roledescription="slide">
+        <span class="kick">Habit 3 · Share the work</span>
+        <h2>Give the key seats a job.</h2>
+        <div class="roles">
+          <div class="room">
+            <svg viewBox="0 0 440 320" role="group" aria-label="Meeting table with four role seats">
+              <ellipse cx="220" cy="160" rx="132" ry="78" fill="#EFE7DB" stroke="#1D1A24" stroke-width="3"/>
+              <ellipse cx="220" cy="160" rx="104" ry="54" fill="none" stroke="#DCD1C1" stroke-width="2" stroke-dasharray="6 6"/>
+              <text x="220" y="166" text-anchor="middle" font-family="Manrope" font-weight="700" font-size="15" fill="#9A9187">Click a glowing seat</text>
+              <g fill="#D8D2CB"><circle cx="128" cy="62" r="20"/><circle cx="312" cy="258" r="20"/></g>
+              <g class="seat" data-role="0" tabindex="0" role="button" aria-label="Facilitator seat"><circle class="pulse" cx="220" cy="46" r="28" fill="#D9512C"/><circle class="ring" cx="220" cy="46" r="28" fill="#D9512C" stroke="#1D1A24" stroke-width="3"/><text x="220" y="54" text-anchor="middle" font-size="24">🧭</text></g>
+              <g class="seat" data-role="1" tabindex="0" role="button" aria-label="Timekeeper seat"><circle class="pulse" cx="392" cy="160" r="28" fill="#F3B23C"/><circle class="ring" cx="392" cy="160" r="28" fill="#F3B23C" stroke="#1D1A24" stroke-width="3"/><text x="392" y="168" text-anchor="middle" font-size="24">⏱️</text></g>
+              <g class="seat" data-role="2" tabindex="0" role="button" aria-label="Note-taker seat"><circle class="pulse" cx="220" cy="274" r="28" fill="#1F6F6B"/><circle class="ring" cx="220" cy="274" r="28" fill="#1F6F6B" stroke="#1D1A24" stroke-width="3"/><text x="220" y="282" text-anchor="middle" font-size="24">📝</text></g>
+              <g class="seat" data-role="3" tabindex="0" role="button" aria-label="Decision owner seat"><circle class="pulse" cx="48" cy="160" r="28" fill="#6B5CA5"/><circle class="ring" cx="48" cy="160" r="28" fill="#6B5CA5" stroke="#1D1A24" stroke-width="3"/><text x="48" y="168" text-anchor="middle" font-size="24">✅</text></g>
+            </svg>
+          </div>
+          <div>
+            <div class="rcard" id="rcard" aria-live="polite"><div class="ic" style="background:var(--sun-soft)">👆</div><h3>Four seats, four jobs</h3><p>When everyone owns the meeting, no one does. Click each glowing seat to see what that person is responsible for.</p></div>
+            <div class="found" id="found">0 of 4 roles found</div>
+          </div>
+        </div>
+        <div class="foot"><span>MEETINGS WORTH HAVING</span><span>05</span></div>
+      </section>
+
+      <!-- 6 · Data story (builds) -->
+      <section class="slide s6" data-title="Where the hour goes" data-builds="2" aria-roledescription="slide">
+        <span class="kick">The payoff</span>
+        <h2>Same hour. Very different meeting.</h2>
+        <div class="chart" id="chart">
+          <div class="row"><div class="lab">Without the habits<small>a typical 60-minute meeting</small></div><div class="sbar" id="barA"></div></div>
+          <div class="row build" data-b="1"><div class="lab" style="color:var(--teal)">With all three<small>same team, same topic</small></div><div class="sbar" id="barB"></div></div>
+          <div class="callouts build" data-b="2">
+            <div class="co"><b>15 min</b><span>handed back to everyone</span></div>
+            <div class="co c"><b>2×</b><span>more time spent actually deciding</span></div>
+            <div class="co" style="border-color:var(--ink)"><b style="color:var(--ink)">0 min</b><span>lost to off-topic detours</span></div>
+          </div>
+        </div>
+        <div class="illus">Illustrative example · hover or tap a segment for details</div>
+        <div class="foot"><span>MEETINGS WORTH HAVING</span><span>06</span></div>
+      </section>
+
+      <!-- 7 · Job aid -->
+      <section class="slide s7" data-title="Before you hit Send" aria-roledescription="slide">
+        <span class="kick">Take it with you</span>
+        <h2>Before you hit “Send invite”…</h2>
+        <div class="cols">
+          <div class="check" role="group" aria-label="Pre-meeting checklist">
+            <button class="ck" role="checkbox" aria-checked="false"><span class="bx">✓</span><span>It needs a conversation<small>Not just an update a message could carry</small></span></button>
+            <button class="ck" role="checkbox" aria-checked="false"><span class="bx">✓</span><span>Purpose and outcome are in the invite<small>People know why they're coming</small></span></button>
+            <button class="ck" role="checkbox" aria-checked="false"><span class="bx">✓</span><span>The agenda has time boxes<small>And it fits inside the time booked</small></span></button>
+            <button class="ck" role="checkbox" aria-checked="false"><span class="bx">✓</span><span>Facilitator, timekeeper, notes, decider<small>One person can wear two hats</small></span></button>
+          </div>
+          <div class="ready">
+            <div class="stamp" id="stamp" aria-live="polite">Check all<br>four</div>
+            <div class="endlinks"><button class="sbtn" id="again">↺ Start over</button><a class="sbtn ink" href="mailto:bianca.augustin0318@gmail.com?subject=Presentation%20design">Hire me for your deck</a></div>
+          </div>
+        </div>
+        <div class="foot"><span>MEETINGS WORTH HAVING · DESIGNED BY BIANCA AUGUSTIN</span><span>07</span></div>
+      </section>
+
+      <div class="dot-laser" id="laser" hidden></div>
+    </div>
+  </div>
+
+  <div class="bar stage-wrap">
+    <div class="nav">
+      <button class="cbtn" id="prev" aria-label="Previous slide">←<span class="lbl">Back</span></button>
+      <span class="count" id="count" aria-live="polite">1 / 7</span>
+      <button class="cbtn primary" id="next" aria-label="Next">Next →</button>
+      <span class="builds" id="builds" aria-hidden="true"></span>
+    </div>
+    <div class="tools">
+      <button class="cbtn" id="tOv" aria-label="All slides">▦<span class="lbl">All slides</span> <kbd>G</kbd></button>
+      <button class="cbtn" id="tNotes" aria-pressed="true">🗒<span class="lbl">Notes</span> <kbd>N</kbd></button>
+      <button class="cbtn" id="tLaser" aria-pressed="false">🔴<span class="lbl">Laser</span> <kbd>L</kbd></button>
+      <button class="cbtn" id="tFull" aria-label="Fullscreen">⛶<span class="lbl">Full screen</span> <kbd>F</kbd></button>
+    </div>
+  </div>
+
+  <div class="notes stage-wrap" id="notes">
+    <div class="ntabs" role="tablist">
+      <button role="tab" aria-selected="true" data-nt="say">Speaker notes</button>
+      <button role="tab" aria-selected="false" data-nt="why">Why I designed it this way</button>
+      <span class="timer"><span id="clock">00:00</span><button id="tPause">Pause</button><button id="tReset">Reset</button></span>
+    </div>
+    <div class="npane" id="npane" role="tabpanel"></div>
+  </div>
+  <p class="keys"><kbd>←</kbd> <kbd>→</kbd> move · <kbd>G</kbd> all slides · <kbd>N</kbd> notes · <kbd>L</kbd> laser pointer · <kbd>F</kbd> full screen · swipe on a phone</p>
+</main>
+
+<div class="ov" id="ov" hidden role="dialog" aria-label="All slides"><h2>All slides <button class="cbtn" id="ovClose">Close <kbd>Esc</kbd></button></h2><div class="ovg" id="ovg"></div></div>
+
+<script>
+/* Meetings Worth Having · interactive deck, designed and coded by Bianca Augustin */
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const slides=$$(".slide"),N=slides.length;
+let cur=0,built=slides.map(()=>0),noteTab="say";
+
+const NOTES=[
+ {say:["Open with the poll before you say anything. Ask for a show of hands, then react to the room's answer.","Promise them three habits, not a lecture. That sets the bar for a short, useful talk."],
+  why:["A quick poll pulls in people's own experience first, so the content lands on something real (gain attention, activate prior knowledge).","The title is a promise of value, not a topic label. Slide footers and numbers stay quiet so the content leads."],skills:["Presentation design","Audience engagement","Visual hierarchy"]},
+ {say:["Ask someone for their team's typical meeting: how many people, how long. Move the sliders live with their numbers.","Pause on the yearly number. Let the room react before you go on."],
+  why:["Abstract costs don't change behavior. Personal ones do. The live calculator turns “meetings are expensive” into the audience's own number.","The dark panel holds the one number that matters, so the eye lands there first."],skills:["Interactive data","Persuasion through numbers","Microinteractions"]},
+ {say:["Have the room call out each answer before you click. Disagreements are the best part, so let them argue for a moment.","Land the rule of thumb at the end: meet to decide, debate, or connect. Message to inform."],
+  why:["Retrieval practice with immediate feedback beats telling. The cards are realistic situations, not definitions.","The rule only appears after they've tried, so it confirms what they worked out instead of lecturing first."],skills:["Practice activities","Feedback design","Card-swipe interaction"]},
+ {say:["Click once per question. Ask “what would you write here for your next meeting?” before revealing each example.","The last click shows the finished invite. Point out that people can now prepare, or decline with a reason."],
+  why:["Click builds show one idea at a time (progressive disclosure), which keeps cognitive load low and lets the presenter set the pace.","Each card follows the same pattern: question, then example. The repeated structure makes the three-part model easy to remember."],skills:["Animation builds","Progressive disclosure","Information design"]},
+ {say:["Invite someone to come up and click the seats, or ask who usually plays each role without being asked.","Mention that in a three-person meeting, one person can hold two roles."],
+  why:["A spatial picture (who sits where) is easier to remember than a bulleted list of four roles.","Pulsing seats signal what's clickable, and the counter makes finding all four a small, satisfying goal."],skills:["Visual metaphor","SVG illustration","Hotspot interaction"]},
+ {say:["Show the first bar and ask where their meetings lose time. Click to reveal the second bar.","Final click: read the three callouts slowly. Fifteen minutes back, every meeting."],
+  why:["One chart, one message. Segments are labeled directly, so nobody hunts through a legend. Color carries meaning: gray for waste, teal for discussion, coral for decisions.","The second bar animates in from the first, so the comparison is the story. The data is clearly labeled as illustrative."],skills:["Data storytelling","Chart design","Animation builds"]},
+ {say:["Ask everyone to think of one meeting on their calendar this week and run it through the checklist.","Close with the one-line takeaway: question it, write it down, share the work."],
+  why:["The talk ends on a job aid, not a summary slide. Performance support is what changes behavior after the presentation is over.","The stamp gives a small reward for finishing, and Start over resets everything for the next audience."],skills:["Job aid design","Performance support","Closing with action"]}
+];
+
+/* ---------- navigation ---------- */
+function buildCount(i){return +(slides[i].dataset.builds||0)}
+function applyBuilds(i){slides[i].querySelectorAll(".build").forEach(b=>b.classList.toggle("in",+b.dataset.b<=built[i]));if(i===5)drawBars()}
+function show(i,dir){i=Math.max(0,Math.min(N-1,i));
+ const st=$("#stage");st.dataset.dir=dir||"fwd";
+ slides.forEach((s,k)=>{s.classList.toggle("on",k===i);s.setAttribute("aria-hidden",k!==i);s.inert=k!==i});
+ cur=i;applyBuilds(i);ui();
+ try{history.replaceState(null,"","#"+(i+1))}catch(e){}}
+function next(){if(built[cur]<buildCount(cur)){built[cur]++;applyBuilds(cur);ui();return}if(cur<N-1)show(cur+1,"fwd")}
+function prev(){if(cur>0){built[cur-1]=buildCount(cur-1);show(cur-1,"back")}}
+function ui(){$("#count").textContent=`${cur+1} / ${N}`;$("#prog").style.width=((cur+ (buildCount(cur)?built[cur]/buildCount(cur):1))/N*100)+"%";
+ $("#prev").disabled=cur===0;$("#prev").style.opacity=cur===0?.4:1;
+ const bc=buildCount(cur),left=bc-built[cur];
+ $("#next").innerHTML=left>0?"Next build →":(cur===N-1?"The end ✓":"Next →");$("#next").disabled=cur===N-1&&!left;
+ $("#builds").innerHTML=bc?Array.from({length:bc},(_,k)=>`<i class="${k<built[cur]?"on":""}"></i>`).join(""):"";
+ renderNotes()}
+function renderNotes(){const n=NOTES[cur];
+ $("#npane").innerHTML=(noteTab==="say"?n.say:n.why).map(t=>`<p>${t}</p>`).join("")+(noteTab==="why"?`<div class="chips">${n.skills.map(s=>`<span>${s}</span>`).join("")}</div>`:"")}
+$$(".ntabs [data-nt]").forEach(b=>b.onclick=()=>{noteTab=b.dataset.nt;$$(".ntabs [data-nt]").forEach(x=>x.setAttribute("aria-selected",x===b));renderNotes()});
+$("#next").onclick=next;$("#prev").onclick=prev;
+
+/* keyboard */
+document.addEventListener("keydown",e=>{const t=e.target,tag=t.tagName;
+ if(e.metaKey||e.ctrlKey||e.altKey)return;
+ if(!$("#ov").hidden){if(e.key==="Escape"||e.key==="g"||e.key==="G"){closeOv();e.preventDefault()}return}
+ if(tag==="INPUT"||tag==="TEXTAREA"||tag==="SELECT")return;
+ const k=e.key;
+ if((k===" "||k==="Enter")&&(tag==="BUTTON"||tag==="A"||t.getAttribute("role")==="button"))return;
+ if(["ArrowRight","PageDown"," "].includes(k)){e.preventDefault();next()}
+ else if(["ArrowLeft","PageUp"].includes(k)){e.preventDefault();prev()}
+ else if(k==="Home"){show(0,"back")}else if(k==="End"){show(N-1)}
+ else if(k==="n"||k==="N")toggleNotes();else if(k==="g"||k==="G")openOv();
+ else if(k==="f"||k==="F")full();else if(k==="l"||k==="L")laser()});
+/* swipe */
+let sx=null,sy=0;$("#stage").addEventListener("touchstart",e=>{sx=e.touches[0].clientX;sy=e.touches[0].clientY},{passive:true});
+$("#stage").addEventListener("touchend",e=>{if(sx==null)return;const dx=e.changedTouches[0].clientX-sx,dy=e.changedTouches[0].clientY-sy;
+ if(Math.abs(dx)>60&&Math.abs(dx)>Math.abs(dy)*1.5&&!e.target.closest("input,.card")){dx<0?next():prev()}sx=null});
+
+/* tools */
+function toggleNotes(){const h=!$("#notes").hidden;$("#notes").hidden=h;$("#tNotes").setAttribute("aria-pressed",!h)}
+$("#tNotes").onclick=toggleNotes;
+function full(){const el=document.documentElement;try{document.fullscreenElement?document.exitFullscreen():(el.requestFullscreen||el.webkitRequestFullscreen).call(el)}catch(e){}}
+$("#tFull").onclick=full;
+let laserOn=false;function laser(){laserOn=!laserOn;$("#stage").classList.toggle("laser",laserOn);$("#laser").hidden=!laserOn;$("#tLaser").setAttribute("aria-pressed",laserOn)}
+$("#tLaser").onclick=laser;
+$("#stage").addEventListener("pointermove",e=>{if(!laserOn)return;const r=$("#stage").getBoundingClientRect();$("#laser").style.left=(e.clientX-r.left)+"px";$("#laser").style.top=(e.clientY-r.top)+"px"});
+/* overview with live thumbnails */
+function openOv(){const g=$("#ovg");g.innerHTML="";
+ slides.forEach((s,i)=>{const b=document.createElement("button");b.className="th"+(i===cur?" cur":"");
+  const m=document.createElement("div");m.className="mini";const tw=document.createElement("div");tw.className="tw";m.appendChild(tw);const c=s.cloneNode(true);c.removeAttribute("aria-roledescription");c.querySelectorAll("[id]").forEach(x=>x.removeAttribute("id"));c.classList.add("on");c.inert=true;c.removeAttribute("aria-hidden");tw.appendChild(c);
+  b.appendChild(m);b.insertAdjacentHTML("beforeend",`<span><b>${String(i+1).padStart(2,"0")}</b>${s.dataset.title}</span>`);
+  b.onclick=()=>{closeOv();built[i]=i===cur?built[i]:0;show(i,i<cur?"back":"fwd")};g.appendChild(b)});
+ $("#ov").hidden=false;fitThumbs();(g.querySelector(".cur")||g.firstChild).focus()}
+function fitThumbs(){$$(".mini").forEach(m=>m.firstChild.style.transform=`scale(${m.offsetWidth/1280})`)}
+addEventListener("resize",()=>{if(!$("#ov").hidden)fitThumbs()});
+function closeOv(){$("#ov").hidden=true;$("#tOv").focus()}
+$("#tOv").onclick=openOv;$("#ovClose").onclick=closeOv;
+/* presenter timer */
+let t0=Date.now(),acc=0,run=true;
+setInterval(()=>{const s=Math.floor((acc+(run?Date.now()-t0:0))/1000);$("#clock").textContent=String(Math.floor(s/60)).padStart(2,"0")+":"+String(s%60).padStart(2,"0")},500);
+$("#tPause").onclick=()=>{if(run){acc+=Date.now()-t0}else{t0=Date.now()}run=!run;$("#tPause").textContent=run?"Pause":"Resume"};
+$("#tReset").onclick=()=>{acc=0;t0=Date.now()};
+
+/* ---------- slide 1 · poll ---------- */
+const PR=["Love that. Let's figure out what made it work, so you can repeat it on purpose.","You're in good company. By slide 3 you'll have a fast way to spot those.","Totally human. Long, unfocused meetings drain attention. Let's fix the meeting, not the people."];
+$$("[data-poll]").forEach(b=>b.onclick=()=>{$$("[data-poll]").forEach(x=>{x.classList.toggle("pick",x===b);x.setAttribute("aria-pressed",x===b)});$(".preply").textContent=PR[+b.dataset.poll]});
+
+/* ---------- slide 2 · cost ---------- */
+const money=n=>"$"+Math.round(n).toLocaleString("en-US");
+let shown=360,raf=null;
+const PERSON=c=>`<svg viewBox="0 0 30 36"><circle cx="15" cy="9" r="7" fill="${c}"/><path d="M2 36c0-9 6-15 13-15s13 6 13 15z" fill="${c}"/></svg>`;
+function cost(){const p=+$("#inP").value,m=+$("#inM").value,r=+$("#inR").value,c=p*m/60*r,y=c*52;
+ $("#oP").textContent=p;$("#oM").textContent=m+" min";$("#oR").textContent="$"+r;
+ const h=p*m/60;$("#cHrs").textContent=(Number.isInteger(h)?h:h.toFixed(1))+" hours";$("#cLen").textContent=m%60?m+" minutes":(m/60)+(m===60?" hour":" hours");
+ $("#cYr").textContent=money(y)+" a year";$("#cAsk").textContent=money(c);$("#cBar").style.width=Math.min(100,y/150000*100)+"%";
+ const pe=$("#people"),have=pe.children.length;
+ if(have<p){for(let i=have;i<p;i++)pe.insertAdjacentHTML("beforeend",PERSON(["#D9512C","#1F6F6B","#F3B23C","#6B5CA5","#1D1A24"][i%5]))}else while(pe.children.length>p)pe.lastChild.remove();
+ cancelAnimationFrame(raf);const from=shown,to=c,st=performance.now();
+ const step=t=>{const k=Math.min(1,(t-st)/450),e=1-Math.pow(1-k,3);shown=from+(to-from)*e;$("#cBig").textContent=money(shown);if(k<1)raf=requestAnimationFrame(step)};raf=requestAnimationFrame(step)}
+["#inP","#inM","#inR"].forEach(s=>$(s).addEventListener("input",cost));
+
+/* ---------- slide 3 · meeting or message ---------- */
+const CARDS=[
+ ["Share last month's sales numbers with the team","msg","An update people can read in two minutes doesn't need everyone's calendar. Send it, and invite questions."],
+ ["Two vendors, one budget, and the team disagrees","meet","Real disagreement plus a decision is exactly what meetings are for. Talking it through is faster than a 40-reply thread."],
+ ["Let everyone know the office closes early Friday","msg","Pure information, no discussion needed. A message reaches everyone, including people who'd miss the meeting."],
+ ["Kick off a project with people who've never worked together","meet","New relationships and shared goals are built face to face. This one is worth the time."],
+ ["Get quick feedback on a one-page draft","msg","Comments on the document work better. People can respond when they're ready. Meet only if the feedback conflicts."]];
+let ci=0,score=[];
+function drawCards(){const d=$("#deck");d.innerHTML="";
+ if(ci>=CARDS.length){const ok=score.filter(Boolean).length;
+  d.innerHTML=`<div class="card" style="background:var(--sun-soft)"><span class="n">YOU GOT ${ok} OF ${CARDS.length}</span><div class="rule">Meet to <em>decide</em>, <em>debate</em>, or <em>connect</em>.<br>Message to <u>inform</u>.</div><div class="acts"><button class="sbtn" id="sortAgain">↺ Try again</button></div></div>`;
+  $("#sortAgain").onclick=()=>{ci=0;score=[];drawCards();fbIdle()};tally();return}
+ for(let k=Math.min(CARDS.length-1,ci+2);k>=ci;k--){const [q]=CARDS[k],el=document.createElement("div");el.className="card"+(k===ci+1?" back1":k===ci+2?" back2":"");
+  el.innerHTML=k===ci?`<span class="n">CARD ${ci+1} OF ${CARDS.length}</span><div class="q">${q}</div><div class="acts"><button class="sbtn" data-a="meet">👥 Meeting</button><button class="sbtn" data-a="msg">💬 Message</button></div>`:"";
+  d.appendChild(el)}
+ d.querySelectorAll("[data-a]").forEach(b=>b.onclick=()=>answer(b.dataset.a));
+ tally()}
+function tally(){$("#tally").innerHTML=CARDS.map((_,k)=>`<i class="${k<score.length?(score[k]?"ok":"no"):""}"></i>`).join("")}
+function fbIdle(){const f=$("#fb");f.className="fb idle";f.textContent="Pick one for each card. You'll get feedback right away."}
+function answer(a){const [,right,why]=CARDS[ci],ok=a===right;score.push(ok);
+ const f=$("#fb");f.className="fb"+(ok?"":" bad");f.innerHTML=`<b>${ok?"✓ Nice call.":"✗ Not quite."} ${right==="meet"?"Meeting.":"Message."}</b>${why}`;
+ const top=$("#deck").lastElementChild;top.classList.add(a==="meet"?"gone-r":"gone-l");top.querySelectorAll("button").forEach(b=>b.disabled=true);
+ ci++;setTimeout(drawCards,380)}
+
+/* ---------- slide 5 · roles ---------- */
+const ROLES=[["🧭","Facilitator","Keeps the conversation on the agenda and makes sure quieter people get heard.","“Let's park that and come back to it at the end.”","var(--coral-soft)"],
+ ["⏱️","Timekeeper","Watches the time boxes and gives a two-minute warning before each one ends.","“Two minutes left on options, then we decide.”","var(--sun-soft)"],
+ ["📝","Note-taker","Captures decisions, owners, and due dates. Not a transcript.","“So Priya owns the contract, due Friday. Right?”","var(--teal-soft)"],
+ ["✅","Decision owner","Makes the final call when the discussion is done, so the meeting ends with an answer.","“Thanks, everyone. We're going with vendor B.”","#E9E5F4"]];
+const seen=new Set();
+function role(i){const [ic,h,p,say,bg]=ROLES[i];seen.add(i);
+ $("#rcard").innerHTML=`<div class="ic" style="background:${bg}">${ic}</div><h3>${h}</h3><p>${p}</p><p class="say">${say}</p>`;
+ $$(".seat").forEach(s=>{if(+s.dataset.role===i)s.classList.add("seen")});
+ $("#found").textContent=seen.size<4?`${seen.size} of 4 roles found`:"All 4 found ✓  In small meetings, one person can wear two hats."}
+$$(".seat").forEach(s=>{s.addEventListener("click",()=>role(+s.dataset.role));s.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();role(+s.dataset.role)}})});
+
+/* ---------- slide 6 · stacked bars ---------- */
+const A=[["Waiting for people",7,"#B9B1A8",1],["Off-topic",14,"#E39A82",1],["Re-explaining context",12,"#E9BF6E",1],["Real discussion",20,"#1F6F6B"],["Deciding",7,"#D9512C"]];
+const B=[["Waiting",2,"#B9B1A8",1],["Context (read ahead)",4,"#E9BF6E",1],["Real discussion",25,"#1F6F6B"],["Deciding",14,"#D9512C"],["Time given back",15,"give"]];
+function segHTML(d){return d.map(([n,m,c,light])=>`<div class="seg${c==="give"?" give":""}${light?" light":""}" data-tip="${n}: ${m} min" style="${c==="give"?"":"background:"+c};flex-grow:0" tabindex="0" aria-label="${n}, ${m} minutes"><b>${m}</b>${m>=10?n:""}</div>`).join("")}
+function initBars(){$("#barA").innerHTML=segHTML(A);$("#barB").innerHTML=segHTML(B)}
+function drawBars(){requestAnimationFrame(()=>{$$("#barA .seg").forEach((s,k)=>s.style.flexGrow=A[k][1]);
+ const on=built[5]>=1;$$("#barB .seg").forEach((s,k)=>s.style.flexGrow=on?B[k][1]:0)})}
+let tipEl=null;
+$("#chart").addEventListener("pointerover",e=>{const s=e.target.closest(".seg");if(!s)return;tipEl?.remove();const r=s.getBoundingClientRect(),c=$(".s6").getBoundingClientRect();
+ tipEl=document.createElement("div");tipEl.className="tip";tipEl.textContent=s.dataset.tip;tipEl.style.left=(r.left+r.width/2-c.left)+"px";tipEl.style.top=(r.top-c.top)+"px";$(".s6").appendChild(tipEl)});
+$("#chart").addEventListener("pointerout",e=>{if(e.target.closest(".seg")){tipEl?.remove();tipEl=null}});
+
+/* ---------- slide 7 · checklist ---------- */
+$$(".ck").forEach(b=>b.onclick=()=>{b.setAttribute("aria-checked",b.getAttribute("aria-checked")!=="true");
+ const all=$$(".ck").every(x=>x.getAttribute("aria-checked")==="true"),st=$("#stamp"),n=$$('.ck[aria-checked="true"]').length;
+ st.classList.toggle("go",all);st.innerHTML=all?"Ready<br>to book ✓":n?`${4-n} to go`:"Check all<br>four"});
+$("#again").onclick=()=>{$$(".ck").forEach(b=>b.setAttribute("aria-checked","false"));$("#stamp").className="stamp";$("#stamp").innerHTML="Check all<br>four";
+ ci=0;score=[];drawCards();fbIdle();seen.clear();$$(".seat").forEach(s=>s.classList.remove("seen"));
+ $("#rcard").innerHTML=`<div class="ic" style="background:var(--sun-soft)">👆</div><h3>Four seats, four jobs</h3><p>When everyone owns the meeting, no one does. Click each glowing seat to see what that person is responsible for.</p>`;$("#found").textContent="0 of 4 roles found";
+ $$("[data-poll]").forEach(x=>x.classList.remove("pick"));$(".preply").textContent="";built=slides.map(()=>0);show(0,"back")};
+
+/* start */
+cost();drawCards();initBars();
+const fromHash=()=>{const h=parseInt((location.hash||"").slice(1));return h>=1&&h<=N?h-1:0};show(fromHash());
+addEventListener("hashchange",()=>{const i=fromHash();if(i!==cur)show(i,i<cur?"back":"fwd")});
+</script>
+</body>
+</html>
