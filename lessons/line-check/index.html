@@ -1,0 +1,480 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Line Check · Fig &amp; Fennel Kitchen</title>
+<meta name="description" content="Line Check: a bilingual 3D food-safety hazard hunt for new restaurant staff, designed and built by Bianca Augustin.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bagel+Fat+One&family=Atkinson+Hyperlegible:wght@400;700&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+/* Layout: kitchen pass. Big 3D stage on the left, order tickets clipped to a rail on the right; manager view below. Single committed look: teal tile + tomato + mustard, black outlines, hard offset shadows. */
+:root{
+  --tile:#123F3A; --tile-2:#0D302C; --paper:#FFF9EA; --ink:#141414; --tomato:#E5432D; --mustard:#F3B53F; --mint:#A6DCC8; --steel:#C7CFD1; --steel-dark:#7F8B8E; --ok:#1F7A4D;
+  --f-display:"Bagel Fat One","Arial Black",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-ticket:"Courier Prime","Courier New",ui-monospace,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--tile);color:var(--paper);font-family:var(--f-body);font-size:17px;line-height:1.5;
+  background-image:linear-gradient(rgba(255,255,255,.035) 2px,transparent 2px),linear-gradient(90deg,rgba(255,255,255,.035) 2px,transparent 2px);background-size:56px 56px}
+button{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--mustard);outline-offset:3px}
+a{color:inherit}
+.wrap{max-width:1320px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.sticker{border:3px solid var(--ink);box-shadow:5px 5px 0 var(--ink);border-radius:14px}
+.btn{display:inline-flex;align-items:center;gap:8px;border:3px solid var(--ink);box-shadow:4px 4px 0 var(--ink);border-radius:12px;background:var(--mustard);color:var(--ink);font-weight:700;padding:10px 18px;cursor:pointer;text-decoration:none;transition:transform .08s,box-shadow .08s}
+.btn:hover{transform:translate(-1px,-1px);box-shadow:5px 5px 0 var(--ink)}
+.btn:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
+.btn.red{background:var(--tomato);color:var(--paper)}
+.btn.paper{background:var(--paper)}
+.btn.small{padding:6px 12px;font-size:14px;border-width:2.5px;box-shadow:3px 3px 0 var(--ink)}
+
+/* top bar */
+.top{padding-block:16px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:14px;text-decoration:none}
+.logo{font-family:var(--f-display);font-size:30px;line-height:1;background:var(--tomato);color:var(--paper);padding:8px 14px 10px;transform:rotate(-2deg)}
+.brand small{font-family:var(--f-ticket);font-size:13px;color:var(--mint);letter-spacing:.06em;text-transform:uppercase}
+.tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.seg{display:flex;border:2.5px solid var(--ink);border-radius:10px;overflow:hidden;box-shadow:3px 3px 0 var(--ink)}
+.seg button{border:0;background:var(--paper);color:var(--ink);font-weight:700;padding:6px 12px;cursor:pointer;font-size:14px}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--mustard)}
+.back{font-size:14px;color:var(--mint);font-weight:700}
+
+/* main */
+.pass{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:26px;align-items:start;padding-bottom:40px}
+.stage{position:relative;aspect-ratio:16/10;background:#BFE3D6;overflow:hidden;max-width:100%}
+.stage canvas{display:block;width:100%;height:100%;touch-action:none}
+.stage.hovering canvas{cursor:pointer}
+.tip{position:absolute;pointer-events:none;background:var(--ink);color:var(--paper);font-weight:700;font-size:14px;padding:5px 10px;border-radius:8px;transform:translate(-50%,-140%);white-space:nowrap;z-index:3}
+.pin{position:absolute;width:34px;height:34px;margin:-17px 0 0 -17px;border-radius:50%;background:var(--tomato);color:var(--paper);border:3px solid var(--ink);display:grid;place-items:center;font-family:var(--f-display);font-size:16px;pointer-events:none;z-index:2;box-shadow:2px 2px 0 var(--ink)}
+.pin.pop{animation:pop .45s cubic-bezier(.3,1.6,.5,1)}
+@keyframes pop{from{transform:scale(0)}to{transform:scale(1)}}
+.toast{position:absolute;left:16px;right:16px;bottom:16px;z-index:4;background:var(--paper);color:var(--ink);padding:14px 16px;display:flex;gap:14px;align-items:flex-start;transform:translateY(0);transition:opacity .25s,transform .25s}
+.toast.gone{opacity:0;transform:translateY(12px);pointer-events:none}
+.toast .badge{flex:none;font-family:var(--f-display);font-size:15px;padding:4px 10px;border-radius:8px;border:2.5px solid var(--ink)}
+.toast .badge.haz{background:var(--tomato);color:var(--paper)}
+.toast .badge.safe{background:var(--mint)}
+.toast b{display:block;font-size:17px}
+.toast span{font-size:15px}
+.hud{position:absolute;left:14px;top:14px;display:flex;gap:8px;z-index:3;flex-wrap:wrap}
+.hud .chip{background:var(--paper);color:var(--ink);border:2.5px solid var(--ink);border-radius:10px;padding:4px 10px;font-weight:700;font-size:14px;box-shadow:2px 2px 0 var(--ink)}
+.hint-btn{position:absolute;right:14px;top:14px;z-index:3}
+.overlay{position:absolute;inset:0;z-index:5;background:rgba(18,63,58,.82);display:grid;place-items:center;padding:20px;overflow:auto}
+.card{background:var(--paper);color:var(--ink);padding:28px;max-width:560px;display:grid;gap:14px;text-align:left}
+.card h1{font-family:var(--f-display);font-weight:400;font-size:clamp(38px,6vw,60px);line-height:.95;margin:0;color:var(--tomato);-webkit-text-stroke:2px var(--ink);text-shadow:4px 4px 0 var(--ink)}
+.card p{margin:0}
+.card .meta{display:flex;gap:8px;flex-wrap:wrap}
+.card .meta span{font-family:var(--f-ticket);font-size:13px;font-weight:700;border:2px dashed var(--ink);border-radius:8px;padding:3px 8px}
+.list-mode{position:absolute;inset:0;z-index:4;background:var(--paper);color:var(--ink);overflow:auto;padding:22px}
+.list-mode h2{font-family:var(--f-display);font-weight:400;margin:0 0 6px;font-size:28px}
+.areas{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:14px}
+.area h3{font-family:var(--f-ticket);font-size:14px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 8px}
+.area button{display:block;width:100%;text-align:left;background:#fff;border:2.5px solid var(--ink);border-radius:10px;padding:9px 12px;margin-bottom:8px;cursor:pointer;font-weight:700;box-shadow:2px 2px 0 var(--ink)}
+.area button.found{background:#FBD4CD}
+.area button.safe-seen{background:#DDF1E9}
+
+/* ticket rail */
+.rail{display:grid;gap:18px;position:sticky;top:16px}
+.rail::before{content:"";display:block;height:10px;border-radius:5px;background:linear-gradient(var(--steel),var(--steel-dark));border:2px solid var(--ink);margin:0 -6px -12px}
+.ticket{background:var(--paper);color:var(--ink);font-family:var(--f-ticket);padding:18px 18px 22px;position:relative;filter:drop-shadow(4px 4px 0 var(--ink))}
+.ticket::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:10px;background:linear-gradient(-45deg,transparent 7px,var(--paper) 0) 0 0/14px 10px,linear-gradient(45deg,transparent 7px,var(--paper) 0) 0 0/14px 10px}
+.ticket .head{display:flex;justify-content:space-between;font-weight:700;font-size:13px;letter-spacing:.06em;border-bottom:2px dashed var(--ink);padding-bottom:8px;margin-bottom:10px;text-transform:uppercase}
+.clock{font-family:var(--f-display);font-size:48px;line-height:1;letter-spacing:.02em}
+.clock.low{color:var(--tomato)}
+.stats{display:flex;gap:18px;margin-top:8px;font-weight:700}
+.stats .m{color:var(--tomato)}
+.bar{height:12px;border:2px solid var(--ink);border-radius:6px;overflow:hidden;margin-top:10px;background:#fff}
+.bar i{display:block;height:100%;width:0;background:var(--tomato);transition:width .4s}
+.found-list{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.found-list li{display:grid;grid-template-columns:26px 1fr;gap:10px;font-size:14px;line-height:1.35}
+.found-list li .n{width:26px;height:26px;border-radius:50%;background:var(--tomato);color:var(--paper);display:grid;place-items:center;font-weight:700;border:2px solid var(--ink)}
+.found-list li b{display:block;font-size:14.5px}
+.empty{font-size:14px;color:#5B5B5B}
+
+/* results receipt */
+.receipt{background:var(--paper);color:var(--ink);font-family:var(--f-ticket);width:min(420px,100%);padding:24px 22px 28px;position:relative;filter:drop-shadow(6px 6px 0 var(--ink))}
+.receipt::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:10px;background:linear-gradient(-45deg,transparent 7px,var(--paper) 0) 0 0/14px 10px,linear-gradient(45deg,transparent 7px,var(--paper) 0) 0 0/14px 10px}
+.receipt h2{font-family:var(--f-display);font-weight:400;text-align:center;margin:0;font-size:30px}
+.receipt .c{text-align:center;font-size:13px}
+.receipt .ln{display:flex;justify-content:space-between;gap:10px;font-size:15px;padding:3px 0}
+.receipt hr{border:0;border-top:2px dashed var(--ink);margin:10px 0}
+.receipt .tot{font-weight:700;font-size:20px}
+.stamp{display:block;text-align:center;font-family:var(--f-display);font-size:24px;color:var(--tomato);border:3px solid var(--tomato);border-radius:10px;padding:6px;transform:rotate(-4deg);margin:14px auto 4px;width:max-content;max-width:100%}
+.receipt .acts{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:16px;font-family:var(--f-body)}
+
+/* manager view */
+.mgr{background:var(--paper);color:var(--ink);padding:32px;margin-bottom:56px}
+.mgr-head{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:end;border-bottom:3px solid var(--ink);padding-bottom:16px;margin-bottom:24px}
+.mgr-head h2{font-family:var(--f-display);font-weight:400;font-size:clamp(30px,4vw,42px);margin:0;line-height:1}
+.sample{font-family:var(--f-ticket);font-size:13px;font-weight:700;background:var(--mustard);border:2px solid var(--ink);border-radius:8px;padding:4px 10px}
+.kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:26px}
+.kpi{border:3px solid var(--ink);border-radius:12px;padding:14px 16px;background:#fff}
+.kpi b{display:block;font-family:var(--f-display);font-weight:400;font-size:32px;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi span{font-size:14px;color:#4A4A4A}
+.mgr-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:26px}
+.panel{border:3px solid var(--ink);border-radius:12px;padding:18px;background:#fff;min-width:0}
+.panel h3{margin:0 0 4px;font-size:18px}
+.panel p.sub{margin:0 0 12px;font-size:14px;color:#4A4A4A}
+.chart{overflow-x:auto}
+.insight{margin-top:14px;background:#FFF1CC;border:2px dashed var(--ink);border-radius:10px;padding:12px 14px;font-size:15px}
+.feed{font-family:var(--f-ticket);font-size:12.5px;line-height:1.45;background:var(--ink);color:#BDF0D9;border-radius:10px;padding:14px;max-height:340px;overflow:auto;white-space:pre-wrap;word-break:break-word}
+.feed .v{color:var(--mustard)}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;margin-top:8px}
+.legend i{display:inline-block;width:12px;height:12px;border:2px solid var(--ink);border-radius:3px;margin-right:6px;vertical-align:-1px}
+.foot{font-size:14px;color:var(--mint);padding-bottom:40px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+@media (max-width:1000px){.pass{grid-template-columns:1fr}.rail{position:static;grid-template-columns:repeat(auto-fit,minmax(260px,1fr))}.rail::before{display:none}.mgr-grid{grid-template-columns:1fr}}
+@media (max-width:640px){.stage{aspect-ratio:4/5}.kpis{grid-template-columns:1fr 1fr}.mgr{padding:20px}.card{padding:20px}.logo{font-size:24px}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header class="wrap top">
+  <a class="brand" href="../../" aria-label="Back to Bianca Augustin's portfolio"><span class="logo sticker">LINE CHECK</span><small data-t="sub">Fig &amp; Fennel Kitchen · pre-shift</small></a>
+  <div class="tools">
+    <div class="seg" role="group" aria-label="Language"><button id="lang-en" aria-pressed="true">EN</button><button id="lang-es" aria-pressed="false">ES</button></div>
+    <button class="btn small paper" id="soundBtn" aria-pressed="true"><span data-t="sound">Sound on</span></button>
+    <button class="btn small paper" id="listBtn" aria-pressed="false"><span data-t="listBtn">Inspect from a list</span></button>
+    <a class="back" href="../../work/line-check.html" data-t="caseLink">Read the case study →</a>
+  </div>
+</header>
+
+<main class="wrap">
+  <div class="pass">
+    <div class="stage sticker" id="stage">
+      <div class="hud" aria-hidden="true"><span class="chip" data-t="drag">Drag to look around · scroll to zoom</span></div>
+      <button class="btn small red hint-btn" id="hintBtn" hidden><span data-t="hint">Ask Chef Rosa</span></button>
+      <div class="tip" id="tip" hidden></div>
+      <div id="pins"></div>
+      <div class="toast sticker gone" id="toast" role="status" aria-live="polite"><span class="badge" id="toastBadge"></span><div><b id="toastTitle"></b><span id="toastBody"></span></div></div>
+      <div class="list-mode" id="listMode" hidden>
+        <h2 data-t="listTitle">Inspect from a list</h2>
+        <p data-t="listIntro">Same kitchen, no 3D needed. Select anything you'd check during a line check.</p>
+        <div class="areas" id="areas"></div>
+      </div>
+      <div class="overlay" id="intro">
+        <div class="card sticker">
+          <h1>Line<br>Check</h1>
+          <p><b data-t="introLead">Doors open at 5:00. It's 4:57.</b> <span data-t="introBody">Walk the kitchen and find every food-safety hazard before the first guests arrive. Click anything that looks wrong. Careful: flagging something that's fine costs you points.</span></p>
+          <div class="meta"><span data-t="m1">7 hazards</span><span data-t="m2">3:00 on the clock</span><span data-t="m3">English / Español</span></div>
+          <div style="display:flex;gap:10px;flex-wrap:wrap"><button class="btn red" id="startBtn"><span data-t="start">Start the line check</span></button></div>
+        </div>
+      </div>
+      <div class="overlay" id="end" hidden><div class="receipt" id="receipt"></div></div>
+    </div>
+
+    <aside class="rail" aria-label="Order tickets">
+      <div class="ticket">
+        <div class="head"><span data-t="t1">Ticket #014</span><span data-t="t1b">Pre-shift</span></div>
+        <div class="clock" id="clock">3:00</div>
+        <div class="stats"><span id="foundStat">0/7</span><span class="m" id="missStat">0</span></div>
+        <div class="bar"><i id="barFill"></i></div>
+      </div>
+      <div class="ticket">
+        <div class="head"><span data-t="t2">Hazards flagged</span><span id="foundCount">0</span></div>
+        <ol class="found-list" id="foundList"><li class="empty" style="display:block" data-t="none">Nothing flagged yet. Start looking.</li></ol>
+      </div>
+    </aside>
+  </div>
+
+  <section class="mgr sticker" id="manager" aria-labelledby="mgrTitle">
+    <div class="mgr-head">
+      <div><span class="sample" data-t="sampleTag">Sample data for demonstration</span><h2 id="mgrTitle" style="margin-top:10px" data-t="mgrTitle">Manager view</h2></div>
+      <p style="margin:0;max-width:46ch;font-size:15px" data-t="mgrIntro">What a kitchen manager or L&amp;D team would see after a cohort of new hires completes Line Check, plus the live tracking data from your session.</p>
+    </div>
+    <div class="kpis">
+      <div class="kpi"><b>24</b><span data-t="k1">New hires this month</span></div>
+      <div class="kpi"><b>92%</b><span data-t="k2">Completed before first shift</span></div>
+      <div class="kpi"><b>5.6<small style="font-size:18px">/7</small></b><span data-t="k3">Average hazards found</span></div>
+      <div class="kpi"><b>42%</b><span data-t="k4">Chose Spanish</span></div>
+    </div>
+    <div class="mgr-grid">
+      <div class="panel">
+        <h3 data-t="c1">Which hazards do new hires miss?</h3>
+        <p class="sub" data-t="c1s">Percent of the cohort who found each hazard. Your result is marked on the right.</p>
+        <div class="chart" id="chart"></div>
+        <div class="legend"><span><i style="background:#E5432D"></i><span data-t="lg1">Cohort found it</span></span><span><i style="background:#1F7A4D"></i><span data-t="lg2">You found it</span></span><span><i style="background:#fff"></i><span data-t="lg3">You missed it</span></span></div>
+        <div class="insight"><b data-t="insT">What I'd do with this:</b> <span data-t="insB">Only 38% spot the cooling soup. That points to a knowledge gap, not carelessness, so the next step is a laminated cooling-log job aid at the prep station and a 60-second refresher video on the two-stage cooling rule.</span></div>
+      </div>
+      <div class="panel">
+        <h3 data-t="c2">Live xAPI feed</h3>
+        <p class="sub" data-t="c2s">Every action you take sends a learning record a Learning Record Store or LMS could track.</p>
+        <div class="feed" id="feed" aria-live="off"></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="foot"><span>Designed and built by <a href="../../">Bianca Augustin</a></span><span data-t="fict">Fig &amp; Fennel is a fictional restaurant. Food-safety temperatures follow the FDA Food Code.</span></div>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const $=s=>document.querySelector(s);
+/* ---------------- content (EN / ES) ---------------- */
+const T={
+ en:{sub:"Fig & Fennel Kitchen · pre-shift",sound:"Sound on",soundOff:"Sound off",listBtn:"Inspect from a list",listBtnOff:"Back to 3D kitchen",caseLink:"Read the case study →",drag:"Drag to look around · scroll to zoom",hint:"Ask Chef Rosa",
+  listTitle:"Inspect from a list",listIntro:"Same kitchen, no 3D needed. Select anything you'd check during a line check.",introLead:"Doors open at 5:00. It's 4:57.",
+  introBody:"Walk the kitchen and find every food-safety hazard before the first guests arrive. Click anything that looks wrong. Careful: flagging something that's fine costs you points.",
+  m1:"7 hazards",m2:"3:00 on the clock",m3:"English / Español",start:"Start the line check",t1:"Ticket #014",t1b:"Pre-shift",t2:"Hazards flagged",none:"Nothing flagged yet. Start looking.",
+  found:"found",misses:"misses",hazard:"HAZARD",safe:"LOOKS GOOD",already:"Already flagged",chef:"Chef Rosa",
+  sampleTag:"Sample data for demonstration",mgrTitle:"Manager view",mgrIntro:"What a kitchen manager or L&D team would see after a cohort of new hires completes Line Check, plus the live tracking data from your session.",
+  k1:"New hires this month",k2:"Completed before first shift",k3:"Average hazards found",k4:"Chose Spanish",c1:"Which hazards do new hires miss?",c1s:"Percent of the cohort who found each hazard. Your result is marked on the right.",
+  lg1:"Cohort found it",lg2:"You found it",lg3:"You missed it",insT:"What I'd do with this:",insB:"Only 38% spot the cooling soup. That points to a knowledge gap, not carelessness, so the next step is a laminated cooling-log job aid at the prep station and a 60-second refresher video on the two-stage cooling rule.",
+  c2:"Live xAPI feed",c2s:"Every action you take sends a learning record a Learning Record Store or LMS could track.",fict:"Fig & Fennel is a fictional restaurant. Food-safety temperatures follow the FDA Food Code.",
+  rTitle:"LINE CHECK",rSub:"Fig & Fennel Kitchen",rFound:"Hazards found",rMiss:"False flags",rTime:"Time bonus",rTotal:"TOTAL",rMissed:"Still on the line:",
+  g1:"READY FOR SERVICE",g2:"ALMOST THERE",g3:"BACK TO PREP",again:"Run it again",toMgr:"See the manager view",timeUp:"Doors are open!",allFound:"Kitchen's clear!",
+  pts:"pts",youMissed:"You didn't find:",nothingMissed:"You found every hazard.",
+  area_cooler:"Walk-in cooler",area_prep:"Prep counter",area_sinks:"Sinks & floor",area_walls:"Walls & stations"},
+ es:{sub:"Cocina Fig & Fennel · antes del turno",sound:"Sonido sí",soundOff:"Sonido no",listBtn:"Revisar desde una lista",listBtnOff:"Volver a la cocina 3D",caseLink:"Leer el caso de estudio →",drag:"Arrastra para mirar · rueda para acercar",hint:"Pregúntale a Chef Rosa",
+  listTitle:"Revisar desde una lista",listIntro:"La misma cocina, sin 3D. Selecciona todo lo que revisarías antes del turno.",introLead:"Abrimos a las 5:00. Son las 4:57.",
+  introBody:"Recorre la cocina y encuentra todos los peligros de inocuidad antes de que lleguen los primeros clientes. Haz clic en todo lo que se vea mal. Cuidado: marcar algo que está bien te resta puntos.",
+  m1:"7 peligros",m2:"3:00 en el reloj",m3:"English / Español",start:"Empezar la revisión",t1:"Comanda #014",t1b:"Antes del turno",t2:"Peligros marcados",none:"Nada marcado todavía. Empieza a buscar.",
+  found:"encontrados",misses:"errores",hazard:"PELIGRO",safe:"TODO BIEN",already:"Ya lo marcaste",chef:"Chef Rosa",
+  sampleTag:"Datos de muestra para demostración",mgrTitle:"Vista del gerente",mgrIntro:"Lo que vería un gerente de cocina o el equipo de capacitación después de que un grupo de nuevos empleados complete Line Check, más los datos de seguimiento en vivo de tu sesión.",
+  k1:"Nuevos empleados este mes",k2:"Completaron antes del primer turno",k3:"Promedio de peligros encontrados",k4:"Eligieron español",c1:"¿Qué peligros pasan por alto?",c1s:"Porcentaje del grupo que encontró cada peligro. Tu resultado aparece a la derecha.",
+  lg1:"El grupo lo encontró",lg2:"Tú lo encontraste",lg3:"No lo encontraste",insT:"Lo que haría con esto:",insB:"Solo el 38% detecta la sopa enfriándose. Eso indica una falta de conocimiento, no de cuidado, así que el siguiente paso es una guía plastificada del registro de enfriamiento en la estación de preparación y un video de 60 segundos sobre la regla de enfriamiento en dos etapas.",
+  c2:"Registro xAPI en vivo",c2s:"Cada acción que haces envía un registro de aprendizaje que un LRS o LMS podría guardar.",fict:"Fig & Fennel es un restaurante ficticio. Las temperaturas siguen el Código de Alimentos de la FDA.",
+  rTitle:"LINE CHECK",rSub:"Cocina Fig & Fennel",rFound:"Peligros encontrados",rMiss:"Marcas falsas",rTime:"Bono de tiempo",rTotal:"TOTAL",rMissed:"Siguen en la cocina:",
+  g1:"LISTOS PARA SERVIR",g2:"CASI LISTOS",g3:"DE VUELTA A PREPARAR",again:"Intentar de nuevo",toMgr:"Ver la vista del gerente",timeUp:"¡Ya abrimos!",allFound:"¡Cocina despejada!",
+  pts:"pts",youMissed:"No encontraste:",nothingMissed:"Encontraste todos los peligros.",
+  area_cooler:"Cámara fría",area_prep:"Mesa de preparación",area_sinks:"Fregaderos y piso",area_walls:"Paredes y estaciones"}};
+const ITEMS={
+ fridge:{haz:1,area:"cooler",cohort:71,
+  en:["Raw chicken stored above the salad","Juices from raw poultry can drip onto ready-to-eat food. Ready-to-eat food goes on top; raw poultry goes on the bottom shelf.","Check what's on the top shelf of the cooler."],
+  es:["Pollo crudo guardado sobre la ensalada","Los jugos del pollo crudo pueden gotear sobre alimentos listos para comer. Lo listo para comer va arriba; el pollo crudo, en el estante de abajo.","Revisa qué hay en el estante de arriba de la cámara fría."]},
+ board:{haz:1,area:"prep",cohort:88,
+  en:["Raw steak and lettuce on one cutting board","Cross-contamination. Use separate, color-coded boards for raw meat and produce, and clean and sanitize between tasks.","Look closely at the cutting board."],
+  es:["Carne cruda y lechuga en la misma tabla","Contaminación cruzada. Usa tablas separadas por color para carne cruda y verduras, y limpia y desinfecta entre tareas.","Mira bien la tabla de picar."]},
+ soup:{haz:1,area:"prep",cohort:38,
+  en:["Soup cooling on the counter at 95°F","It's in the temperature danger zone (41–135°F), where bacteria grow fast. Cool it in shallow pans or an ice bath: to 70°F within 2 hours, then to 41°F within 4 more.","That big stockpot has been sitting out a while. What temperature is it?"],
+  es:["Sopa enfriándose sobre el mostrador a 95°F","Está en la zona de peligro (41–135°F), donde las bacterias crecen rápido. Enfríala en recipientes poco profundos o en baño de hielo: a 70°F en 2 horas y luego a 41°F en 4 horas más.","Esa olla grande lleva rato afuera. ¿A qué temperatura está?"]},
+ handsink:{haz:1,area:"walls",cohort:54,
+  en:["Boxes blocking the handwashing sink","Handwashing sinks must stay clear and be used only for washing hands. If staff can't reach it, they won't wash.","Can everyone get to the handwashing sink?"],
+  es:["Cajas bloqueando el lavamanos","El lavamanos debe estar despejado y usarse solo para lavarse las manos. Si el personal no llega a él, no se lava.","¿Todos pueden llegar al lavamanos?"]},
+ chem:{haz:1,area:"prep",cohort:79,
+  en:["Cleaning spray right next to the bread","Chemicals must be stored away from and below food and prep areas, so nothing can splash or spill onto food.","Something on the prep counter doesn't belong near food."],
+  es:["Spray de limpieza junto al pan","Los químicos deben guardarse lejos y por debajo de los alimentos y las áreas de preparación, para que nada salpique la comida.","Algo en la mesa de preparación no debería estar cerca de la comida."]},
+ knife:{haz:1,area:"sinks",cohort:46,
+  en:["Knife hidden under the sink water","Anyone reaching into that water can't see the blade. Never leave knives in a sink. Wash them right away or set them beside it.","Look in the dish sink. Is anything hiding under the water?"],
+  es:["Cuchillo escondido bajo el agua","Quien meta la mano en el agua no ve la hoja. Nunca dejes cuchillos en el fregadero. Lávalos enseguida o colócalos al lado.","Mira el fregadero. ¿Hay algo escondido bajo el agua?"]},
+ floor:{haz:1,area:"sinks",cohort:96,
+  en:["Water on the floor with no warning sign","Slips are one of the most common kitchen injuries. Mop it up now and put out a wet-floor sign until it's dry.","Watch your step near the sink."],
+  es:["Agua en el piso sin señal de advertencia","Los resbalones son de las lesiones más comunes en la cocina. Sécalo ahora y pon una señal de piso mojado hasta que se seque.","Cuidado dónde pisas cerca del fregadero."]},
+ extinguisher:{haz:0,area:"walls",en:["Fire extinguisher","Mounted, visible, and unblocked. Exactly where it should be."],es:["Extintor","Montado, visible y sin obstáculos. Justo donde debe estar."]},
+ firstaid:{haz:0,area:"walls",en:["First aid kit","Stocked and easy to reach. No problem here."],es:["Botiquín","Equipado y fácil de alcanzar. Todo bien."]},
+ bucket:{haz:0,area:"prep",en:["Sanitizer bucket","Stored low and away from food, ready for wiping surfaces. Good practice."],es:["Cubeta de desinfectante","Guardada abajo y lejos de la comida, lista para limpiar superficies. Buena práctica."]},
+ container:{haz:0,area:"prep",en:["Labeled prep container","Labeled with the contents and date. That's how it's done."],es:["Recipiente etiquetado","Tiene el contenido y la fecha. Así se hace."]},
+ stove:{haz:0,area:"walls",en:["Sauté pan on the stove","Handle turned inward so nobody bumps it. Nice."],es:["Sartén en la estufa","El mango está hacia adentro para que nadie lo golpee. Bien."]},
+ trash:{haz:0,area:"sinks",en:["Lidded trash can","Covered and away from the prep area. All good."],es:["Bote de basura con tapa","Tapado y lejos del área de preparación. Todo bien."]},
+ dairy:{haz:0,area:"cooler",en:["Milk on the middle shelf","Ready-to-use dairy, sealed and in date. Fine where it is."],es:["Leche en el estante del medio","Lácteos sellados y vigentes. Está bien ahí."]}};
+const SHORT={fridge:["Raw chicken over salad","Pollo crudo sobre ensalada"],board:["Meat & lettuce, one board","Carne y lechuga, una tabla"],soup:["Soup cooling at 95°F","Sopa enfriándose a 95°F"],handsink:["Blocked hand sink","Lavamanos bloqueado"],chem:["Spray next to bread","Spray junto al pan"],knife:["Knife in sink water","Cuchillo en el agua"],floor:["Wet floor, no sign","Piso mojado sin señal"],
+ fridgeN:["Cooler shelves","Estantes de la cámara"],boardN:["Cutting board","Tabla de picar"],soupN:["Stockpot","Olla grande"],handsinkN:["Handwashing sink","Lavamanos"],chemN:["Spray bottle & bread","Botella de spray y pan"],knifeN:["Dish sink","Fregadero"],floorN:["Floor by the sink","Piso junto al fregadero"]};
+const sname=k=>SHORT[k]?SHORT[k][lang==="es"?1:0]:ITEMS[k][lang][0];
+const nname=k=>SHORT[k+"N"]?SHORT[k+"N"][lang==="es"?1:0]:ITEMS[k][lang][0];
+const HAZ=Object.keys(ITEMS).filter(k=>ITEMS[k].haz);
+let lang="en";
+const t=k=>T[lang][k]||T.en[k];
+function applyLang(){document.documentElement.lang=lang;document.querySelectorAll("[data-t]").forEach(el=>{const k=el.dataset.t;if(T[lang][k])el.textContent=T[lang][k]});
+  $("#lang-en").setAttribute("aria-pressed",lang==="en");$("#lang-es").setAttribute("aria-pressed",lang==="es");
+  $("#soundBtn span").textContent=sound?t("sound"):t("soundOff");$("#listBtn span").textContent=listOn?t("listBtnOff"):t("listBtn");
+  renderFound();renderStats();buildAreas();drawChart();if(!$("#end").hidden)showEnd(lastEndReason)}
+
+/* ---------------- sound (Web Audio, synthesized) ---------------- */
+let sound=true,ac=null;
+function tone(seq){if(!sound)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const t0=ac.currentTime;
+  seq.forEach(([f,d,type,v,at])=>{const o=ac.createOscillator(),g=ac.createGain();o.type=type||"sine";o.frequency.value=f;g.gain.setValueAtTime(0,t0+at);g.gain.linearRampToValueAtTime(v||.18,t0+at+.01);g.gain.exponentialRampToValueAtTime(.0001,t0+at+d);o.connect(g).connect(ac.destination);o.start(t0+at);o.stop(t0+at+d+.05)})}catch(e){}}
+const SFX={ding:()=>tone([[880,.18,"sine",.2,0],[1320,.32,"sine",.18,.09]]),buzz:()=>tone([[150,.22,"square",.07,0],[120,.22,"square",.06,.1]]),bell:()=>tone([[1568,.9,"triangle",.16,0],[2093,.9,"triangle",.1,.02]]),tick:()=>tone([[2000,.04,"square",.04,0]]),
+  done:()=>tone([[784,.15,"sine",.18,0],[988,.15,"sine",.18,.12],[1175,.15,"sine",.18,.24],[1568,.5,"sine",.2,.36]])};
+
+/* ---------------- xAPI-style statements ---------------- */
+const feed=[];
+function xapi(verb,obj,result){const s={actor:{name:"Portfolio visitor"},verb:{id:"http://adlnet.gov/expapi/verbs/"+verb,display:{"en-US":verb}},object:{id:"https://bianca-augustin.github.io/lessons/line-check#"+obj.replace(/\s+/g,"-").toLowerCase(),definition:{name:{"en-US":obj}}},timestamp:new Date().toISOString()};
+  if(result)s.result=result;feed.unshift(s);renderFeed()}
+function renderFeed(){const el=$("#feed");if(!feed.length){el.textContent=lang==="es"?"Esperando tu primera acción…":"Waiting for your first action…";return}
+  el.innerHTML=feed.slice(0,30).map(s=>{const j=JSON.stringify({actor:s.actor.name,verb:s.verb.display["en-US"],object:s.object.definition.name["en-US"],result:s.result,timestamp:s.timestamp.slice(11,19)});return j.replace(/"verb":"(\w+)"/,'"verb":"<span class="v">$1</span>"')}).join("\n")}
+
+/* ---------------- game state ---------------- */
+let state="intro",found=[],missed=new Set(),misses=0,timeLeft=180,timer=null,lastEndReason="",startAt=0,hintAt=0,hintsUsed=0;
+function renderStats(){$("#foundStat").textContent=`${found.length}/7 ${t("found")}`;$("#missStat").textContent=`${misses} ${t("misses")}`;$("#barFill").style.width=found.length/7*100+"%";
+  const m=Math.floor(timeLeft/60),s=String(timeLeft%60).padStart(2,"0");$("#clock").textContent=`${m}:${s}`;$("#clock").classList.toggle("low",timeLeft<=30);$("#foundCount").textContent=found.length}
+function renderFound(){const ol=$("#foundList");if(!found.length){ol.innerHTML=`<li class="empty" style="display:block">${t("none")}</li>`;return}
+  ol.innerHTML=found.map((k,i)=>`<li><span class="n">${i+1}</span><div><b>${ITEMS[k][lang][0]}</b>${ITEMS[k][lang][1]}</div></li>`).join("")}
+let toastT=null;
+function toast(kind,title,body){$("#toastBadge").className="badge "+(kind==="haz"?"haz":"safe");$("#toastBadge").textContent=kind==="haz"?t("hazard"):kind==="hint"?t("chef"):t("safe");
+  $("#toastTitle").textContent=title;$("#toastBody").textContent=body;$("#toast").classList.remove("gone");clearTimeout(toastT);toastT=setTimeout(()=>$("#toast").classList.add("gone"),kind==="haz"?7000:4500)}
+function inspect(id){if(state!=="play")return;const it=ITEMS[id];if(!it)return;
+  if(it.haz){if(found.includes(id)){toast("haz",t("already"),it[lang][0]);return}found.push(id);SFX.ding();addPin(id);toast("haz",it[lang][0],it[lang][1]);
+    xapi("identified","Hazard: "+it.en[0],{success:true});renderFound();renderStats();buildAreas();if(found.length===7)finish("all")}
+  else{if(!missed.has(id)){missed.add(id);misses++}SFX.buzz();toast("safe",it[lang][0],it[lang][1]);xapi("inspected",it.en[0]+" (no hazard)",{success:false});renderStats();buildAreas()}}
+function start(){state="play";found=[];missed=new Set();misses=0;timeLeft=180;startAt=Date.now();hintAt=Date.now();hintsUsed=0;$("#pins").innerHTML="";PINS.length=0;
+  $("#intro").hidden=true;$("#end").hidden=true;renderFound();renderStats();buildAreas();SFX.bell();xapi("launched","Line Check",null);
+  clearInterval(timer);timer=setInterval(()=>{timeLeft--;if(timeLeft<=10&&timeLeft>0)SFX.tick();renderStats();
+    if(Date.now()-hintAt>40000&&found.length<7)$("#hintBtn").hidden=false;if(timeLeft<=0)finish("time")},1000)}
+function finish(reason){if(state!=="play")return;state="end";clearInterval(timer);$("#hintBtn").hidden=true;lastEndReason=reason;SFX.done();
+  const score=found.length*100-misses*25+(reason==="all"?timeLeft:0);xapi("completed","Line Check",{success:found.length===7,score:{raw:score},duration:"PT"+Math.round((Date.now()-startAt)/1000)+"S"});
+  setTimeout(()=>showEnd(reason),reason==="all"?900:200);drawChart()}
+function showEnd(reason){const tb=reason==="all"?timeLeft:0,score=Math.max(0,found.length*100-misses*25+tb);
+  const grade=found.length===7&&misses<=1?t("g1"):found.length>=5?t("g2"):t("g3");const left=HAZ.filter(k=>!found.includes(k));
+  $("#receipt").innerHTML=`<h2>${t("rTitle")}</h2><p class="c">${t("rSub")}<br>${new Date().toLocaleString(lang==="es"?"es-US":"en-US",{dateStyle:"medium",timeStyle:"short"})}</p><hr>
+  <p class="c" style="font-weight:700">${reason==="all"?t("allFound"):t("timeUp")}</p><hr>
+  <div class="ln"><span>${t("rFound")} ${found.length} × 100</span><span>${found.length*100}</span></div>
+  <div class="ln"><span>${t("rMiss")} ${misses} × −25</span><span>−${misses*25}</span></div>
+  <div class="ln"><span>${t("rTime")}</span><span>${tb}</span></div><hr>
+  <div class="ln tot"><span>${t("rTotal")}</span><span>${score} ${t("pts")}</span></div>
+  <span class="stamp">${grade}</span>
+  ${left.length?`<hr><p style="margin:0;font-weight:700">${t("youMissed")}</p>${left.map(k=>`<div class="ln"><span>· ${ITEMS[k][lang][0]}</span></div>`).join("")}`:`<p class="c">${t("nothingMissed")}</p>`}
+  <div class="acts"><button class="btn red small" id="againBtn">${t("again")}</button><a class="btn small paper" href="#manager">${t("toMgr")}</a></div>`;
+  $("#end").hidden=false;$("#againBtn").onclick=()=>{$("#end").hidden=true;start()}}
+
+/* ---------------- manager chart ---------------- */
+function drawChart(){const W=560,rowH=34,top=8,left=220,barW=W-left-70,H=top+HAZ.length*rowH+24;const sorted=[...HAZ].sort((a,b)=>ITEMS[a].cohort-ITEMS[b].cohort);
+  let s=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="min-width:460px;font-family:var(--f-body)" role="img" aria-label="${t("c1")}">`;
+  [0,25,50,75,100].forEach(v=>{const x=left+barW*v/100;s+=`<line x1="${x}" y1="${top-4}" x2="${x}" y2="${H-20}" stroke="#141414" stroke-opacity=".12"/><text x="${x}" y="${H-4}" font-size="11" text-anchor="middle" fill="#4A4A4A">${v}%</text>`});
+  sorted.forEach((k,i)=>{const y=top+i*rowH,p=ITEMS[k].cohort,you=state==="end"||found.length?found.includes(k):null;
+    s+=`<text x="${left-10}" y="${y+20}" font-size="13" text-anchor="end" fill="#141414" font-weight="700">${sname(k)}</text>`;
+    s+=`<rect x="${left}" y="${y+6}" width="${barW*p/100}" height="20" rx="4" fill="#E5432D" stroke="#141414" stroke-width="2"/><text x="${left+barW*p/100+6}" y="${y+21}" font-size="12.5" font-weight="700" fill="#141414">${p}%</text>`;
+    if(you!==null)s+=`<circle cx="${W-14}" cy="${y+16}" r="8" fill="${you?"#1F7A4D":"#fff"}" stroke="#141414" stroke-width="2"/>`});
+  s+="</svg>";$("#chart").innerHTML=s}
+
+/* ---------------- list mode ---------------- */
+let listOn=false;
+function buildAreas(){const g={cooler:[],prep:[],sinks:[],walls:[]};Object.keys(ITEMS).forEach(k=>g[ITEMS[k].area].push(k));
+  $("#areas").innerHTML=Object.entries(g).map(([a,ks])=>`<div class="area"><h3>${t("area_"+a)}</h3>${ks.map(k=>`<button data-k="${k}" class="${found.includes(k)?"found":missed.has(k)?"safe-seen":""}">${nname(k)}</button>`).join("")}</div>`).join("");
+  $("#areas").querySelectorAll("button").forEach(b=>b.onclick=()=>{if(state==="intro")start();inspect(b.dataset.k)})}
+$("#listBtn").onclick=()=>{listOn=!listOn;$("#listMode").hidden=!listOn;$("#listBtn").setAttribute("aria-pressed",listOn);applyLang()};
+$("#lang-en").onclick=()=>{lang="en";applyLang();renderFeed()};$("#lang-es").onclick=()=>{lang="es";applyLang();renderFeed()};
+$("#soundBtn").onclick=()=>{sound=!sound;$("#soundBtn").setAttribute("aria-pressed",sound);applyLang()};
+$("#startBtn").onclick=start;
+
+/* ---------------- 3D kitchen ---------------- */
+const PINS=[];const ANCHORS={};let flyTo=null;
+function addPin(id){const el=document.createElement("div");el.className="pin pop";el.textContent=found.length;$("#pins").appendChild(el);PINS.push({id,el})}
+let renderer,scene,camera,controls,ray,mouse,clickables=[],steam=[];
+function initThree(){
+  if(!window.THREE)throw new Error("no three");
+  const stage=$("#stage");renderer=new THREE.WebGLRenderer({antialias:true});renderer.setPixelRatio(Math.min(devicePixelRatio,2));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+  renderer.outputEncoding=THREE.sRGBEncoding;stage.prepend(renderer.domElement);renderer.domElement.setAttribute("aria-label","3D kitchen. Use Inspect from a list for a keyboard-friendly version.");renderer.domElement.setAttribute("role","img");
+  scene=new THREE.Scene();scene.background=new THREE.Color("#BFE3D6");scene.fog=new THREE.Fog("#BFE3D6",18,34);
+  camera=new THREE.PerspectiveCamera(42,1,.1,100);camera.position.set(3.4,4.6,6.2);
+  controls=new THREE.OrbitControls(camera,renderer.domElement);controls.target.set(-1.1,1,-2.5);controls.enableDamping=true;controls.dampingFactor=.08;controls.enablePan=false;
+  controls.minDistance=5;controls.maxDistance=12;controls.minPolarAngle=.55;controls.maxPolarAngle=1.38;controls.minAzimuthAngle=-.15;controls.maxAzimuthAngle=1.25;
+  scene.add(new THREE.HemisphereLight("#ffffff","#5d7d76",.75));const sun=new THREE.DirectionalLight("#fff6e0",.85);sun.position.set(4,9,6);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
+  Object.assign(sun.shadow.camera,{left:-9,right:9,top:9,bottom:-9});sun.shadow.bias=-.0008;scene.add(sun);
+  const grad=new THREE.DataTexture(new Uint8Array([110,190,255]),3,1,THREE.LuminanceFormat);grad.minFilter=grad.magFilter=THREE.NearestFilter;grad.needsUpdate=true;
+  const mat=(c,o={})=>new THREE.MeshToonMaterial(Object.assign({color:c,gradientMap:grad},o));
+  const edgeMat=new THREE.LineBasicMaterial({color:"#141414"});
+  function add(geo,color,pos,o={}){const m=new THREE.Mesh(geo,o.material||mat(color,o.mo||{}));m.position.set(...pos);if(o.rot)m.rotation.set(...o.rot);m.castShadow=o.shadow!==false;m.receiveShadow=true;
+    if(o.edges!==false){const e=new THREE.LineSegments(new THREE.EdgesGeometry(geo,30),edgeMat);m.add(e)}(o.parent||scene).add(m);if(o.id){m.userData.id=o.id;clickables.push(m)}return m}
+  const B=(w,h,d)=>new THREE.BoxGeometry(w,h,d),C=(rt,rb,h,s=24)=>new THREE.CylinderGeometry(rt,rb,h,s);
+  function canvasTex(w,h,draw){const c=document.createElement("canvas");c.width=w;c.height=h;draw(c.getContext("2d"),w,h);const tx=new THREE.CanvasTexture(c);tx.encoding=THREE.sRGBEncoding;tx.anisotropy=4;return tx}
+  function label(text,w,h,pos,o={}){const tx=canvasTex(256*w,256*h,(g,W,H)=>{g.fillStyle=o.bg||"#FFF9EA";g.fillRect(0,0,W,H);g.strokeStyle="#141414";g.lineWidth=10;g.strokeRect(5,5,W-10,H-10);g.fillStyle=o.fg||"#141414";g.font=`bold ${o.size||60}px Atkinson Hyperlegible, Arial`;g.textAlign="center";g.textBaseline="middle";text.split("\n").forEach((l,i,a)=>g.fillText(l,W/2,H/2+(i-(a.length-1)/2)*(o.size||60)*1.1))});
+    const m=new THREE.Mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:tx}));m.position.set(...pos);if(o.rot)m.rotation.set(...o.rot);(o.parent||scene).add(m);if(o.id){m.userData.id=o.id;clickables.push(m)}return m}
+  // floor & walls
+  const floorTx=canvasTex(512,512,(g,W)=>{const n=8,s=W/n;for(let i=0;i<n;i++)for(let j=0;j<n;j++){g.fillStyle=(i+j)%2?"#E8DFC9":"#2F6F66";g.fillRect(i*s,j*s,s,s)}});floorTx.wrapS=floorTx.wrapT=THREE.RepeatWrapping;floorTx.repeat.set(1.6,1.3);
+  add(new THREE.PlaneGeometry(12,10),"#fff",[0,0,0],{rot:[-Math.PI/2,0,0],material:new THREE.MeshToonMaterial({map:floorTx,gradientMap:grad}),edges:false,shadow:false});
+  const tileTx=canvasTex(512,256,(g,W,H)=>{g.fillStyle="#F4F1E6";g.fillRect(0,0,W,H);g.strokeStyle="#9DBDB2";g.lineWidth=4;for(let y=0;y<=H;y+=32){g.beginPath();g.moveTo(0,y);g.lineTo(W,y);g.stroke();for(let x=((y/32)%2)*32;x<=W;x+=64){g.beginPath();g.moveTo(x,y);g.lineTo(x,y+32);g.stroke()}}});
+  tileTx.wrapS=tileTx.wrapT=THREE.RepeatWrapping;tileTx.repeat.set(3,1.2);
+  const wallM=new THREE.MeshToonMaterial({map:tileTx,gradientMap:grad});
+  add(B(12,4,.2),"#fff",[0,2,-5.1],{material:wallM});const lw=add(B(.2,4,10),"#fff",[-6.1,2,0],{material:wallM.clone()});
+  add(B(12,.25,.24),"#2F6F66",[0,4.05,-5.1]);add(B(.24,.25,10),"#2F6F66",[-6.1,4.05,0]);
+  // back counter
+  add(B(5.6,.85,1),"#2F6F66",[1.1,.43,-4.4]);add(B(5.8,.08,1.1),"#C7CFD1",[1.1,.89,-4.4]);
+  add(B(5.4,.04,.02),"#141414",[1.1,.6,-3.89],{edges:false,shadow:false});
+  // cutting board w/ steak + lettuce (hazard: board)
+  const board=new THREE.Group();board.position.set(-.6,.95,-4.25);scene.add(board);
+  add(B(1.1,.06,.62),"#7CC28F",[0,0,0],{parent:board,id:"board"});
+  add(new THREE.SphereGeometry(.17,16,12),"#B3343B",[-.26,.1,0],{parent:board,id:"board",rot:[0,0,0]}).scale.set(1.5,.55,1.1);
+  [[.2,.12,.05],[.32,.13,-.1],[.27,.12,.14],[.38,.11,.06]].forEach(p=>add(new THREE.SphereGeometry(.11,12,10),"#8CCF4D",p,{parent:board,id:"board"}));
+  ANCHORS.board=new THREE.Vector3(-.6,1.15,-4.25);
+  // chemical spray next to bread (hazard: chem)
+  add(C(.09,.11,.42),"#3D8BFF",[.45,1.14,-4.15],{id:"chem"});add(B(.08,.1,.18),"#141414",[.45,1.4,-4.08],{id:"chem"});add(C(.05,.07,.08),"#F3F3F3",[.45,1.38,-4.15],{id:"chem"});
+  label("CLEAN",.22,.1,[.45,1.12,-4.03],{size:70,parent:scene,id:"chem",bg:"#fff"});
+  const bread=add(new THREE.SphereGeometry(.2,20,14),"#D99A4E",[1.0,1.08,-4.2],{id:"chem"});bread.scale.set(1.8,.75,.85);
+  ANCHORS.chem=new THREE.Vector3(.6,1.25,-4.15);
+  // stockpot with thermometer (hazard: soup)
+  add(C(.42,.4,.62,28),"#C7CFD1",[2.25,1.24,-4.25],{id:"soup"});add(C(.43,.43,.05,28),"#7F8B8E",[2.25,1.56,-4.25],{id:"soup"});
+  add(C(.015,.015,.6,8),"#7F8B8E",[2.45,1.7,-4.15],{rot:[0,0,-.25],id:"soup"});add(C(.07,.07,.03,16),"#fff",[2.52,1.98,-4.13],{rot:[Math.PI/2,0,0],id:"soup"});
+  label("95°F",.36,.18,[2.25,2.18,-4.25],{size:96,fg:"#E5432D",id:"soup"});
+  for(let i=0;i<6;i++){const s=new THREE.Mesh(new THREE.SphereGeometry(.09+.03*(i%3),12,10),new THREE.MeshBasicMaterial({color:"#ffffff",transparent:true,opacity:.6}));s.position.set(2.25,1.7,-4.25);s.userData.ph=i/6;scene.add(s);steam.push(s)}
+  ANCHORS.soup=new THREE.Vector3(2.25,1.6,-4.25);
+  // labeled container (safe)
+  add(B(.36,.3,.3),"#F3F3F3",[3.3,1.08,-4.25],{id:"container",mo:{transparent:true,opacity:.92}});add(B(.38,.05,.32),"#E5432D",[3.3,1.25,-4.25],{id:"container"});
+  label("SALSA 10/31",.32,.11,[3.3,1.08,-4.09],{size:46,id:"container"});
+  // sanitizer bucket under counter (safe)
+  add(C(.2,.16,.32),"#E5432D",[1.6,.17,-3.55],{id:"bucket"});add(new THREE.TorusGeometry(.17,.015,6,20,Math.PI),"#141414",[1.6,.36,-3.55],{id:"bucket"});
+  // stove (safe) with pan handle inward
+  add(B(1.3,.9,1),"#3A3F42",[4.6,.45,-4.4]);add(B(1.3,.06,1),"#141414",[4.6,.92,-4.4]);
+  [[4.3,-4.2],[4.9,-4.2],[4.3,-4.6],[4.9,-4.6]].forEach(([x,z])=>add(C(.17,.17,.03),"#5A5F62",[x,.97,z],{edges:false}));
+  add(C(.25,.2,.1,24),"#2B2B2B",[4.3,1.02,-4.2],{id:"stove"});add(B(.08,.04,.42),"#2B2B2B",[4.3,1.05,-4.6],{id:"stove"});
+  // hood
+  add(B(1.6,.5,1),"#C7CFD1",[4.6,3.3,-4.5]);
+  // handwashing sink with boxes (hazard: handsink)
+  add(B(.7,.35,.5),"#C7CFD1",[-2.7,1.05,-4.75],{id:"handsink"});add(C(.03,.03,.3,8),"#7F8B8E",[-2.7,1.35,-4.9],{id:"handsink"});
+  label("HANDWASHING\nONLY",.8,.32,[-2.7,1.85,-4.99],{size:44,id:"handsink",bg:"#fff"});
+  add(B(.8,.55,.6),"#C58A4B",[-2.75,.28,-4.1],{id:"handsink"});add(B(.7,.45,.55),"#B37A3E",[-2.6,.78,-4.05],{id:"handsink",rot:[0,.15,0]});add(B(.55,.35,.45),"#C58A4B",[-2.8,1.18,-4.05],{id:"handsink",rot:[0,-.1,0]});
+  ANCHORS.handsink=new THREE.Vector3(-2.7,1,-4.4);
+  // reach-in cooler (hazard: fridge)
+  const fr=new THREE.Group();fr.position.set(-4.85,0,-4.25);scene.add(fr);
+  const fm="#D8DEE0";add(B(1.5,.1,1),fm,[0,.05,0],{parent:fr});add(B(1.5,.12,1),fm,[0,2.4,0],{parent:fr});add(B(.1,2.4,1),fm,[-.7,1.2,0],{parent:fr});add(B(.1,2.4,1),fm,[.7,1.2,0],{parent:fr});add(B(1.5,2.4,.1),"#B8C2C5",[0,1.2,-.45],{parent:fr});
+  [.65,1.25,1.85].forEach(y=>add(B(1.3,.04,.85),"#9AA5A8",[0,y,0],{parent:fr}));
+  add(B(.6,.16,.42),"#F2A7A0",[-.2,1.95,.05],{parent:fr,id:"fridge"});label("RAW\nCHICKEN",.36,.18,[-.2,1.95,.27],{size:56,parent:fr,id:"fridge",fg:"#E5432D"});
+  add(C(.28,.2,.22,20),"#FFFFFF",[.15,1.39,.05],{parent:fr,id:"fridge"});[[.05,0],[.2,.06],[.18,-.08],[.3,.0]].forEach(([x,z])=>add(new THREE.SphereGeometry(.09,10,8),"#8CCF4D",[x,1.5,z+.05],{parent:fr,id:"fridge"}));
+  [[-.35,.0],[-.15,.0]].forEach(([x])=>add(B(.16,.34,.16),"#FFFFFF",[x,.84,.05],{parent:fr,id:"dairy"}));
+  const glass=new THREE.Mesh(B(1.3,2.25,.03),new THREE.MeshBasicMaterial({color:"#cfeef5",transparent:true,opacity:.14}));glass.position.set(0,1.25,.5);fr.add(glass);
+  ANCHORS.fridge=new THREE.Vector3(-4.85,1.6,-4.1);
+  // three-compartment sink on left wall w/ knife (hazard: knife)
+  const sk=new THREE.Group();sk.position.set(-5.5,0,.3);scene.add(sk);
+  add(B(1,.9,2.6),"#C7CFD1",[0,.45,0],{parent:sk});
+  [-.85,0,.85].forEach(z=>{add(B(.8,.04,.75),"#5FB8D9",[0,.88,z],{parent:sk,id:"knife",mo:{transparent:true,opacity:.85},edges:false});add(B(.84,.06,.04),"#7F8B8E",[0,.92,z+.4],{parent:sk})});
+  add(B(.06,.06,.3),"#141414",[.12,.93,-.05],{parent:sk,id:"knife",rot:[.5,0,.2]});
+  add(C(.03,.03,.5,8),"#7F8B8E",[-.42,1.15,0],{parent:sk});ANCHORS.knife=new THREE.Vector3(-5.5,1,.3);
+  // puddle (hazard: floor)
+  const pud=add(new THREE.CircleGeometry(.75,32),"#7FD0F0",[-4.3,.012,.9],{rot:[-Math.PI/2,0,0],id:"floor",mo:{transparent:true,opacity:.8},edges:false,shadow:false});pud.scale.set(1.3,.8,1);
+  add(new THREE.CircleGeometry(.25,20),"#7FD0F0",[-3.4,.013,1.6],{rot:[-Math.PI/2,0,0],id:"floor",mo:{transparent:true,opacity:.8},edges:false,shadow:false});
+  ANCHORS.floor=new THREE.Vector3(-4.2,.1,.9);
+  // trash (safe)
+  add(C(.3,.26,.8),"#7F8B8E",[-5.5,.4,2.4],{id:"trash"});add(C(.32,.32,.07),"#5A5F62",[-5.5,.84,2.4],{id:"trash"});
+  // first aid kit (safe) and extinguisher (safe) on left wall
+  add(B(.12,.45,.6),"#FFFFFF",[-5.95,1.8,-2.2],{id:"firstaid"});label("+",.3,.3,[-5.88,1.8,-2.2],{size:200,fg:"#E5432D",rot:[0,Math.PI/2,0],id:"firstaid"});
+  add(C(.14,.14,.6),"#E5432D",[-5.8,1.0,3.6],{id:"extinguisher"});add(C(.06,.08,.12,10),"#141414",[-5.8,1.36,3.6],{id:"extinguisher"});add(B(.06,.3,.3),"#141414",[-5.97,1.0,3.6],{id:"extinguisher"});
+  label("FIRE",.3,.14,[-5.95,1.6,3.6],{size:80,fg:"#fff",bg:"#E5432D",rot:[0,Math.PI/2,0],id:"extinguisher"});
+  // clock + shelf props
+  const clk=add(C(.32,.32,.05,32),"#FFF9EA",[-.8,3.1,-4.98],{rot:[Math.PI/2,0,0]});add(B(.03,.22,.02),"#141414",[-.8,3.18,-4.94],{edges:false});add(B(.16,.03,.02),"#141414",[-.74,3.1,-4.94],{edges:false,rot:[0,0,-.9]});
+  add(B(3.4,.06,.5),"#C7CFD1",[1.6,2.5,-4.75]);[[.3,"#E5432D"],[.9,"#F3B53F"],[1.5,"#8CCF4D"],[2.1,"#FFF9EA"],[2.7,"#3D8BFF"]].forEach(([x,c])=>add(C(.17,.17,.36,16),c,[x,2.72,-4.75]));
+  // island prep table (front, for depth)
+  add(B(2.6,.08,1.2),"#C7CFD1",[.8,.92,-1]);[[-.4,-.5],[2,-.5],[-.4,-1.5],[2,-1.5]].forEach(([x,z])=>add(B(.08,.9,.08),"#7F8B8E",[x,.45,z]));add(B(2.4,.04,1),"#9AA5A8",[.8,.25,-1]);
+  add(B(.5,.08,.35),"#F3B53F",[.2,1,-1]);add(C(.22,.22,.14,20),"#FFFFFF",[1.2,1.03,-1.1]);
+
+  ray=new THREE.Raycaster();mouse=new THREE.Vector2();
+  const resize=()=>{const r=stage.getBoundingClientRect();renderer.setSize(r.width,r.height,false);camera.aspect=r.width/r.height;camera.fov=r.width<640?55:42;camera.updateProjectionMatrix()};
+  new ResizeObserver(resize).observe(stage);resize();
+  let down=null;
+  const pick=e=>{const r=renderer.domElement.getBoundingClientRect();mouse.set((e.clientX-r.left)/r.width*2-1,-(e.clientY-r.top)/r.height*2+1);ray.setFromCamera(mouse,camera);const h=ray.intersectObjects(clickables,false)[0];return h?h.object.userData.id:null};
+  renderer.domElement.addEventListener("pointerdown",e=>{down=[e.clientX,e.clientY]});
+  renderer.domElement.addEventListener("pointerup",e=>{if(!down)return;const moved=Math.hypot(e.clientX-down[0],e.clientY-down[1]);down=null;if(moved>6)return;const id=pick(e);if(id){if(state==="intro")return;inspect(id)}});
+  renderer.domElement.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")return;const id=state==="play"?pick(e):null;const tip=$("#tip");stage.classList.toggle("hovering",!!id);
+    if(id){const r=stage.getBoundingClientRect();tip.hidden=false;tip.style.left=(e.clientX-r.left)+"px";tip.style.top=(e.clientY-r.top)+"px";tip.textContent=nname(id)}else tip.hidden=true});
+  renderer.domElement.addEventListener("pointerleave",()=>{$("#tip").hidden=true});
+  const v=new THREE.Vector3();
+  (function loop(time){requestAnimationFrame(loop);
+    if(flyTo){controls.target.lerp(flyTo.target,.06);camera.position.lerp(flyTo.pos,.06);if(camera.position.distanceTo(flyTo.pos)<.05)flyTo=null}
+    controls.update();
+    steam.forEach(s=>{const p=((time/2400)+s.userData.ph)%1;s.position.y=1.7+p*1.1;s.position.x=2.25+Math.sin(p*6+s.userData.ph*9)*.12;s.material.opacity=.55*(1-p);s.scale.setScalar(.6+p)});
+    const r=stage.getBoundingClientRect();
+    PINS.forEach(p=>{v.copy(ANCHORS[p.id]).project(camera);p.el.style.left=((v.x+1)/2*r.width)+"px";p.el.style.top=((1-v.y)/2*r.height-28)+"px";p.el.style.display=v.z<1?"grid":"none"});
+    renderer.render(scene,camera)})(0);
+}
+$("#hintBtn").onclick=()=>{const left=HAZ.filter(k=>!found.includes(k));if(!left.length)return;const k=left[0];hintsUsed++;hintAt=Date.now();$("#hintBtn").hidden=true;
+  toast("hint",t("chef"),ITEMS[k][lang][2]);xapi("asked","Hint: "+ITEMS[k].en[0],null);
+  if(camera&&ANCHORS[k]){const a=ANCHORS[k];flyTo={target:a.clone(),pos:new THREE.Vector3(a.x+3.4,a.y+2.6,a.z+5.2)}}};
+
+try{initThree()}catch(e){console.error("3D init failed:",e&&e.message);listOn=true;$("#listMode").hidden=false;$("#listBtn").hidden=true;$(".hud").hidden=true}
+applyLang();renderFeed();drawChart();
+</script>
+</body>
+</html>
