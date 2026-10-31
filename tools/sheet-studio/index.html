@@ -258,6 +258,25 @@ tr.fl td.auto{animation:fl 1.2s ease-out}
 .bigcta{margin-top:24px;background:var(--surface);border:2px solid var(--ink);border-radius:4px;padding:24px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center;box-shadow:7px 7px 0 var(--green)}
 .bigcta h3{margin:0;font-stretch:72%;font-weight:800;text-transform:uppercase;font-size:clamp(1.6rem,3.4vw,2.3rem);line-height:1}
 .bigcta p{margin:8px 0 0;color:var(--ink-2)}
+.getfile{border:0;border-radius:4px;background:#17603F;color:#fff;font-weight:700;font-size:12.5px;padding:5px 10px;cursor:pointer;white-space:nowrap}
+.getfile:hover{background:#1E7A51}
+dialog.gf{border:2px solid var(--ink);border-radius:6px;padding:0;max-width:min(520px,calc(100% - 32px));width:100%;background:var(--surface);color:var(--ink);box-shadow:8px 8px 0 var(--green)}
+dialog.gf::backdrop{background:rgba(18,21,18,.5)}
+.gf-in{padding:22px;display:grid;gap:14px}
+.gf-in h2{margin:0;font-stretch:72%;font-weight:800;text-transform:uppercase;font-size:1.7rem;line-height:1}
+.gf-in p{margin:0;color:var(--ink-2);font-size:15px}
+.gf-sum{background:var(--paper);border:1.5px solid var(--line);border-radius:4px;padding:12px 14px;font-size:14px;display:grid;gap:4px}
+.gf-sum div{display:grid;grid-template-columns:110px 1fr;gap:8px}
+.gf-sum span{color:var(--ink-3);font-weight:700;font-size:12.5px;text-transform:uppercase;letter-spacing:.04em;padding-top:1px}
+.gf-fmt{display:flex;gap:8px;flex-wrap:wrap}
+.gf-fmt label{display:flex;gap:7px;align-items:center;border:1.5px solid var(--line);border-radius:4px;padding:8px 12px;cursor:pointer;font-weight:600;font-size:14px}
+.gf-fmt label:has(input:checked){border-color:var(--green);background:var(--green-soft)}
+.gf-fmt input{accent-color:var(--green)}
+.gf-in textarea{min-height:64px}
+.gf-in input[type=email]{font:inherit;font-weight:500;font-size:15px;padding:9px 11px;border:1.5px solid var(--line);border-radius:4px;background:#fff;color:var(--ink)}
+.gf-acts{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.gf-x{position:absolute;right:12px;top:10px;border:0;background:none;font-size:22px;cursor:pointer;color:var(--ink-2);line-height:1}
+.gf-note{font-size:12.5px;color:var(--ink-3)}
 .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#1C211C;color:#fff;padding:10px 16px;border-radius:4px;font-weight:700;font-size:14.5px;z-index:20;transition:opacity .3s;max-width:calc(100% - 32px);box-shadow:0 8px 24px rgba(0,0,0,.25)}
 .toast.gone{opacity:0;pointer-events:none}
 @media (max-width:1150px){.bench{grid-template-columns:minmax(0,1fr)}.hero{grid-template-columns:1fr}.autos{grid-template-columns:1fr 1fr}.cards{grid-template-columns:1fr 1fr}}
@@ -345,15 +364,16 @@ tr.fl td.auto{animation:fl 1.2s ease-out}
         <h2><i>03</i>Make it yours</h2>
         <div class="cta-box">
           <b>This is a live demo</b>
-          <p>Everything here is interactive, but downloads are turned off. I'll build a custom version around your team's real process, in Excel, Google Sheets, or as a web tool like this one.</p>
-          <a class="btn" href="mailto:bianca.augustin0318@gmail.com?subject=Custom%20spreadsheet">Request a custom spreadsheet</a>
+          <p>Everything here is interactive, but downloads are turned off. Like what you built? I can turn it into a real Excel or Google Sheets file, customized to your team's process.</p>
+          <button class="btn" data-getfile>📥 Want this as a real file?</button>
+          <small style="opacity:.9">I'll send you a version of exactly what you built, customized to fit your team.</small>
         </div>
       </div>
     </div>
 
     <div>
       <div class="sheet" id="sheet">
-        <div class="ribbon"><span class="file"><i>X</i><span id="fname"></span></span><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="live" id="live">Live preview</span><span class="demo-tag">DEMO · HAND-CODED BY BIANCA AUGUSTIN</span></span></div>
+        <div class="ribbon"><span class="file"><i>X</i><span id="fname"></span></span><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span class="live" id="live">Live preview</span><span class="demo-tag">DEMO · HAND-CODED BY BIANCA AUGUSTIN</span><button class="getfile" data-getfile>📥 Want this as a real file?</button></span></div>
         <div class="toolbar"><span style="display:flex;gap:8px;align-items:center">🎨 Theme <span class="dots" id="themes2" role="group" aria-label="Theme"></span></span><span class="legend-cells"><span><i style="background:var(--c)"></i>You type</span><span><i style="background:#fff"></i>Automatic</span></span></div>
         <div class="fx"><span id="cellRef">A1</span><em>fx</em><span id="cellVal">Click any cell to see the formula behind it</span></div>
         <div class="view" id="view"></div>
@@ -394,6 +414,17 @@ tr.fl td.auto{animation:fl 1.2s ease-out}
     </div>
   </section>
 </main>
+<dialog class="gf" id="gf" aria-labelledby="gfTitle"><div class="gf-in" style="position:relative">
+  <button class="gf-x" id="gfClose" aria-label="Close">×</button>
+  <h2 id="gfTitle">Get this as a real spreadsheet</h2>
+  <p>I'll build a working version of what you just made, adjusted to your team's real process. Here's what I'll start from:</p>
+  <div class="gf-sum" id="gfSum"></div>
+  <div><div class="lbl" style="margin-bottom:6px">Format</div><div class="gf-fmt"><label><input type="radio" name="gffmt" value="Excel" checked>Excel (.xlsx)</label><label><input type="radio" name="gffmt" value="Google Sheets">Google Sheets</label><label><input type="radio" name="gffmt" value="Not sure yet">Not sure yet</label></div></div>
+  <label class="f" style="display:grid;gap:6px;font-size:13px;font-weight:700;color:var(--ink-2)">Your email (optional, so I can match your build)<input type="email" id="gfEmail" autocomplete="email" placeholder="you@company.com"></label>
+  <label class="f" style="display:grid;gap:6px;font-size:13px;font-weight:700;color:var(--ink-2)">Anything to change or add? (optional)<textarea id="gfNote" placeholder="e.g. Add a column for supervisor sign-off, use our school colors…"></textarea></label>
+  <div class="gf-acts"><a class="btn primary" id="gfSend" href="#">Email Bianca with these details</a><button class="btn" id="gfCopy">Copy details</button></div>
+  <span class="gf-note">Opens your email app with everything filled in. When you send your request, a copy of your build's settings comes to me automatically so I can see exactly what you made. I'll reply with a quote and timeline, and the finished file comes after that. You can also reach me at bianca.augustin0318@gmail.com.</span>
+</div></dialog>
 <div class="toast gone" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -881,7 +912,49 @@ function build(){C=null;LOG=parse($("#desc").value);buildData();renderAll();rend
 $("#build").addEventListener("click",build);
 document.querySelectorAll("[data-ex]").forEach(b=>b.addEventListener("click",()=>{$("#desc").value=b.dataset.ex;build()}));
 $("#desc").addEventListener("keydown",e=>{if(e.key==="Enter"&&(e.metaKey||e.ctrlKey)){e.preventDefault();build()}});
-build();
+/* ---------- "want this as a real file?" request ---------- */
+function buildSummary(){const p=P(),pr=progressOf(D.trackers[0].rows,goalMult()),feats=FEATS.filter(([k])=>C.f[k]&&featOk(k)).map(f=>f[1]);
+ const rows=[["Title",C.title],["Type",p.label],["Columns",COLS.filter(c=>c.k!=="#").map(c=>c.label).join(", ")],["Tabs",tabList().map(x=>x.label).join(", ")]];
+ if(starsKind()||pr.kind==="limit")rows.push(["Goal",pr.kind==="limit"?fmtU(C.goal.value,"dollars")+" budget":fmtP(pr.goal/goalMult(),pr)+(pr.kind==="count"?" "+pr.unit:"")+(groups().length>1?" per person":"")]);
+ if(C.people.length)rows.push(["People",C.people.join(", ")]);
+ rows.push(["Features",feats.join(", ")],["Theme",THEMES[C.theme].n+" "+C.icon]);return rows}
+/* Saved-build link: the whole build (settings + data) packed into the URL hash, so Bianca can reopen exactly what a visitor made. */
+const B64=u=>{let b="";u.forEach(x=>b+=String.fromCharCode(x));return btoa(b).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")};
+const UNB64=t=>{const b=atob(t.replace(/-/g,"+").replace(/_/g,"/"));return Uint8Array.from(b,c=>c.charCodeAt(0))};
+async function packState(){const json=JSON.stringify({v:1,desc:$("#desc").value,C,D,LOG},function(k,v){return this[k] instanceof Date?{$d:this[k].getTime()}:v});
+ try{const buf=await new Response(new Blob([json]).stream().pipeThrough(new CompressionStream("deflate-raw"))).arrayBuffer();return "z"+B64(new Uint8Array(buf))}
+ catch(e){return "j"+B64(new TextEncoder().encode(json))}}
+async function unpackState(t){const raw=UNB64(t.slice(1));
+ const json=t[0]==="z"?await new Response(new Blob([raw]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).text():new TextDecoder().decode(raw);return JSON.parse(json,(k,v)=>v&&typeof v==="object"&&"$d" in v?new Date(v.$d):v)}
+async function restoreFromHash(){const m=location.hash.match(/^#build=([zj][\w-]+)$/);if(!m)return false;
+ try{const st=await unpackState(m[1]);$("#desc").value=st.desc||"";C=st.C;D=st.D;LOG=st.LOG||[];lastCounts={};renderAll();renderLog();VIEW="t0";render();toast("Opened a saved build");return true}
+ catch(e){return false}}
+function dataText(){const L=[];D.trackers.forEach((t,i)=>{L.push(`--- ${t.name?t.name+"'s ":""}${P().label} tab (${t.rows.length} rows) ---`);
+ t.rows.forEach((r,j)=>{const v=Object.entries(r).filter(([k,x])=>x!==""&&x!=null&&typeof x!=="object").map(([k,x])=>`${k}: ${x}`).join(" | ");if(v)L.push(`${j+1}. ${v}`)})});
+ if(D.lib.length){L.push("--- Library ---");D.lib.forEach((x,j)=>L.push(`${j+1}. ${x.name} | ${x.cat} | ${x.m}${x.info?" | "+x.info:""}`))}
+ return L.join("\n").slice(0,20000)}
+let GF_LINK="",GF_SENT=false;
+function openGF(){const rows=buildSummary();$("#gfSum").innerHTML=rows.map(([k,v])=>`<div><span>${esc(k)}</span><b style="font-weight:600">${esc(v)}</b></div>`).join("");GF_SENT=false;GF_LINK="";
+ packState().then(t=>{GF_LINK=location.origin+location.pathname+"#build="+t}).catch(()=>{});$("#gf").showModal()}
+/* Sends Bianca a separate, automatic email with the visitor's build. The visitor never receives a file. */
+function sendBuildToBianca(){if(GF_SENT)return;GF_SENT=true;
+ const fmt=document.querySelector('input[name="gffmt"]:checked').value,em=$("#gfEmail").value.trim();
+ const body={_subject:"Sheet Studio build: "+C.title,_template:"box",_captcha:"false",
+  "Visitor email":em||"(not given)","Format wanted":fmt,"Their description":$("#desc").value.trim()||"(none)",
+  "Changes or additions":$("#gfNote").value.trim()||"(none)",
+  "Summary":buildSummary().map(([k,v])=>`${k}: ${v}`).join("\n"),
+  "Open their exact build":GF_LINK||"(link unavailable on this browser)","Data in their sheet":dataText()};
+ if(/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(em))body._replyto=em;
+ const payload=JSON.stringify(body);
+ try{fetch("https://formsubmit.co/ajax/bianca.augustin0318@gmail.com",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:payload,keepalive:payload.length<60000}).catch(()=>{})}catch(e){}}
+function gfText(){const fmt=document.querySelector('input[name="gffmt"]:checked').value,note=$("#gfNote").value.trim();
+ return `Hi Bianca,\n\nI built this in Sheet Studio and would like it as a real spreadsheet.\n\nFormat: ${fmt}${$("#gfEmail").value.trim()?"\nMy email: "+$("#gfEmail").value.trim():""}\nMy description: ${$("#desc").value.trim()||"(none)"}\n\n`+buildSummary().map(([k,v])=>`${k}: ${v}`).join("\n")+(note?`\n\nChanges or additions: ${note}`:"")+`\n\nThanks!`}
+document.querySelectorAll("[data-getfile]").forEach(b=>b.addEventListener("click",openGF));
+$("#gfClose").onclick=()=>$("#gf").close();
+$("#gf").addEventListener("click",e=>{if(e.target===$("#gf"))$("#gf").close()});
+$("#gfSend").addEventListener("click",e=>{e.preventDefault();sendBuildToBianca();const body=gfText().slice(0,1800);location.href="mailto:bianca.augustin0318@gmail.com?subject="+encodeURIComponent("Spreadsheet request: "+C.title)+"&body="+encodeURIComponent(body);toast("Opening your email app…")});
+$("#gfCopy").addEventListener("click",async()=>{sendBuildToBianca();try{await navigator.clipboard.writeText(gfText());toast("Copied. Paste it into an email to bianca.augustin0318@gmail.com")}catch(e){toast("Couldn't copy here. Email bianca.augustin0318@gmail.com")}});
+restoreFromHash().then(ok=>{if(!ok)build()});
 </script>
 </body>
 </html>
